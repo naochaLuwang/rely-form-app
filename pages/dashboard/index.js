@@ -231,9 +231,7 @@ const Dashboard = () => {
         <h1 className="text-xl font-bold">Form Feedback</h1>
 
         <div className="flex items-center justify-between mb-3">
-          <h1 className="text-sm font-semibold ">
-            Total Records :{tableData.length}
-          </h1>
+          <h1 className="text-sm font-semibold ">Total Records :</h1>
 
           <div className="flex space-x-5 ">
             <div className="flex items-center space-x-2">

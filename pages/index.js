@@ -30,11 +30,11 @@ const Home = () => {
 
   const gridRef = useRef();
 
-  // const today = new Date();
-  // const date = today.setDate(today.getDate());
-  // const defaultValue = new Date(date)?.toISOString().split("T")[0];
+  const today = new Date();
+  const date = today.setDate(today.getDate());
+  const defaultValue = new Date(date)?.toISOString().split("T")[0];
   const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
+  const [endDate, setEndDate] = useState(defaultValue);
 
   const dateFilterParams = {
     // provide comparator function
@@ -67,14 +67,14 @@ const Home = () => {
 
   const onGridReady = (params) => {
     setGridApi(params);
-    fetch("/api/form")
-      .then((resp) => resp.json())
-      .then((resp) => params.api.applyTransaction({ add: resp }));
+    // fetch("/api/form")
+    //   .then((resp) => resp.json())
+    //   .then((resp) => params.api.applyTransaction({ add: resp }));
   };
 
-  // useEffect(() => {
-  //   getFormTemplates();
-  // }, []);
+  useEffect(() => {
+    getFormTemplates();
+  }, []);
 
   const getFormTemplates = () => {
     fetch("/api/form")
@@ -470,7 +470,7 @@ const Home = () => {
 
         <AgGridReact
           columnDefs={columnDefs}
-          // rowData={tableData}
+          rowData={tableData}
           defaultColDef={defaultColDef}
           onGridReady={onGridReady}
           pagination={true}
