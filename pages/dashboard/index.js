@@ -212,6 +212,7 @@ const Dashboard = () => {
 
       gridApi.api.onFilterChanged();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
   console.log(startDate, endDate);
