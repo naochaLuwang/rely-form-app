@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const formFeedbackSchema = new mongoose.Schema(
   {
@@ -6,6 +6,9 @@ const formFeedbackSchema = new mongoose.Schema(
       type: String,
     },
     formName: {
+      type: String,
+    },
+    formUrl: {
       type: String,
     },
     createdBy: {
@@ -21,6 +24,7 @@ const formFeedbackSchema = new mongoose.Schema(
       type: Number,
     },
     patient: {
+      salutationName: String,
       name: String,
       regId: Number,
       patientType: String,
@@ -39,7 +43,6 @@ const formFeedbackSchema = new mongoose.Schema(
         value: Number,
         required: Boolean,
         placeholderText: String,
-        questionNo: Number,
         weightage: Number,
         style: {
           label: Boolean,
@@ -52,6 +55,7 @@ const formFeedbackSchema = new mongoose.Schema(
         options: [
           {
             optionText: String,
+            weightage: Number,
             isChecked: Boolean,
           },
         ],
@@ -67,4 +71,5 @@ const formFeedbackSchema = new mongoose.Schema(
 const FormFeedback =
   mongoose.models.FormFeedback ||
   mongoose.model("FormFeedback", formFeedbackSchema);
-export default FormFeedback;
+
+module.exports = FormFeedback;
