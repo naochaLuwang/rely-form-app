@@ -34,7 +34,7 @@ const FormPage = ({ formFeedback }) => {
     Router.events.on("routeChangeComplete", handleComplete);
     Router.events.on("routeChangeError", handleComplete);
   }, []);
-  const router = useRouter();
+  const Router = useRouter();
 
   // const formName = newForm?.formName;
 
