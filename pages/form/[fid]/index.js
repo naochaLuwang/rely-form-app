@@ -8,7 +8,7 @@ import FormSuccess from "../../../components/FormSuccess";
 
 import db from "../../../utils/db";
 
-import Router from "next/router";
+// import Router from "next/router";
 import Loader from "../../../components/Loader";
 import FormFeedback from "../../../models/FormFeedback";
 
@@ -21,20 +21,20 @@ const FormPage = ({ formFeedback }) => {
 
   console.log(formData);
 
-  useEffect(() => {
-    const handleStart = () => {
-      setLoading(true);
-    };
-    let handleComplete = () => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    };
-    Router.events.on("routeChangeStart", handleStart);
-    Router.events.on("routeChangeComplete", handleComplete);
-    Router.events.on("routeChangeError", handleComplete);
-  }, []);
-  const Router = useRouter();
+  // useEffect(() => {
+  //   const handleStart = () => {
+  //     setLoading(true);
+  //   };
+  //   let handleComplete = () => {
+  //     setTimeout(() => {
+  //       setLoading(false);
+  //     }, 500);
+  //   };
+  //   Router.events.on("routeChangeStart", handleStart);
+  //   Router.events.on("routeChangeComplete", handleComplete);
+  //   Router.events.on("routeChangeError", handleComplete);
+  // }, []);
+  // const Router = useRouter();
 
   // const formName = newForm?.formName;
 

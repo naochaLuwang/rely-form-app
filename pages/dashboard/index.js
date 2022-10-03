@@ -20,9 +20,13 @@ const Dashboard = () => {
   const gridRef = useRef();
 
   const date = today.setDate(today.getDate());
-  const defaultValue = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
+  const defaultValue = new Date(date).toISOString();
+  console.log(defaultValue);
+  const todaysDate = defaultValue.split("T")[0];
+  console.log(todaysDate);
+  // const defaultValue = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState(defaultValue);
+  const [endDate, setEndDate] = useState("");
 
   const dateFilterParams = {
     // provide comparator function
@@ -222,8 +226,8 @@ const Dashboard = () => {
 
   console.log(startDate, endDate);
   return (
-    <div className=" w-screen h-screen overflow-hidden ag-theme-alpine">
-      <div className="mx-auto max-w-7xl h-[70%]  mt-5 ">
+    <div className=" w-screen h-screen overflow-hidden ">
+      <div className="mx-auto max-w-7xl h-[70%]  mt-5 ag-theme-alpine  ">
         <h1 className="text-xl font-bold">Form Feedback</h1>
 
         <div className="flex items-center justify-between mb-3">

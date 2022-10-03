@@ -30,11 +30,11 @@ const Home = () => {
 
   const gridRef = useRef();
 
-  const today = new Date();
-  const date = today.setDate(today.getDate());
-  const defaultValue = new Date(date).toISOString().split("T")[0];
+  // const today = new Date();
+  // const date = today.setDate(today.getDate());
+  // const defaultValue = new Date(date)?.toISOString().split("T")[0];
   const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState(defaultValue);
+  const [endDate, setEndDate] = useState();
 
   const dateFilterParams = {
     // provide comparator function
@@ -49,7 +49,7 @@ const Home = () => {
       // We create a Date object for comparison against the filter date
 
       console.log(dateAsString);
-      var dateParts = dateAsString.split("-");
+      var dateParts = dateAsString?.split("-");
       var day = Number(dateParts[2]);
       var month = Number(dateParts[1]) - 1;
       var year = Number(dateParts[0]);

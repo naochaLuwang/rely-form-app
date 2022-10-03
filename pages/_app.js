@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/style.css";
 
 // import Router from "next/router";
 

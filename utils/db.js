@@ -1,8 +1,9 @@
-import mongoose from "mongoose";
+import dynamic from "next/dynamic";
 
 const connection = {};
 
 const connect = async () => {
+  const mongoose = (await import("mongoose")).default;
   if (connection.isConnected) {
     console.log("Database already connected");
     return;
@@ -18,7 +19,7 @@ const connect = async () => {
     await mongoose.disconnect();
   }
 
-  const db = await mongoose.connect(process.env.MONGODB_URI, {
+  const db = mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });
