@@ -67,11 +67,14 @@ const Home = () => {
 
   const onGridReady = (params) => {
     setGridApi(params);
+    fetch("/api/form")
+      .then((resp) => resp.json())
+      .then((resp) => params.api.applyTransaction({ add: resp }));
   };
 
-  useEffect(() => {
-    getFormTemplates();
-  }, []);
+  // useEffect(() => {
+  //   getFormTemplates();
+  // }, []);
 
   const getFormTemplates = () => {
     fetch("/api/form")
@@ -467,7 +470,7 @@ const Home = () => {
 
         <AgGridReact
           columnDefs={columnDefs}
-          rowData={tableData}
+          // rowData={tableData}
           defaultColDef={defaultColDef}
           onGridReady={onGridReady}
           pagination={true}

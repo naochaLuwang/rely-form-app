@@ -14,6 +14,8 @@ const Dashboard = () => {
   const [gridApi, setGridApi] = useState();
   const [refresh, setRefresh] = useState(false);
 
+  console.log(tableData);
+
   const today = new Date();
   const gridRef = useRef();
 
@@ -172,11 +174,14 @@ const Dashboard = () => {
 
   const onGridReady = (params) => {
     setGridApi(params);
+    fetch("/api/formFeedback")
+      .then((resp) => resp.json())
+      .then((resp) => params.api.applyTransaction({ add: resp }));
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  // useEffect(() => {
+  //   getUsers();
+  // }, []);
 
   const handleRefresh = () => {
     getUsers();
@@ -289,7 +294,7 @@ const Dashboard = () => {
 
         <AgGridReact
           columnDefs={columnDefs}
-          rowData={tableData}
+          // rowData={tableData}
           ref={gridRef}
           defaultColDef={defaultColDef}
           onGridReady={onGridReady}
