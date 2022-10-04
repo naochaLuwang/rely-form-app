@@ -1,58 +1,18 @@
 import React, { useEffect, useState } from "react";
-
-import Slider from "@mui/material/Slider";
-import axios from "axios";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
 import FormSuccess from "../../../components/FormSuccess";
+import Slider from "@mui/material/Slider";
+import axios from "axios";
 
-import db from "../../../utils/db";
-
-// import Router from "next/router";
 import Loader from "../../../components/Loader";
-import FormFeedback from "../../../models/FormFeedback";
 
-const FormPage = ({ formFeedback }) => {
+const FormFeedbackPage = ({ formFeedback }) => {
   const [formData, setFormData] = useState(formFeedback);
   const [newForm, setNewForm] = useState(formData);
 
-  const [loading, setLoading] = useState(false);
-  const [overallScoreWeightage, setOverallScoreWeightage] = useState(0);
-
-  console.log(formData);
-
-  // useEffect(() => {
-  //   const handleStart = () => {
-  //     setLoading(true);
-  //   };
-  //   let handleComplete = () => {
-  //     setTimeout(() => {
-  //       setLoading(false);
-  //     }, 500);
-  //   };
-  //   Router.events.on("routeChangeStart", handleStart);
-  //   Router.events.on("routeChangeComplete", handleComplete);
-  //   Router.events.on("routeChangeError", handleComplete);
-  // }, []);
-  // const Router = useRouter();
-
-  // const formName = newForm?.formName;
-
   const formDatas = newForm?.form;
-  // const createdBy = newForm?.createdBy;
-  // const formId = newForm?.formId;
-  // const patient = {
-  //   name: patientDetail.patientName,
-  //   regId: patientDetail.regId,
-  //   patientType: patientDetail.patientType,
-  //   age: patientDetail.ageY,
-  //   gender: patientDetail.gender,
-  //   primaryMobileNumber: patientDetail.primaryMobileNumber,
-  //   iPDNumber: patientDetail.iPDNumber,
-  //   uhid: patientDetail.uhid,
-  // };
-
-  // console.log(patientDetail);
+  const router = useRouter();
 
   const handleChange = (e, i, j) => {
     const newFormData = { ...newForm };
@@ -66,7 +26,7 @@ const FormPage = ({ formFeedback }) => {
   const handleCheckBox = (i, j) => {
     const newFormData = { ...newForm };
     newFormData.form[i].options[j].isChecked =
-      !newFormData.form[i].options[j].isChecked;
+      newFormData.form[i].options[j].isChecked;
     setNewForm(newFormData);
     console.log(newForm);
   };
@@ -78,7 +38,6 @@ const FormPage = ({ formFeedback }) => {
     console.log(newRange);
   };
   const handleSubmit = async () => {
-    await db.connect();
     let overallScore = 0;
 
     const newFormData = { ...newForm };
@@ -115,16 +74,12 @@ const FormPage = ({ formFeedback }) => {
     console.log(newText.form[i].text);
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <>
       <Toaster />
 
       {/* <FormHeader /> */}
-      {formFeedback?.isSubmitted ? (
+      {formData?.isSubmitted ? (
         <FormSuccess />
       ) : (
         <div className="max-w-screen bg-slate-100  py-10 px-10 hidden lg:block">
@@ -133,44 +88,44 @@ const FormPage = ({ formFeedback }) => {
             <div className="w-full border px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">
               <h1 className="text-4xl font-bold mb-10">{formData?.formName}</h1>
               {/* <p className="absolute top-16">
-              Signed in as {session?.user?.email}
-            </p> */}
+                Signed in as {session?.user?.email}
+              </p> */}
               <div className="flex items-center justify-between pr-10 -mt-5">
                 <div className="flex flex-col">
                   <h1 className="tracking-wider">
                     <span className="font-semibold">Patient Name :</span>{" "}
-                    {newForm.patient.name}
+                    {newForm?.patient.name}
                   </h1>
                   <h1 className="tracking-wider">
                     <span className="font-semibold">Age :</span>{" "}
-                    {newForm.patient.ageY}
+                    {newForm?.patient.ageY}
                   </h1>
                   <h1 className="tracking-wider">
                     <span className="font-semibold">Gender :</span>{" "}
-                    {newForm.patient.gender}
+                    {newForm?.patient.gender}
                   </h1>
                   <h1 className="tracking-wider">
                     <span className="font-semibold">Mobile :</span>{" "}
-                    {newForm.patient.primaryMobileNumber}
+                    {newForm?.patient.primaryMobileNumber}
                   </h1>
                 </div>
                 <div className="flex flex-col">
                   <h1 className="tracking-wider">
                     {" "}
                     <span className="font-semibold">Patient Type :</span>{" "}
-                    {newForm.patient.patientType}
+                    {newForm?.patient.patientType}
                   </h1>
                   <h1 className="tracking-wider">
                     <span className="font-semibold">IPD Number :</span>{" "}
-                    {newForm.patient.iPDNumber}
+                    {newForm?.patient.iPDNumber}
                   </h1>
                   <h1 className="tracking-wider">
                     <span className="font-semibold">Reg Id :</span>{" "}
-                    {newForm.patient.regId}
+                    {newForm?.patient.regId}
                   </h1>
                   <h1 className="tracking-wider">
                     <span className="font-semibold">UHID :</span>{" "}
-                    {newForm.patient.uhid}
+                    {newForm?.patient.uhid}
                   </h1>
                 </div>
               </div>
@@ -420,7 +375,7 @@ const FormPage = ({ formFeedback }) => {
   );
 };
 
-export default FormPage;
+export default FormFeedbackPage;
 
 export async function getServerSideProps(context) {
   const { params, query } = context;
@@ -431,19 +386,16 @@ export async function getServerSideProps(context) {
 
   console.log(query);
 
-  await db.connect();
+  const formFeedback = await fetch(
+    `https://rely-form.herokuapp.com//api/formFeedback/${fid}/${decryptedId}`
+  );
+  const data = await formFeedback.json();
 
-  const formFeedback = await FormFeedback.findOne({
-    submittedBy: Number(decryptedId),
-    formId: fid,
-  });
+  console.log(data);
 
-  console.log(formFeedback);
-
-  await db.disconnect();
   return {
     props: {
-      formFeedback: JSON.parse(JSON.stringify(formFeedback)),
+      formFeedback: JSON.parse(JSON.stringify(data)),
     },
   };
 }

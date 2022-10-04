@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -114,14 +114,17 @@ const Home = () => {
     gridApi.api.exportDataAsCsv();
   };
 
-  const defaultColDef = {
-    headerClass: function (params) {
-      return "Header-one";
-    },
-    editable: false,
-    flex: 1,
-    resizable: true,
-  };
+  const defaultColDef = useMemo(
+    () => ({
+      headerClass: function (params) {
+        return "Header-one";
+      },
+      editable: false,
+      flex: 1,
+      resizable: true,
+    }),
+    []
+  );
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -404,7 +407,7 @@ const Home = () => {
 
         <div className="flex items-center justify-between mb-3">
           <h1 className="text-sm font-semibold ">
-            Total Records :{tableData.length}
+            Total Records :{tableData?.length}
           </h1>
 
           <div className="flex space-x-5 ">
