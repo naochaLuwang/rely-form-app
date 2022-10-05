@@ -508,7 +508,7 @@ export default Home;
 
 export async function getServerSideProps(context) {
   await dbConnect();
-  const response = await fetch("http://localhost:3000/api/form");
+  const response = await fetch("https://rely-form.herokuapp.com/api/form");
   const data = await response.json();
 
   console.log(data);
