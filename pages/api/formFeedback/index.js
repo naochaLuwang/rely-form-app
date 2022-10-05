@@ -1,12 +1,12 @@
 import nc from "next-connect";
 import FormFeedback from "../../../models/FormFeedback";
-import db from "../../../utils/db";
+import dbConnect from "../../../utils/db";
 
 const handler = nc();
 
 handler.get(async (req, res) => {
   try {
-    await db.connect();
+    await dbConnect();
     const response = await FormFeedback.find();
     res.json(response);
   } catch (error) {

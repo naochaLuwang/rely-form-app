@@ -1,48 +1,47 @@
-import dynamic from "next/dynamic";
+import mongoose from "mongoose";
 
-const connection = {};
+const MONGODB_URI = process.env.MONGODB_URI;
 
-const connect = async () => {
-  const mongoose = (await import("mongoose")).default;
-  if (connection.isConnected) {
-    console.log("Database already connected");
-    return;
+if (!MONGODB_URI) {
+  throw new Error(
+    "Please define the MONGODB_URI environment variable inside .env.local"
+  );
+}
+
+/**
+ * Global is used here to maintain a cached connection across hot reloads
+ * in development. This prevents connections growing exponentially
+ * during API Route usage.
+ */
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+async function dbConnect() {
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  if (mongoose.connections.length > 0) {
-    connection.isConnected = mongoose.connections[0].readyState;
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+    };
 
-    if (connection.isConnected === 1) {
-      console.log("use previous connection");
-      return;
-    }
-    await mongoose.disconnect();
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      return mongoose;
+    });
   }
 
-  const db = mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  console.log("New database connection");
-  connection.isConnected = db.connections[0].readyState;
-};
-
-const disconnect = async () => {
-  if (connection.isConnected) {
-    if (process.env.NODE_ENV === "production") {
-      await mongoose.disconnect();
-      connection.isConnected = false;
-    } else {
-      console.log("Not disconnected");
-    }
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
   }
-};
 
-const convertDocToObj = (doc) => {
-  doc._id = doc._id.toString();
+  return cached.conn;
+}
 
-  return doc;
-};
-
-const db = { connect, disconnect, convertDocToObj };
-export default db;
+export default dbConnect;

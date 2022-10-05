@@ -1,5 +1,5 @@
 import nc from "next-connect";
-import db from "../../utils/db";
+import dbConnect from "../../utils/db";
 
 import Patient from "../../models/Patient";
 
@@ -7,7 +7,7 @@ const handler = nc();
 
 handler.post(async (req, res) => {
   try {
-    await db.connect();
+    await dbConnect();
     const {
       patientType,
       iPDID,

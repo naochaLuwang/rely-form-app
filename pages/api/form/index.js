@@ -1,13 +1,13 @@
 import nc from "next-connect";
 
 import Form from "../../../models/Form";
-import db from "../../../utils/db";
+import dbConnect from "../../../utils/db";
 
 const handler = nc();
 
 handler.post(async (req, res) => {
   try {
-    await db.connect();
+    await dbConnect();
 
     const { formId, formData, formName, createdBy, formType, status } =
       req.body;
@@ -36,7 +36,7 @@ handler.post(async (req, res) => {
 
 handler.get(async (req, res) => {
   try {
-    await db.connect();
+    await dbConnect();
     const data = await Form.find({}).sort({ createdAt: -1 });
     res.json(data);
   } catch (error) {

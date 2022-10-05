@@ -19,8 +19,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import Link from "next/link";
 import { ImStatsBars } from "react-icons/im";
-const Home = () => {
-  const [tableData, setTableData] = useState([]);
+import dbConnect from "../utils/db";
+import FormHeader from "../components/FormHeader";
+const Home = ({ form }) => {
+  const [tableData, setTableData] = useState(form);
   const [gridApi, setGridApi] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -67,19 +69,16 @@ const Home = () => {
 
   const onGridReady = (params) => {
     setGridApi(params);
-    // fetch("/api/form")
-    //   .then((resp) => resp.json())
-    //   .then((resp) => params.api.applyTransaction({ add: resp }));
   };
 
-  useEffect(() => {
-    getFormTemplates();
-  }, []);
+  // useEffect(() => {
+  //   getFormTemplates();
+  // }, []);
 
-  const getFormTemplates = () => {
-    fetch("/api/form")
-      .then((resp) => resp.json())
-      .then((resp) => setTableData(resp));
+  const getFormTemplates = async () => {
+    const response = await axios.get("/api/form");
+    const data = response.data;
+    setTableData(data);
   };
 
   const onFilterTextChange = (e) => {
@@ -117,7 +116,7 @@ const Home = () => {
   const defaultColDef = useMemo(
     () => ({
       headerClass: function (params) {
-        return "Header-one";
+        return "header-one";
       },
       editable: false,
       flex: 1,
@@ -186,7 +185,7 @@ const Home = () => {
     {
       headerName: "Date",
       field: "createdAt",
-      cellClass: "text-base text-grey-500 tracking-wide font-medium ",
+      cellClass: "text-sm text-grey-500 tracking-wide font-medium  ",
       filter: "agDateColumnFilter",
       filterParams: dateFilterParams,
 
@@ -198,7 +197,7 @@ const Home = () => {
     {
       headerName: "Time",
       field: "createdAt",
-      cellClass: "text-base text-grey-500 tracking-wide font-medium ",
+      cellClass: "text-sm text-grey-500 tracking-wide font-medium ",
 
       cellRenderer: (data) => {
         return moment(data.data.createdAt).format("hh:mm A ");
@@ -214,7 +213,7 @@ const Home = () => {
     {
       headerName: "Created By",
       field: "createdBy",
-      cellClass: "text-base text-grey-500 tracking-wider  font-medium",
+      cellClass: "text-sm text-grey-500 tracking-wider  font-medium",
       flex: 1.5,
     },
     {
@@ -225,9 +224,9 @@ const Home = () => {
           <div className="flex justify-between items-center w-24">
             <div>
               {data.data.status ? (
-                <h1 className="text-green-500 text-lg font-medium">Active</h1>
+                <h1 className="text-green-500 text-base font-medium">Active</h1>
               ) : (
-                <h1 className=" text-grey-500 font-medium">Disabled</h1>
+                <h1 className=" text-grey-500 text-sm font-medium">Disabled</h1>
               )}
             </div>
 
@@ -236,7 +235,7 @@ const Home = () => {
                 title={`${data.data.status ? "Deactivate" : "Activate"}`}
               >
                 <IconButton
-                  className="bg-gray-200 hover:bg-gray-300"
+                  className="bg-gray-200 h-8 w-8 hover:bg-gray-300"
                   //
                   onClick={() => {
                     handleClickOpen2();
@@ -324,7 +323,7 @@ const Home = () => {
             <div className="  flex space-x-2">
               <div>
                 <Tooltip title="Edit" className="bg-blue">
-                  <IconButton className="bg-gray-200 hover:bg-gray-300">
+                  <IconButton className="bg-gray-200 h-8 w-8 hover:bg-gray-300">
                     <FiEdit />
                   </IconButton>
                 </Tooltip>
@@ -332,7 +331,7 @@ const Home = () => {
               <div>
                 <Tooltip title="Delete">
                   <IconButton
-                    className="bg-gray-200 hover:bg-gray-300"
+                    className="bg-gray-200 h-8 w-8 hover:bg-gray-300"
                     //
                     onClick={() => {
                       handleClickOpen();
@@ -401,89 +400,122 @@ const Home = () => {
     },
   ];
   return (
-    <div className=" w-screen h-screen overflow-hidden ag-theme-alpine">
-      <div className="mx-auto max-w-7xl h-[70%]  mt-5 ">
-        <h1 className="text-xl font-bold">Form Templates</h1>
-
-        <div className="flex items-center justify-between mb-3">
-          <h1 className="text-sm font-semibold ">
-            Total Records :{tableData?.length}
-          </h1>
-
-          <div className="flex space-x-5 ">
-            <div className="flex items-center space-x-2">
-              <h1 className="text-sm font-semibold">From</h1>
-              <input
-                type="date"
-                className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                placeholder="dd-mm-yyyy"
-                value={startDate}
-                onChange={(e) =>
-                  //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
-                  setStartDate(e.target.value)
-                }
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <h1 className="text-sm font-semibold">To</h1>
-              <input
-                type="date"
-                value={endDate}
-                className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+    <>
+      <div className=" w-screen h-screen overflow-hidden ag-theme-alpine ag-style  ">
+        <FormHeader />
+        <div className="mx-auto max-w-7xl h-[70%]  mt-5 ">
+          <div className="flex justify-between items-center ">
+            <h1 className="text-2xl font-bold">Form Templates</h1>
+            <div>
+              <Link href="/form">
+                <p className="relative px-5 py-3 overflow-hidden font-medium text-white bg-green-500 border border-gray-100 rounded-lg shadow-inner group cursor-pointer">
+                  <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-green-400 group-hover:w-full ease"></span>
+                  <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-green-400 group-hover:w-full ease"></span>
+                  <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-green-400 group-hover:h-full ease"></span>
+                  <span className="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-green-400 group-hover:h-full ease"></span>
+                  <span className="absolute inset-0 w-full h-full duration-300 delay-300 bg-green-500 opacity-0 group-hover:opacity-100"></span>
+                  <span className="relative transition-colors duration-300 delay-200 font-bold group-hover:text-white ease">
+                    + New Form
+                  </span>
+                </p>
+              </Link>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3 ">
-            <div className="max-w-xs">
-              <div className=" mt-1 relative p-3 runded-md  ">
-                <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
-                  <SearchIcon className="h-5 w-5 text-gray-500" />
-                </div>
+          <div className="flex items-center justify-between mb-3">
+            <h1 className="text-base text-gray-500 font-semibold ">
+              Total Records :{tableData?.length}
+            </h1>
+
+            <div className="flex space-x-5 ">
+              <div className="flex items-center space-x-2">
+                <h1 className="text-sm font-semibold">From</h1>
                 <input
+                  type="date"
                   className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                  type="search"
-                  placeholder="search"
-                  onChange={onFilterTextChange}
+                  placeholder="dd-mm-yyyy"
+                  value={startDate}
+                  onChange={(e) =>
+                    //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
+                    setStartDate(e.target.value)
+                  }
+                />
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <h1 className="text-sm font-semibold">To</h1>
+                <input
+                  type="date"
+                  value={endDate}
+                  className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                  onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
             </div>
-            <button
-              className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
-              onClick={handleRefresh}
-            >
-              <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
-                <h1>Refresh</h1>
-                <FcRefresh className="text-sm text-gray-600" />
-              </div>
-            </button>
-            <button
-              className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
-              onClick={onExportClick}
-            >
-              <div className="flex items-center text-white text-sm font-semibold space-x-2">
-                <h1>Export</h1>
-                <FaFileExport />
-              </div>
-            </button>
-          </div>
-        </div>
 
-        <AgGridReact
-          columnDefs={columnDefs}
-          rowData={tableData}
-          defaultColDef={defaultColDef}
-          onGridReady={onGridReady}
-          pagination={true}
-          ref={gridRef}
-          paginationPageSize={10}
-          paginationAutoPageSize={true}
-        ></AgGridReact>
+            <div className="flex items-center space-x-3 ">
+              <div className="max-w-xs">
+                <div className=" mt-1 relative p-3 runded-md  ">
+                  <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
+                    <SearchIcon className="h-5 w-5 text-gray-500" />
+                  </div>
+                  <input
+                    className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                    type="search"
+                    placeholder="search"
+                    onChange={onFilterTextChange}
+                  />
+                </div>
+              </div>
+              <button
+                className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
+                onClick={handleRefresh}
+              >
+                <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
+                  <h1>Refresh</h1>
+                  <FcRefresh className="text-sm text-gray-600" />
+                </div>
+              </button>
+              <button
+                className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
+                onClick={onExportClick}
+              >
+                <div className="flex items-center text-white text-sm font-semibold space-x-2">
+                  <h1>Export</h1>
+                  <FaFileExport />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <AgGridReact
+            columnDefs={columnDefs}
+            rowData={tableData}
+            defaultColDef={defaultColDef}
+            onGridReady={onGridReady}
+            pagination={true}
+            ref={gridRef}
+            paginationPageSize={10}
+            paginationAutoPageSize={true}
+          ></AgGridReact>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default Home;
+
+export async function getServerSideProps(context) {
+  await dbConnect();
+  const response = await fetch("http://localhost:3000/api/form");
+  const data = await response.json();
+
+  console.log(data);
+
+  return {
+    props: {
+      form: JSON.parse(JSON.stringify(data)),
+    },
+  };
+}

@@ -1,7 +1,7 @@
 import nc from "next-connect";
 
 import FormFeedback from "../../../../../models/FormFeedback";
-import db from "../../../../../utils/db";
+import dbConnect from "../../../../../utils/db";
 
 const handler = nc();
 
@@ -11,7 +11,7 @@ handler.get(async (req, res) => {
   console.log(req.query.regId);
 
   try {
-    await db.connect();
+    await dbConnect();
     const data = await FormFeedback.findOne({
       submittedBy: req.query.regId,
       formId: req.query.id,

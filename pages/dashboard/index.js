@@ -5,14 +5,20 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import moment from "moment";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 import { FaFileExport } from "react-icons/fa";
 import { FcRefresh } from "react-icons/fc";
+import FormHeader from "../../components/FormHeader";
 
 const Dashboard = () => {
   const [tableData, setTableData] = useState([]);
   const [gridApi, setGridApi] = useState();
-  const [refresh, setRefresh] = useState(false);
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   console.log(tableData);
 
@@ -26,7 +32,7 @@ const Dashboard = () => {
   console.log(todaysDate);
   // const defaultValue = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
   const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [endDate, setEndDate] = useState(todaysDate);
 
   const dateFilterParams = {
     // provide comparator function
@@ -227,6 +233,7 @@ const Dashboard = () => {
   console.log(startDate, endDate);
   return (
     <div className=" w-screen h-screen overflow-hidden ">
+      <FormHeader />
       <div className="mx-auto max-w-7xl h-[70%]  mt-5 ag-theme-alpine  ">
         <h1 className="text-xl font-bold">Form Feedback</h1>
 
@@ -275,7 +282,7 @@ const Dashboard = () => {
             </div>
             <button
               className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
-              onClick={handleRefresh}
+              onClick={refreshData}
             >
               <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
                 <h1>Refresh</h1>

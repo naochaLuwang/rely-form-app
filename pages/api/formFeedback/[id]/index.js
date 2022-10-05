@@ -1,14 +1,14 @@
 import nc from "next-connect";
 import FormFeedback from "../../../../models/FormFeedback";
 
-import db from "../../../../utils/db";
+import dbConnect from "../../../../utils/db";
 
 const handler = nc();
 
 handler.put(async (req, res) => {
   const { isSubmitted, overallScore, formDatas } = req.body;
   try {
-    await db.connect();
+    await dbConnect();
     const response = await FormFeedback.findOneAndUpdate(
       {
         submittedBy: req.query.id,

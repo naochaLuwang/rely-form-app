@@ -2,12 +2,12 @@ import nc from "next-connect";
 
 import Form from "../../../../models/Form";
 import FormFeedback from "../../../../models/FormFeedback";
-import db from "../../../../utils/db";
+import dbConnect from "../../../../utils/db";
 
 const handler = nc();
 
 handler.delete(async (req, res) => {
-  await db.connect();
+  await dbConnect();
   const form = await Form.findOne({ formId: req.query.id });
   if (form) {
     await form.remove();
@@ -22,7 +22,7 @@ handler.delete(async (req, res) => {
 handler.get(async (req, res) => {
   console.log(req.query.id);
   try {
-    await db.connect();
+    await dbConnect();
     const data = await FormFeedback.find({ formId: req.query.id });
     res.json(data);
     await db.disconnect();
@@ -34,7 +34,7 @@ handler.get(async (req, res) => {
 handler.put(async (req, res) => {
   try {
     const { status } = req.body;
-    await db.connect();
+    await dbConnect();
     const data = await Form.findOneAndUpdate(
       { formId: req.query.id },
       {

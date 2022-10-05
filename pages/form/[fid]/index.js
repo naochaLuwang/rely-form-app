@@ -387,7 +387,7 @@ export async function getServerSideProps(context) {
   console.log(query);
 
   const formFeedback = await fetch(
-    `https://rely-form.herokuapp.com//api/formFeedback/${fid}/${decryptedId}`
+    `https://rely-form.herokuapp.com/api/formFeedback/${fid}/${decryptedId}`
   );
   const data = await formFeedback.json();
 
