@@ -25,4 +25,16 @@ handler.put(async (req, res) => {
   }
 });
 
+handler.get(async (req, res) => {
+  try {
+    await dbConnect();
+    const formFeedback = await FormFeedback.find({
+      formId: req.query.id,
+    });
+    await res.json(formFeedback);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default handler;
