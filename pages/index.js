@@ -404,12 +404,12 @@ const Home = ({ form }) => {
     <>
       <div className=" w-screen h-screen flex overflow-hidden ag-theme-alpine ag-style  ">
         <Sidebar />
-        <div className="flex-1 h-[70%] p-7   ">
+        <div className="flex-1 h-[80%] p-7   ">
           <div className="flex justify-between items-center ">
             <h1 className="text-2xl font-bold">Form Templates</h1>
             <div>
               <Link href="/form">
-                <p className="relative px-5 py-3 overflow-hidden font-medium text-white bg-green-500 border border-gray-100 rounded-lg shadow-inner group cursor-pointer">
+                <p className="relative px-5 py-4 overflow-hidden font-medium text-white bg-green-500 border border-gray-100 rounded-lg shadow-inner group cursor-pointer">
                   <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-green-400 group-hover:w-full ease"></span>
                   <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-green-400 group-hover:w-full ease"></span>
                   <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-green-400 group-hover:h-full ease"></span>
@@ -425,12 +425,11 @@ const Home = ({ form }) => {
 
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-base text-gray-500 font-semibold ">
-              Total Records :{tableData?.length}
+              {tableData?.length} templates found
             </h1>
 
             <div className="flex space-x-5 ">
               <div className="flex items-center space-x-2">
-                <h1 className="text-sm font-semibold">From</h1>
                 <input
                   type="date"
                   className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"

@@ -4,12 +4,13 @@ import control from "../assets/images/control.png";
 import logo from "../assets/images/logo.jpeg";
 import Setting from "../assets/images/Setting.png";
 import Chart_fill from "../assets/images/Chart_fill.png";
+import Link from "next/link";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
   const Menus = [
-    { title: "Dashoard", src: Chart_fill },
-    { title: "Settings", src: Setting },
+    { title: "Dashoard", src: Chart_fill, url: "/dashboard" },
+    { title: "Settings", src: Setting, url: "/" },
   ];
   return (
     <div
@@ -26,38 +27,47 @@ const Sidebar = () => {
         <Image src={control} alt="control" layout="fill" objectFit="contain" />
       </div>
 
-      <div className="flex gap-x-4 items-center ">
-        <div
-          className={`relative w-9 h-9 rounded-md cursor-pointer duration-500 flex-shrink-0`}
-        >
-          <Image src={logo} alt="logo" layout="fill" objectFit="contain" />
+      <div className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2">
+        <div className="relative w-7 h-7 flex-shrink-0">
+          <Image
+            src={logo}
+            alt="menu icons"
+            layout="fill"
+            objectFit="contain"
+          />
         </div>
-
-        <h1
-          className={`text-white origin-left font-medium text-xl duration-300 ${
-            !open && "scale-0"
-          }`}
-        >
+        <span className={`${!open && "hidden"} font-bold text-lg `}>
           Rely Form
-        </h1>
+        </span>
       </div>
 
-      <ul className="pt-6">
-        {Menus.map((menu, index) => (
-          <li
-            key={index}
-            className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md"
-          >
-            <div className="relative w-7 h-7 flex-shrink-0">
-              <Image
-                src={menu.src}
-                alt="menu icons"
-                layout="fill"
-                objectFit="contain"
-              />
+      {open && (
+        <div className="flex flex-col mt-5 duration-500">
+          <div className="flex items-center text-white space-x-4 font-bold">
+            <div className="w-12 h-12 rounded-full bg-light-white"></div>
+            <div className="flex flex-col space-y-2">
+              <p>Admin</p>
+              <p className="font-light">admin@gmail.com</p>
             </div>
-            <span className={`${!open && "hidden"}`}>{menu.title}</span>
-          </li>
+          </div>
+        </div>
+      )}
+
+      <ul className="pt-4">
+        {Menus.map((menu, index) => (
+          <Link key={index} href={menu.url}>
+            <li className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
+              <div className="relative w-7 h-7 flex-shrink-0">
+                <Image
+                  src={menu.src}
+                  alt="menu icons"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+              <span className={`${!open && "hidden"}`}>{menu.title}</span>
+            </li>
+          </Link>
         ))}
       </ul>
     </div>
