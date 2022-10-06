@@ -21,6 +21,7 @@ import Link from "next/link";
 import { ImStatsBars } from "react-icons/im";
 import dbConnect from "../utils/db";
 import FormHeader from "../components/FormHeader";
+import Sidebar from "../components/Sidebar";
 const Home = ({ form }) => {
   const [tableData, setTableData] = useState(form);
   const [gridApi, setGridApi] = useState(null);
@@ -401,9 +402,9 @@ const Home = ({ form }) => {
   ];
   return (
     <>
-      <div className=" w-screen h-screen overflow-hidden ag-theme-alpine ag-style  ">
-        <FormHeader />
-        <div className="mx-auto max-w-7xl h-[70%]  mt-5 ">
+      <div className=" w-screen h-screen flex overflow-hidden ag-theme-alpine ag-style  ">
+        <Sidebar />
+        <div className="flex-1 h-[70%] p-7   ">
           <div className="flex justify-between items-center ">
             <h1 className="text-2xl font-bold">Form Templates</h1>
             <div>

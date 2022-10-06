@@ -11,9 +11,8 @@ handler.delete(async (req, res) => {
   const form = await Form.findOne({ formId: req.query.id });
   if (form) {
     await form.remove();
-    await db.disconnect();
+
     res.send({ message: "Form Deleted" });
-    await db.disconnect();
   } else {
     res.status(404).send({ message: "Form Not Found" });
   }
@@ -25,7 +24,6 @@ handler.get(async (req, res) => {
     await dbConnect();
     const data = await FormFeedback.find({ formId: req.query.id });
     res.json(data);
-    await db.disconnect();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { FaFileExport } from "react-icons/fa";
 import { FcRefresh } from "react-icons/fc";
 import FormHeader from "../../components/FormHeader";
+import Sidebar from "../../components/Sidebar";
 
 const Dashboard = () => {
   const [tableData, setTableData] = useState([]);
@@ -232,17 +233,18 @@ const Dashboard = () => {
 
   console.log(startDate, endDate);
   return (
-    <div className=" w-screen h-screen overflow-hidden ">
-      <FormHeader />
-      <div className="mx-auto max-w-7xl h-[70%]  mt-5 ag-theme-alpine  ">
-        <h1 className="text-xl font-bold">Form Feedback</h1>
+    <div className=" w-screen h-screen flex overflow-hidden ">
+      <Sidebar />
+      <div className=" flex-1 px-7 h-[70%]  mt-10 ag-theme-alpine relative  ">
+        <h1 className="text-xl font-bold absolute -top-2">Form Feedback</h1>
 
-        <div className="flex items-center justify-between mb-3">
-          <h1 className="text-sm font-semibold ">Total Records :</h1>
+        <div className="flex items-center   justify-between mb-3">
+          <h1 className="text-sm text-gray-500 font-semibold ">
+            {gridApi?.api.getDisplayedRowCount()} feedback found
+          </h1>
 
           <div className="flex space-x-5 ">
             <div className="flex items-center space-x-2">
-              <h1 className="text-sm font-semibold">From</h1>
               <input
                 type="date"
                 className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"

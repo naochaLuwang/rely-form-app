@@ -1456,7 +1456,6 @@ const FormBody = () => {
                                 >
                                   <div className="flex flex-col py-10 px-10">
                                     <div className="flex items-center justify-between">
-                                      {radioIndex}
                                       <h1 className="text-3xl font-bold text-gray-700">
                                         Radio Properties
                                       </h1>
@@ -1469,10 +1468,12 @@ const FormBody = () => {
                                       </IconButton>
                                     </div>
 
-                                    <p>Question No</p>
+                                    <p className="text-lg mt-5 font-bold text-gray-500">
+                                      Question No
+                                    </p>
                                     <input
                                       type="number"
-                                      className="text_input bg-transparent focus:ring-0 w-full h-fit text-center"
+                                      className="text-input bg-transparent focus:ring-0 w-96 h-fit mt-2"
                                       placeholder="1"
                                       value={formData[radioIndex]?.questionNo}
                                       onChange={(e) => {
