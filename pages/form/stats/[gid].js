@@ -112,7 +112,9 @@ export async function getServerSideProps(context) {
 
   await dbConnect();
 
-  const response = await fetch(`http://localhost:3000/api/formFeedback/${gid}`);
+  const response = await fetch(
+    `https://rely-form.herokuapp.com/api/formFeedback/${gid}`
+  );
   const data = await response.json();
 
   return {
