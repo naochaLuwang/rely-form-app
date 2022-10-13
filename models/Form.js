@@ -17,6 +17,15 @@ const formSchema = new mongoose.Schema(
     status: {
       type: Boolean,
     },
+    minimumWeightage: {
+      type: Number,
+    },
+    maximumWeightage: {
+      type: Number,
+    },
+    averageWeightage: {
+      type: Number,
+    },
 
     form: [
       {

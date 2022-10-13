@@ -35,8 +35,19 @@ const GraphStats = ({ formFeedback }) => {
       },
     },
   };
+  const labels = [];
 
-  const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const getLables = () => {
+    for (
+      let i = formFeedback[0].minimumWeightage;
+      i <= formFeedback[0].maximumWeightage;
+      i++
+    ) {
+      labels.push(i);
+    }
+  };
+
+  getLables();
 
   // formFeedback[0].form[0].options.map((text) => {
   //   labels.push(text.optionText, -1);

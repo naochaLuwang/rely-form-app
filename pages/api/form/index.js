@@ -9,8 +9,17 @@ handler.post(async (req, res) => {
   try {
     await dbConnect();
 
-    const { formId, formData, formName, createdBy, formType, status } =
-      req.body;
+    const {
+      formId,
+      formData,
+      formName,
+      createdBy,
+      formType,
+      status,
+      minimumWeightage,
+      maximumWeightage,
+      averageWeightage,
+    } = req.body;
 
     const form = await Form.findOne({ formId: formId });
     if (form) {
@@ -23,6 +32,9 @@ handler.post(async (req, res) => {
       createdBy,
       formType,
       status,
+      minimumWeightage,
+      maximumWeightage,
+      averageWeightage,
       form: formData,
     });
     await newForm.save();

@@ -57,7 +57,9 @@ const FormBody = () => {
   const [radioIndex, setRadioIndex] = useState(0);
   const [formStatus, setFormStatus] = useState(true);
   const [weightIndex, setWeightIndex] = useState(0);
-  const [descending, setDescending] = useState(null);
+  const [minimumWeightage, setMinimumWeightage] = useState(0);
+  const [maximumWeightage, setMaximumWeightage] = useState(0);
+  const [averageWeightage, setAverageWeightage] = useState(0);
 
   const createdBy = "admin";
   const router = useRouter();
@@ -531,11 +533,26 @@ const FormBody = () => {
 
   // ? form submit
   const handleSubmit = async () => {
+    const filteredData = formData.filter((element) =>
+      element.inputType.includes("radio")
+    );
+
+    let lastIndex = filteredData[0].options.length - 1;
+
+    setMinimumWeightage(filteredData[0].options[0].weightage);
+
+    setMaximumWeightage(filteredData[0].options[lastIndex].weightage);
+
+    const averageWeightage = minimumWeightage + maximumWeightage / 2;
+
     const res = await axios.post("/api/form", {
       formName,
       formData,
       formId,
       formType,
+      minimumWeightage,
+      maximumWeightage,
+      averageWeightage,
       status: formStatus,
       createdBy,
     });

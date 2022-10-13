@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [tableData, setTableData] = useState([]);
   const [gridApi, setGridApi] = useState();
   const router = useRouter();
+  const [feedbackNumber, setFeedbackNumber] = useState(0);
 
   const refreshData = () => {
     router.replace(router.asPath);
@@ -128,7 +129,21 @@ const Dashboard = () => {
       headerName: "Score",
 
       field: "overallScore",
+      cellRenderer: (data) => {
+        return (
+          <>
+            {data.value < data.data.averageWeightage && data.value !== 0 ? (
+              <h1 className="text-red-500">
+                {data.value == 0 ? "" : data.value}
+              </h1>
+            ) : (
+              <h1>{data.value == 0 ? "" : data.value}</h1>
+            )}
+          </>
+        );
+      },
     },
+
     {
       headerName: "Share",
       field: "formUrl",
@@ -188,6 +203,8 @@ const Dashboard = () => {
     fetch("/api/formFeedback")
       .then((resp) => resp.json())
       .then((resp) => params.api.applyTransaction({ add: resp }));
+
+    setFeedbackNumber(params.api.getDisplayedRowCount());
   };
 
   // useEffect(() => {
@@ -240,7 +257,7 @@ const Dashboard = () => {
 
         <div className="flex items-center   justify-between mb-3">
           <h1 className="text-sm text-gray-500 font-semibold ">
-            {gridApi?.api.getDisplayedRowCount()} feedback found
+            {feedbackNumber} feedback found
           </h1>
 
           <div className="flex space-x-5 ">

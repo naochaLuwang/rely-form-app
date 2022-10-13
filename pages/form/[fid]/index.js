@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import toast, { Toaster } from "react-hot-toast";
-import FormSuccess from "../../../components/FormSuccess";
+import Success from "../../success";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
 
@@ -10,6 +10,9 @@ import Loader from "../../../components/Loader";
 const FormFeedbackPage = ({ formFeedback }) => {
   const [formData, setFormData] = useState(formFeedback);
   const [newForm, setNewForm] = useState(formData);
+  const [minimumScore, setMinimumScore] = useState(0);
+  const [maximumScore, setMaximumScore] = useState(0);
+  const [averageScore, setAverageScore] = useState(0);
 
   const formDatas = newForm?.form;
   const router = useRouter();
@@ -46,7 +49,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
     const filteredData = newFormData.form.filter((element) =>
       element.inputType.includes("radio")
     );
-    console.log(filteredData);
+    // console.log(filteredData[0].options[0].weightage);
 
     filteredData.map((element) => {
       overallScore += element.weightage;
@@ -80,19 +83,21 @@ const FormFeedbackPage = ({ formFeedback }) => {
 
       {/* <FormHeader /> */}
       {formData?.isSubmitted ? (
-        <FormSuccess />
+        <Success />
       ) : (
-        <div className="max-w-screen bg-slate-100  py-10 px-10 hidden lg:block">
-          <div className="max-w-4xl mx-auto">
+        <div className="max-w-screen h-auto bg-slate-100  lg:py-10 py-2 lg:px-10 px-2  lg:block">
+          <div className="max-w-screen lg:max-w-4xl mx-auto">
             <div className="w-full h-2 bg-blue-500 rounded-t-lg"></div>
-            <div className="w-full border px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">
-              <h1 className="text-4xl font-bold mb-10">{formData?.formName}</h1>
+            <div className="w-full border px-8 lg:px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">
+              <h1 className="text-lg lg:text-4xl font-bold mb-10">
+                {formData?.formName}
+              </h1>
               {/* <p className="absolute top-16">
                 Signed in as {session?.user?.email}
               </p> */}
-              <div className="flex items-center justify-between pr-10 -mt-5">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:pr-10 -mt-5">
                 <div className="flex flex-col">
-                  <h1 className="tracking-wider">
+                  <h1 className="lg:tracking-wider text-sm">
                     <span className="font-semibold">Patient Name :</span>{" "}
                     {newForm?.patient.name}
                   </h1>
@@ -137,11 +142,11 @@ const FormFeedbackPage = ({ formFeedback }) => {
                   return (
                     <div
                       key={i}
-                      className="flex flex-col space-y-2 mb-5  bg-white px-10 py-4 rounded-lg shadow-sm"
+                      className="flex flex-col space-y-2 lg:mb-5 mb-2  bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       {!formData.form[i].style.label && (
                         <div className="flex ">
-                          <h1 className="text-lg font-bold">
+                          <h1 className="lg:text-lg text-sm font-bold">
                             <span>
                               {i + 1}
                               {". "}
@@ -260,11 +265,11 @@ const FormFeedbackPage = ({ formFeedback }) => {
                   return (
                     <div
                       key={i}
-                      className="flex flex-col space-y-2 mb-5 border bg-white px-10 py-4 rounded-lg shadow-sm"
+                      className="flex flex-col space-y-2 lg:mb-5 mb-2 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       <div className="flex ">
-                        <h1 className="text-lg font-bold">
-                          <span>{i} .</span>
+                        <h1 className="lg:text-lg text-base font-bold">
+                          <span className="lg:text-lg text-base">{i} .</span>
                           {formData.form[i].text}
                         </h1>
                         {formData.form[i].required && (
@@ -285,7 +290,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                               }
                               onChange={(e) => handleChange(e, i, j)}
                             />
-                            <p className="text-base font-medium">
+                            <p className="lg:text-base text-sm font-medium">
                               {option.optionText}
                             </p>
                           </div>
@@ -298,10 +303,10 @@ const FormFeedbackPage = ({ formFeedback }) => {
                   return (
                     <div
                       key={i}
-                      className="flex flex-col space-y-2 mb-5 border bg-white px-10 py-4 rounded-lg shadow-sm"
+                      className="flex flex-col space-y-2 lg:mb-5 mb-2 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       <div className="flex ">
-                        <h1 className="text-lg font-bold">
+                        <h1 className="lg:text-lg text-base font-bold">
                           <span>
                             {i}
                             {". "}
@@ -325,7 +330,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                               }
                               onChange={() => handleCheckBox(i, j)}
                             />
-                            <p className="text-base font-medium">
+                            <p className="lg:text-base text-sm font-medium">
                               {option.optionText}
                             </p>
                           </div>
@@ -387,7 +392,7 @@ export async function getServerSideProps(context) {
   console.log(query);
 
   const formFeedback = await fetch(
-    `https://rely-form.herokuapp.com/api/formFeedback/${fid}/${decryptedId}`
+    `${process.env.HOST_URL}/api/formFeedback/${fid}/${decryptedId}`
   );
   const data = await formFeedback.json();
 
