@@ -385,9 +385,9 @@ export default FormFeedbackPage;
 export async function getServerSideProps(context) {
   const { params, query } = context;
   const { fid } = params;
-  const { regId } = query;
+  const { regID } = query;
 
-  const decryptedId = Buffer.from(regId, "base64").toString("binary");
+  const decryptedId = Buffer.from(regID, "base64").toString("binary");
 
   console.log(query);
 
