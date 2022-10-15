@@ -204,9 +204,14 @@ const Dashboard = () => {
     setGridApi(params);
     fetch("/api/formFeedback")
       .then((resp) => resp.json())
-      .then((resp) => params.api.applyTransaction({ add: resp }));
+      .then(
+        (resp) => (
+          params.api.applyTransaction({ add: resp }),
+          setFeedbackNumber(resp.length)
+        )
+      );
 
-    setFeedbackNumber(params.api.getDisplayedRowCount());
+    //  setFeedbackNumber(params.api.getDisplayedRowCount());
   };
 
   // useEffect(() => {

@@ -141,10 +141,10 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     <span className="font-semibold">IPD Number :</span>{" "}
                     {newForm?.patient.iPDNumber}
                   </h1>
-                  <h1 className="tracking-wider">
+                  {/* <h1 className="tracking-wider">
                     <span className="font-semibold">Reg Id :</span>{" "}
                     {newForm?.patient.regId}
-                  </h1>
+                  </h1> */}
                   <h1 className="tracking-wider">
                     <span className="font-semibold">UHID :</span>{" "}
                     {newForm?.patient.uhid}
