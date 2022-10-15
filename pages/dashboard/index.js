@@ -150,7 +150,9 @@ const Dashboard = () => {
       cellRenderer: (data) => {
         return (
           <Link href={data.data.formUrl}>
-            <a>Link</a>
+            <a target="_blank" rel="noopener noreferrer">
+              Link
+            </a>
           </Link>
         );
       },

@@ -28,14 +28,17 @@ const Sidebar = () => {
       </div>
 
       <div className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2">
-        <div className="relative w-7 h-7 flex-shrink-0">
-          <Image
-            src={logo}
-            alt="menu icons"
-            layout="fill"
-            objectFit="contain"
-          />
-        </div>
+        <Link href="/">
+          <div className="relative w-7 h-7 flex-shrink-0">
+            <Image
+              src={logo}
+              alt="menu icons"
+              layout="fill"
+              objectFit="contain"
+            />
+          </div>
+        </Link>
+
         <span className={`${!open && "hidden"} font-bold text-lg `}>
           Rely Form
         </span>
