@@ -1852,32 +1852,6 @@ const FormBody = () => {
                                       }
                                     />
 
-                                    {/* <p className="text-lg font-bold text-gray-500">
-                                      Weightage
-                                    </p>
-                                    <div className="flex items-center space-x-2 mt-2 w-full mb-5">
-                                      <Button
-                                        variant="outlined"
-                                        className={`${
-                                          formData[i].style.weightsorter &&
-                                          "border-gray-500 text-gray-500"
-                                        } w-40 font-semibold flex-1 h-12 border-2`}
-                                        onClick={() => sortWeight(i, false)}
-                                      >
-                                        Ascending
-                                      </Button>
-                                      <Button
-                                        variant="outlined"
-                                        className={`${
-                                          !formData[i].style.weightsorter &&
-                                          "border-gray-500 text-gray-500 "
-                                        } w-40 font-semibold flex-1 h-12 border-2`}
-                                        onClick={() => sortWeight(i, true)}
-                                      >
-                                        Descending
-                                      </Button>
-                                    </div> */}
-
                                     <p className="text-lg font-bold text-gray-500">
                                       Options
                                     </p>
