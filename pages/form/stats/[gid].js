@@ -30,7 +30,7 @@ const GraphStats = ({ formFeedback }) => {
       },
       title: {
         display: true,
-        text: `${formFeedback[0].formName} Bar Chart`,
+        text: `${formFeedback[0]?.formName} Bar Chart`,
         font: { size: 24, color: "red" },
       },
     },
@@ -39,8 +39,8 @@ const GraphStats = ({ formFeedback }) => {
 
   const getLables = () => {
     for (
-      let i = formFeedback[0].minimumWeightage;
-      i <= formFeedback[0].maximumWeightage;
+      let i = formFeedback[0]?.minimumWeightage;
+      i <= formFeedback[0]?.maximumWeightage;
       i++
     ) {
       labels.push(i);
@@ -55,7 +55,7 @@ const GraphStats = ({ formFeedback }) => {
 
   const datas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  formFeedback.map((form, i) => {
+  formFeedback?.map((form, i) => {
     switch (form.overallScore) {
       case 1:
         datas[i] += 1;
