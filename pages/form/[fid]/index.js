@@ -4,6 +4,8 @@ import toast, { Toaster } from "react-hot-toast";
 import Success from "../../success";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
+import FormFeedback from "../../../models/FormFeedback";
+import dbConnect from "../../../utils/db";
 
 import Loader from "../../../components/Loader";
 
@@ -407,16 +409,25 @@ export async function getServerSideProps(context) {
 
   console.log(query);
 
-  const formFeedback = await fetch(
-    `${process.env.HOST_URL}/api/formFeedback/${fid}/${decryptedId}`
-  );
-  const data = await formFeedback.json();
+  // const formFeedback = await fetch(
+  //   `${process.env.HOST_URL}/api/formFeedback/${fid}/${decryptedId}`
+  // );
+  // const data = await formFeedback.json();
 
-  console.log(data);
+  // console.log(data);
+
+  await dbConnect();
+
+  const response = await FormFeedback.findOne({
+    submittedBy: decryptedId,
+    formId: fid,
+  });
+
+  console.log(response);
 
   return {
     props: {
-      formFeedback: JSON.parse(JSON.stringify(data)),
+      formFeedback: JSON.parse(JSON.stringify(response)),
     },
   };
 }
