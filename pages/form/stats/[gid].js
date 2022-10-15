@@ -101,14 +101,18 @@ const GraphStats = ({ formFeedback }) => {
       {
         label: "Submitted",
         data: datas,
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
+        backgroundColor: "rgb(54, 162, 235 , 0.5)",
+        borderColor: "rgb(54,162,235)",
+        borderWidth: 2,
+        borderRadius: 10,
+        borderSkipped: false,
       },
     ],
   };
 
   console.log(formFeedback);
   return (
-    <div className="max-w-6xl mx-auto mt-10 h-screen">
+    <div className="max-w-6xl mx-auto mt-14 h-full">
       <Bar options={options} data={data} />
     </div>
   );
