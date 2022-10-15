@@ -29,7 +29,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
   const handleCheckBox = (i, j) => {
     const newFormData = { ...newForm };
     newFormData.form[i].options[j].isChecked =
-      newFormData.form[i].options[j].isChecked;
+      !newFormData.form[i].options[j].isChecked;
     setNewForm(newFormData);
     console.log(newForm);
   };
@@ -49,7 +49,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
     const filteredData = newFormData.form.filter((element) =>
       element.inputType.includes("radio")
     );
-    // console.log(filteredData[0].options[0].weightage);
+    // console.log(filteredData);
 
     filteredData.map((element) => {
       overallScore += element.weightage;
@@ -57,6 +57,21 @@ const FormFeedbackPage = ({ formFeedback }) => {
     });
 
     const scoreWeightage = Math.round(overallScore / filteredData.length);
+
+    const requiredFields = newFormData.form.filter(
+      (element) => element.required
+    );
+
+    console.log(requiredFields);
+
+    const filledFields = newFormData.form.filter(
+      (element) => element.required && element.ansText !== ""
+    );
+    console.log(filledFields);
+
+    if (requiredFields.length !== filledFields.length) {
+      return alert("Please fill all the required fields *");
+    }
 
     const res = await axios.put(`/api/formFeedback/${newForm.patient.regId}`, {
       isSubmitted: true,
@@ -284,6 +299,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                             <input
                               type={formData.form[i].inputType}
                               value={option.optionText}
+                              required={formData.form[i].required}
                               checked={
                                 newForm.form[i].ansText === option.optionText &&
                                 newForm.form[i].weightage === option.weightage
@@ -385,9 +401,9 @@ export default FormFeedbackPage;
 export async function getServerSideProps(context) {
   const { params, query } = context;
   const { fid } = params;
-  const { regID } = query;
+  const { regId } = query;
 
-  const decryptedId = Buffer.from(regID, "base64").toString("binary");
+  const decryptedId = Buffer.from(regId, "base64").toString("binary");
 
   console.log(query);
 

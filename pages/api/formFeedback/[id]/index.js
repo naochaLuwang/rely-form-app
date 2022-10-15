@@ -31,7 +31,9 @@ handler.get(async (req, res) => {
     const formFeedback = await FormFeedback.find({
       formId: req.query.id,
     });
-    await res.json(formFeedback);
+    // await res.json(formFeedback);
+    const response = await FormFeedback.json();
+    return res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -99,12 +99,22 @@ const FormBody = () => {
   };
 
   const handleClickOpen = () => {
+    const filteredData = formData.filter((element) =>
+      element.inputType.includes("radio")
+    );
+
+    let lastIndex = filteredData[0].options.length - 1;
+
+    setMinimumWeightage(filteredData[0].options[0].weightage);
+
+    setMaximumWeightage(filteredData[0].options[lastIndex].weightage);
+
+    setAverageWeightage((minimumWeightage + maximumWeightage) / 2);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setDescending(10);
   };
 
   const newName = () => {
@@ -533,18 +543,6 @@ const FormBody = () => {
 
   // ? form submit
   const handleSubmit = async () => {
-    const filteredData = formData.filter((element) =>
-      element.inputType.includes("radio")
-    );
-
-    let lastIndex = filteredData[0].options.length - 1;
-
-    setMinimumWeightage(filteredData[0].options[0].weightage);
-
-    setMaximumWeightage(filteredData[0].options[lastIndex].weightage);
-
-    const averageWeightage = minimumWeightage + maximumWeightage / 2;
-
     const res = await axios.post("/api/form", {
       formName,
       formData,
@@ -2370,6 +2368,33 @@ const FormBody = () => {
                       </Select>
                     </FormControl>
                   </Box>
+
+                  <div className="flex">
+                    <div>
+                      <label htmlFor="min">Minimum Weightage</label>
+                      <input
+                        type="text"
+                        value={minimumWeightage}
+                        onChange={(e) => setMinimumWeightage(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="min">Average Weightage</label>
+                      <input
+                        type="text"
+                        value={averageWeightage}
+                        onChange={(e) => setAverageWeightage(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="min">Maximum Weightage</label>
+                      <input
+                        type="text"
+                        value={maximumWeightage}
+                        onChange={(e) => setMaximumWeightage(e.target.value)}
+                      />
+                    </div>
+                  </div>
 
                   {formData.map((form, i) => {
                     switch (form.inputType) {

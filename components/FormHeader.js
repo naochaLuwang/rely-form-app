@@ -30,11 +30,11 @@ const FormHeader = ({ print }) => {
     <nav className="bg-white flex items-center w-full py-2 justify-between  shadow-md sticky top-0 z-50">
       <div className="flex items-center space-x-2">
         <div key={"left"} className="relative max-w-4xl h-10 ml-10 ">
-          <IconButton onClick={toggleDrawer("left", true)}>
+          {/* <IconButton onClick={toggleDrawer("left", true)}>
             <Menu />
-          </IconButton>
+          </IconButton> */}
 
-          <Drawer
+          {/* <Drawer
             anchor={"left"}
             open={state["left"]}
             onClose={toggleDrawer("left", false)}
@@ -42,7 +42,7 @@ const FormHeader = ({ print }) => {
             <div className="w-96 h-screen py-8  flex flex-col  px-8">
               <div className="h-40"></div>
             </div>
-          </Drawer>
+          </Drawer> */}
         </div>
 
         <div className="flex items-end">
@@ -66,10 +66,10 @@ const FormHeader = ({ print }) => {
         </div>
       </div>
 
-      <p className=" rounded px-6 mr-20 cursor-pointer py-2.5 overflow-hidden group bg-blue-500 relative hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 transition-all ease-out duration-300">
+      {/* <p className=" rounded px-6 mr-20 cursor-pointer py-2.5 overflow-hidden group bg-blue-500 relative hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-blue-400 transition-all ease-out duration-300">
         <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
         <span className="relative font-bold">Sign In</span>
-      </p>
+      </p> */}
     </nav>
   );
 };
