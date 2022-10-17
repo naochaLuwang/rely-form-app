@@ -514,7 +514,7 @@ const FormBody = () => {
     let optionsQuestion = [...formData];
     if (optionsQuestion[i].options.length < 5) {
       optionsQuestion[i].options.push({
-        optionText: "",
+        optionText: "Option " + optionsQuestion[i].options.length,
         isChecked: false,
       });
       setFormData(optionsQuestion);
@@ -1862,16 +1862,13 @@ const FormBody = () => {
                                     <p className="text-lg mt-5 font-bold text-gray-500">
                                       Question Text
                                     </p>
-                                    <textarea
+                                    <input
                                       className="form-input w-96 mt-2 mb-5  focus:ring-0 "
                                       type="text"
-                                      placeholder="Enter question text"
-                                      value={formData[radioIndex]?.text}
+                                      placeholder="Enter text"
+                                      value={formData[i].text}
                                       onChange={(e) =>
-                                        changeRadioQuestion(
-                                          e.target.value,
-                                          radioIndex
-                                        )
+                                        changeRadioQuestion(e.target.value, i)
                                       }
                                     />
 
