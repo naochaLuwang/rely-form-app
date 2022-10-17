@@ -7,7 +7,7 @@ const handler = nc();
 handler.get(async (req, res) => {
   try {
     await dbConnect();
-    const response = await FormFeedback.find().sort({ createdAt: -1 });
+    const response = await FormFeedback.find();
     res.json(response);
   } catch (error) {
     res.status(500).json({ message: error.message });
