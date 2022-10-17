@@ -1,23 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import toast, { Toaster } from "react-hot-toast";
+// import toast, { Toaster } from "react-hot-toast";
 import Success from "../../success";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
 import FormFeedback from "../../../models/FormFeedback";
 import dbConnect from "../../../utils/db";
+import Router from "next/router";
 
 import Loader from "../../../components/Loader";
 
 const FormFeedbackPage = ({ formFeedback }) => {
   const [formData, setFormData] = useState(formFeedback);
   const [newForm, setNewForm] = useState(formData);
-  const [minimumScore, setMinimumScore] = useState(0);
-  const [maximumScore, setMaximumScore] = useState(0);
-  const [averageScore, setAverageScore] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [unfilled, setUnfilled] = useState(false);
+
+  useEffect(() => {
+    const handleStart = () => {
+      setLoading(true);
+    };
+    let handleComplete = () => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    };
+    Router.events.on("routeChangeStart", handleStart);
+    Router.events.on("routeChangeComplete", handleComplete);
+    Router.events.on("routeChangeError", handleComplete);
+  }, []);
+  const router = useRouter();
 
   const formDatas = newForm?.form;
-  const router = useRouter();
 
   const handleChange = (e, i, j) => {
     const newFormData = { ...newForm };
@@ -72,8 +86,20 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(filledFields);
 
     if (requiredFields.length !== filledFields.length) {
-      return alert("Please fill all the required fields *");
+      // return alert("All * fields are required");
+      // const unfilledFields = requiredFields.filter(
+      //   (element) => element.required && element.ansText == ""
+      // );
+      // console.log(unfilledFields);
+      // return unfilledFields;
+
+      setUnfilled(true);
+      return;
+    } else {
+      setUnfilled(false);
     }
+
+    // setLoading(true);
 
     const res = await axios.put(`/api/formFeedback/${newForm.patient.regId}`, {
       isSubmitted: true,
@@ -81,9 +107,10 @@ const FormFeedbackPage = ({ formFeedback }) => {
       overallScore: scoreWeightage,
       formDatas,
     });
-    toast("Form saved successfully", { type: "success" });
+    // toast("Form saved successfully", { type: "success" });
 
     router.push("/success");
+    // setLoading(false);
   };
 
   const changeText = (text, i) => {
@@ -94,9 +121,12 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(newText.form[i].text);
   };
 
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <>
-      <Toaster />
+      {/* <Toaster /> */}
 
       {/* <FormHeader /> */}
       {formData?.isSubmitted ? (
@@ -285,7 +315,15 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       className="flex flex-col space-y-2 lg:mb-5 mb-2 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       <div className="flex ">
-                        <h1 className="lg:text-lg text-base font-bold">
+                        <h1
+                          className={
+                            unfilled &&
+                            formData.form[i].required &&
+                            formData.form[i].ansText == ""
+                              ? "lg:text-lg text-red-500 text-base font-bold"
+                              : "lg:text-lg text-base font-bold"
+                          }
+                        >
                           <span className="lg:text-lg text-base">{i} .</span>
                           {formData.form[i].text}
                         </h1>
@@ -376,6 +414,12 @@ const FormFeedbackPage = ({ formFeedback }) => {
                   <h1>Sorry</h1>;
               }
             })}
+
+            {unfilled && (
+              <h1 className="text-large font-bold text-red-500">
+                Please fill all the required fields ( * )
+              </h1>
+            )}
 
             <div className="flex items-center justify-center mt-4 lg:justify-start mb-4">
               <p
