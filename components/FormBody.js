@@ -492,7 +492,7 @@ const FormBody = () => {
     setFormData([
       ...formData,
       {
-        text: "Enter question text",
+        text: "",
         inputType: "checkbox",
 
         questionNo: radioIndex,
@@ -2523,7 +2523,10 @@ const FormBody = () => {
                       case "checkbox":
                         return (
                           <div className="flex flex-col space-y-3">
-                            <h1 key={i}>{formData[i].text}</h1>
+                            <h1 key={i} className="font-semibold text-lg">
+                              {i + 1} {"."}
+                              {formData[i].text}
+                            </h1>
                             {form.options.map((option, j) => {
                               return (
                                 <div
