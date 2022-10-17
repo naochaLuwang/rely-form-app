@@ -70,7 +70,7 @@ const FormBody = () => {
   const [multilineOpen, setMultilineOpen] = React.useState(false);
   const [radioOpen, setRadioOpen] = React.useState(false);
   const [checkboxOpen, setCheckboxOpen] = React.useState(false);
-
+  const [questionNumber, setQuestionNumber] = useState(1);
   const formEndRef = useRef(null);
 
   useEffect(() => {
@@ -1377,13 +1377,13 @@ const FormBody = () => {
                               onClick={() => handleRadioDialog(i)}
                             >
                               <div className="flex items-center space-x-1">
-                                {formData[i].questionNo === 0 ? (
+                                {/* {formData[i].questionNo === 0 ? (
                                   ""
                                 ) : (
                                   <p className="font-bold">
                                     {formData[i].questionNo}.
                                   </p>
-                                )}
+                                )} */}
                                 <input
                                   type="text"
                                   className={`
@@ -1483,7 +1483,7 @@ const FormBody = () => {
                                       </IconButton>
                                     </div>
 
-                                    <p className="text-lg mt-5 font-bold text-gray-500">
+                                    {/* <p className="text-lg mt-5 font-bold text-gray-500">
                                       Question No
                                     </p>
                                     <input
@@ -1497,7 +1497,7 @@ const FormBody = () => {
                                           radioIndex
                                         );
                                       }}
-                                    />
+                                    /> */}
 
                                     <p className="text-lg mt-5 font-bold text-gray-500">
                                       Question Text
@@ -1546,6 +1546,7 @@ const FormBody = () => {
                                               type="number"
                                               className="text_input focus:ring-0 w-full h-fit text-center"
                                               placeholder="option"
+                                              disabled
                                               value={
                                                 formData[radioIndex]?.options[j]
                                                   .weightage
@@ -1731,13 +1732,13 @@ const FormBody = () => {
                               onClick={() => setCheckboxOpen(true)}
                             >
                               <div className="flex items-center space-x-1">
-                                {formData[i].questionNo === 0 ? (
+                                {/* {formData[i].questionNo === 0 ? (
                                   ""
                                 ) : (
                                   <p className="font-bold">
                                     {formData[i].questionNo}.
                                   </p>
-                                )}
+                                )} */}
                                 <input
                                   type="text"
                                   className={`
