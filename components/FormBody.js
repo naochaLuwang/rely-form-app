@@ -514,7 +514,7 @@ const FormBody = () => {
     let optionsQuestion = [...formData];
     if (optionsQuestion[i].options.length < 5) {
       optionsQuestion[i].options.push({
-        optionText: "Option " + optionsQuestion[i].options.length,
+        optionText: "",
         isChecked: false,
       });
       setFormData(optionsQuestion);
