@@ -109,7 +109,9 @@ const FormBody = () => {
 
     setMaximumWeightage(filteredData[0].options[lastIndex].weightage);
 
-    setAverageWeightage((minimumWeightage + maximumWeightage) / 2);
+    let average = (maximumWeightage + minimumWeightage) / 2;
+
+    setAverageWeightage(average);
     setOpen(true);
   };
 
@@ -497,7 +499,7 @@ const FormBody = () => {
 
         ans: [],
         required: true,
-        options: [{ optionText: "Enter option text", isChecked: false }],
+        options: [{ optionText: "", isChecked: false }],
         style: {
           size: "lg",
           weight: false,
@@ -512,7 +514,7 @@ const FormBody = () => {
     let optionsQuestion = [...formData];
     if (optionsQuestion[i].options.length < 5) {
       optionsQuestion[i].options.push({
-        optionText: "Option " + optionsQuestion[i].options.length,
+        optionText: "",
         isChecked: false,
       });
       setFormData(optionsQuestion);
@@ -1627,6 +1629,23 @@ const FormBody = () => {
                                       ""
                                     )}
 
+                                    <p className="mt-5 font-bold text-lg text-gray-500">
+                                      Required Field
+                                    </p>
+
+                                    <FormControlLabel
+                                      control={
+                                        <Switch
+                                          checked={formData[i].required}
+                                          onChange={() => changeRequired(i)}
+                                          inputprops={{
+                                            "aria-label": "controlled",
+                                          }}
+                                        />
+                                      }
+                                      label="Required"
+                                    />
+
                                     <p className="mt-5 text-lg font-bold text-gray-500">
                                       Text Style
                                     </p>
@@ -1782,7 +1801,7 @@ const FormBody = () => {
                                   <div className="flex items-center space-x-2">
                                     <input
                                       type="text"
-                                      className="text_input bg-transparent w-96 focus:ring-0"
+                                      className="text_input bg-transparent w-96 border-0 focus:ring-0"
                                       placeholder="option"
                                       value={form.options[j].optionText}
                                       // onChange={(e) => {
@@ -1843,13 +1862,16 @@ const FormBody = () => {
                                     <p className="text-lg mt-5 font-bold text-gray-500">
                                       Question Text
                                     </p>
-                                    <input
+                                    <textarea
                                       className="form-input w-96 mt-2 mb-5  focus:ring-0 "
                                       type="text"
-                                      placeholder="Enter text"
-                                      value={formData[i].text}
+                                      placeholder="Enter question text"
+                                      value={formData[radioIndex]?.text}
                                       onChange={(e) =>
-                                        changeRadioQuestion(e.target.value, i)
+                                        changeRadioQuestion(
+                                          e.target.value,
+                                          radioIndex
+                                        )
                                       }
                                     />
 
@@ -1897,7 +1919,7 @@ const FormBody = () => {
                                       </div>
                                     ))}
 
-                                    {form.options.length < 10 ? (
+                                    {form.options.length < 5 ? (
                                       <div className="flex items-center mt-5">
                                         <FormControlLabel
                                           disabled
@@ -2197,6 +2219,7 @@ const FormBody = () => {
               onClick={() => newText()}
               className="w-32 py-2 px-4 shadow-xl text-gray-600 text-xs font-bold border-gray-500"
               variant="outlined"
+              disabled
             >
               <div className="flex items-center">
                 <BsInputCursor className="mr-2 text-2xl" />
@@ -2207,6 +2230,7 @@ const FormBody = () => {
             <Button
               className="w-32 py-3 px-4 shadow-xl text-gray-600 text-xs font-bold border-gray-500"
               variant="outlined"
+              disabled
               onClick={() => newTextNumeric()}
             >
               <div className="flex items-center">
@@ -2219,6 +2243,7 @@ const FormBody = () => {
               className="w-32 py-3 shadow-xl px-4 text-gray-600 text-xs font-bold border-gray-500"
               variant="outlined"
               onClick={() => newMultiline()}
+              disabled
             >
               <div className="flex items-center">
                 <BsTextareaResize className="mr-2 text-2xl" />
@@ -2252,6 +2277,7 @@ const FormBody = () => {
               onClick={() => newRange()}
               className="w-32 py-3 px-4 shadow-xl text-gray-600 font-bold border-gray-500"
               variant="outlined"
+              disabled
             >
               Range
             </Button>
@@ -2260,6 +2286,7 @@ const FormBody = () => {
               onClick={() => newName()}
               className="w-32 py-3 px-4 shadow-xl text-gray-600 font-bold border-gray-500"
               variant="outlined"
+              disabled
             >
               <div className="flex items-center">
                 <BsPersonCircle className="text-2xl mr-2" />
@@ -2271,6 +2298,7 @@ const FormBody = () => {
               onClick={() => newEmail()}
               className="w-32 py-3 px-4 shadow-xl text-gray-600 font-bold border-gray-500"
               variant="outlined"
+              disabled
             >
               <div className="flex items-center">
                 <HiMail className="text-2xl mr-2" />
