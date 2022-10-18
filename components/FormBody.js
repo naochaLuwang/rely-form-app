@@ -9,6 +9,8 @@ import {
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
 
+import { BsPencilSquare } from "react-icons/bs";
+
 import Switch from "@mui/material/Switch";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -52,6 +54,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const FormBody = () => {
   const [formId, setFormId] = useState("");
   const [formName, setFormName] = useState("");
+  const [formDescription, setFormDescription] = useState("");
   const [formData, setFormData] = useState([]);
   const [formType, setFormType] = useState("IPD");
   const [radioIndex, setRadioIndex] = useState(0);
@@ -70,7 +73,7 @@ const FormBody = () => {
   const [multilineOpen, setMultilineOpen] = React.useState(false);
   const [radioOpen, setRadioOpen] = React.useState(false);
   const [checkboxOpen, setCheckboxOpen] = React.useState(false);
-  const [questionNumber, setQuestionNumber] = useState(1);
+
   const formEndRef = useRef(null);
 
   useEffect(() => {
@@ -105,11 +108,14 @@ const FormBody = () => {
 
     let lastIndex = filteredData[0].options.length - 1;
 
-    setMinimumWeightage(filteredData[0].options[0].weightage);
+    let minWeight = filteredData[0].options[0].weightage;
+    let maxWeight = filteredData[0].options[lastIndex].weightage;
 
-    setMaximumWeightage(filteredData[0].options[lastIndex].weightage);
+    setMinimumWeightage(minWeight);
 
-    let average = (maximumWeightage + minimumWeightage) / 2;
+    setMaximumWeightage(maxWeight);
+
+    let average = (minWeight + maxWeight) / 2;
 
     setAverageWeightage(average);
     setOpen(true);
@@ -318,6 +324,7 @@ const FormBody = () => {
         },
       },
     ]);
+
     console.log(formData);
   };
 
@@ -1379,13 +1386,10 @@ const FormBody = () => {
                               onClick={() => handleRadioDialog(i)}
                             >
                               <div className="flex items-center space-x-1">
-                                {/* {formData[i].questionNo === 0 ? (
-                                  ""
-                                ) : (
-                                  <p className="font-bold">
-                                    {formData[i].questionNo}.
-                                  </p>
-                                )} */}
+                                {/* <p className="font-bold">
+                                  {formData[i].questionNo}.
+                                </p> */}
+
                                 <input
                                   type="text"
                                   className={`
@@ -1443,7 +1447,7 @@ const FormBody = () => {
                                 onClick={() => handleRadioDialog(i)}
                                 className="bg-gray-200 text-green-700"
                               >
-                                <Settings />
+                                <BsPencilSquare />
                               </IconButton>
                               <IconButton
                                 aria-label="delete"
@@ -1471,7 +1475,7 @@ const FormBody = () => {
                                   sx={{ width: "right" && 500 }}
                                   role="presentation"
                                 >
-                                  <div className="flex flex-col py-10 px-10">
+                                  <div className="flex flex-col py-10 px-10 rounded-md">
                                     <div className="flex items-center justify-between">
                                       <h1 className="text-3xl font-bold text-gray-700">
                                         Radio Properties
@@ -1501,13 +1505,13 @@ const FormBody = () => {
                                       }}
                                     /> */}
 
-                                    <p className="text-lg mt-5 font-bold text-gray-500">
-                                      Question Text
+                                    <p className="text-lg mt-5 font-medium text-gray-500">
+                                      Question
                                     </p>
                                     <textarea
-                                      className="form-input w-96 mt-2 mb-5  focus:ring-0 "
+                                      className="form-input w-96 mt-2 mb-5 rounded-md  shadow-sm focus:ring-gray-600  "
                                       type="text"
-                                      placeholder="Enter question text"
+                                      placeholder="Enter question "
                                       value={formData[radioIndex]?.text}
                                       onChange={(e) =>
                                         changeRadioQuestion(
@@ -1517,7 +1521,7 @@ const FormBody = () => {
                                       }
                                     />
 
-                                    <p className="text-lg font-bold text-gray-500">
+                                    <p className="text-lg font-medium text-gray-500">
                                       Options
                                     </p>
                                     {formData[radioIndex]?.options?.map(
@@ -1529,7 +1533,7 @@ const FormBody = () => {
                                           <div className="flex items-center space-x-2">
                                             <input
                                               type="text"
-                                              className="text_input focus:ring-0"
+                                              className="text-input rounded-md focus:ring-gray-600"
                                               placeholder="option"
                                               value={
                                                 formData[radioIndex]?.options[j]
@@ -1546,7 +1550,7 @@ const FormBody = () => {
 
                                             <input
                                               type="number"
-                                              className="text_input focus:ring-0 w-full h-fit text-center"
+                                              className="text-input rounded-md  focus:ring-0 w-full h-fit text-center"
                                               placeholder="option"
                                               disabled
                                               value={
@@ -1629,24 +1633,25 @@ const FormBody = () => {
                                       ""
                                     )}
 
-                                    <p className="mt-5 font-bold text-lg text-gray-500">
-                                      Required Field
-                                    </p>
+                                    <div className="flex items-center space-x-2 mt-5">
+                                      <p className="font-medium text-lg text-gray-500">
+                                        Required
+                                      </p>
 
-                                    <FormControlLabel
-                                      control={
-                                        <Switch
-                                          checked={formData[i].required}
-                                          onChange={() => changeRequired(i)}
-                                          inputprops={{
-                                            "aria-label": "controlled",
-                                          }}
-                                        />
-                                      }
-                                      label="Required"
-                                    />
+                                      <FormControlLabel
+                                        control={
+                                          <Switch
+                                            checked={formData[i].required}
+                                            onChange={() => changeRequired(i)}
+                                            inputprops={{
+                                              "aria-label": "controlled",
+                                            }}
+                                          />
+                                        }
+                                      />
+                                    </div>
 
-                                    <p className="mt-5 text-lg font-bold text-gray-500">
+                                    <p className="mt-5 text-lg font-medium text-gray-500">
                                       Text Style
                                     </p>
                                     <div className="flex w-96 space-x-2 mt-2">
@@ -1679,36 +1684,50 @@ const FormBody = () => {
                                       </div>
                                     </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Duplicate Field
-                                    </h1>
-                                    <div
-                                      onClick={() => {
-                                        duplicateRadio(radioIndex);
-                                        setRadioOpen(false);
-                                      }}
-                                      className="max-w-fit flex items-center shadow-lg rounded-md bg-green-500 text-white py-3 px-4 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <ContentCopyTwoTone />
-                                      <p className="text-lg font-black">
-                                        Duplicate
-                                      </p>
-                                    </div>
+                                    {/* <h1 className="text-lg font-bold mt-5 text-gray-500">
+                                      Duplicate
+                                    </h1> */}
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Delete Field
-                                    </h1>
-                                    <div
-                                      onClick={() => {
-                                        deleteComponent(radioIndex),
-                                          setTextOpen(false);
-                                      }}
-                                      className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-red-700 text-white px-6 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <p className="text-lg font-bold">
-                                        Delete
-                                      </p>
-                                      <DeleteForever />
+                                    {/* <h1 className="text-lg font-bold mt-5 text-gray-500">
+                                      Delete
+                                    </h1> */}
+
+                                    <div className="flex items-center mt-5 justify-between">
+                                      <div
+                                        onClick={() => {
+                                          duplicateRadio(radioIndex);
+                                          setRadioOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center shadow-lg rounded-md bg-white text-green-500 py-3 px-4 border border-green-500 cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <ContentCopyTwoTone />
+                                        <p className="text-base font-medium">
+                                          Duplicate
+                                        </p>
+                                      </div>
+                                      <div
+                                        onClick={() => {
+                                          deleteComponent(radioIndex),
+                                            setTextOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-white text-red-700 px-6 border border-red-700 cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium">
+                                          Delete
+                                        </p>
+                                        <DeleteForever />
+                                      </div>
+
+                                      <div
+                                        onClick={() => {
+                                          setRadioOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg text-white bg-blue-500 px-6 border  cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium px-4">
+                                          Save
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </Box>
@@ -2374,6 +2393,7 @@ const FormBody = () => {
                       <label htmlFor="min">Minimum Weightage</label>
                       <input
                         type="text"
+                        disabled
                         value={minimumWeightage}
                         onChange={(e) => setMinimumWeightage(e.target.value)}
                       />
@@ -2381,7 +2401,7 @@ const FormBody = () => {
                     <div>
                       <label htmlFor="min">Average Weightage</label>
                       <input
-                        type="text"
+                        type="number"
                         value={averageWeightage}
                         onChange={(e) => setAverageWeightage(e.target.value)}
                       />
@@ -2390,6 +2410,7 @@ const FormBody = () => {
                       <label htmlFor="min">Maximum Weightage</label>
                       <input
                         type="text"
+                        disabled
                         value={maximumWeightage}
                         onChange={(e) => setMaximumWeightage(e.target.value)}
                       />
@@ -2571,12 +2592,19 @@ const FormBody = () => {
           <div>
             <div className="bg-gray-100 w-[50rem] h-fit mt-20 ml-56 shadow-md  ">
               <div className="bg-blue-500 w-full h-3 rounded-t-md"></div>
-              <div className=" pt-10 pb-10 px-10 ">
+              <div className=" pt-10 pb-10 px-10">
                 <input
                   type="text"
-                  className="form-input bg-transparent text-4xl w-full border-0 outline-0 focus:ring-0 mb-10 focus:border-b-2"
+                  className="form-input bg-transparent text-4xl w-full border-0 outline-0 focus:ring-0  focus:border-b-2"
                   placeholder=" Title"
+                  required="true"
                   onChange={(e) => setFormName(e.target.value)}
+                />
+
+                <textarea
+                  className="form-input bg-transparent text-base font-semibold pl-5 w-full border-0 outline-0 focus:ring-0 mb-10 focus:border-b-2"
+                  placeholder=" Form Description"
+                  onChange={(e) => setFormDescription(e.target.value)}
                 />
 
                 {/* Droppable area */}

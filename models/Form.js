@@ -8,6 +8,9 @@ const formSchema = new mongoose.Schema(
     formName: {
       type: String,
     },
+    formDescription: {
+      type: String,
+    },
     createdBy: {
       type: String,
     },
@@ -26,7 +29,9 @@ const formSchema = new mongoose.Schema(
     averageWeightage: {
       type: Number,
     },
-
+    isDeleted: {
+      type: Boolean,
+    },
     form: [
       {
         label: String,

@@ -13,12 +13,14 @@ handler.post(async (req, res) => {
       formId,
       formData,
       formName,
+      formDescription,
       createdBy,
       formType,
       status,
       minimumWeightage,
       maximumWeightage,
       averageWeightage,
+      isDeleted,
     } = req.body;
 
     const form = await Form.findOne({ formId: formId });
@@ -29,12 +31,14 @@ handler.post(async (req, res) => {
     const newForm = await new Form({
       formId,
       formName,
+      formDescription,
       createdBy,
       formType,
       status,
       minimumWeightage,
       maximumWeightage,
       averageWeightage,
+      isDeleted,
       form: formData,
     });
     await newForm.save();
@@ -49,7 +53,7 @@ handler.post(async (req, res) => {
 handler.get(async (req, res) => {
   try {
     await dbConnect();
-    const data = await Form.find({}).sort({ createdAt: -1 });
+    const data = await Form.find().sort({ createdAt: -1 });
     res.json(data);
   } catch (error) {
     res.status(500).json({ message: error.message });

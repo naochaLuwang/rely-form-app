@@ -31,12 +31,13 @@ handler.get(async (req, res) => {
 
 handler.put(async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, isDeleted } = req.body;
     await dbConnect();
     const data = await Form.findOneAndUpdate(
       { formId: req.query.id },
       {
         status: status,
+        isDeleted: isDeleted,
       }
     );
 

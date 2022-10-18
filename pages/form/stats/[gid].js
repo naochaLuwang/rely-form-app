@@ -36,6 +36,7 @@ const GraphStats = ({ formFeedback }) => {
     },
   };
   const labels = [];
+  const datas = [];
 
   const getLables = () => {
     for (
@@ -44,16 +45,15 @@ const GraphStats = ({ formFeedback }) => {
       i++
     ) {
       labels.push(i);
+      datas.push(0);
     }
   };
 
   getLables();
 
-  formFeedback[0].form[0].options.map((text) => {
-    labels.push(text.optionText, -1);
-  });
-
-  const datas = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  // formFeedback[0].form[0].options.map((text) => {
+  //   labels.push(text.optionText, -1);
+  // });
 
   formFeedback.map((form, i) => {
     switch (form.overallScore) {

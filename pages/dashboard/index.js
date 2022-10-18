@@ -19,7 +19,8 @@ const Dashboard = () => {
   const [feedbackNumber, setFeedbackNumber] = useState(0);
 
   const refreshData = () => {
-    router.replace(router.asPath);
+    // onGridReady();
+    console.log("refresh");
   };
 
   console.log(tableData);
@@ -180,9 +181,16 @@ const Dashboard = () => {
       headerName: "Action",
 
       field: "_id",
-      cellClass: " font-bold text-blue-500 hover:underline",
       cellRenderer: (data) => {
-        return <Link href={`/dashboard/${data.data._id}`}>View</Link>;
+        return data.data.isSubmitted ? (
+          <Link href={`/dashboard/${data.data._id}`}>
+            <p className="font-bold text-blue-500 hover:underline cursor-pointer">
+              View
+            </p>
+          </Link>
+        ) : (
+          <h1 className="font-medium  text-gray-400">View</h1>
+        );
       },
     },
   ];

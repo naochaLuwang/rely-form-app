@@ -20,7 +20,7 @@ import axios from "axios";
 import Link from "next/link";
 import { ImStatsBars } from "react-icons/im";
 import dbConnect from "../utils/db";
-import FormHeader from "../components/FormHeader";
+import Head from "next/head";
 import Sidebar from "../components/Sidebar";
 const Home = ({ form }) => {
   const [tableData, setTableData] = useState(form);
@@ -162,7 +162,10 @@ const Home = ({ form }) => {
 
   const handleDelete = async () => {
     console.log(formId);
-    await axios.delete(`/api/form/${formId}`);
+    await axios.put(`/api/form/${formId}`, {
+      status: false,
+      isDeleted: true,
+    });
     getFormTemplates();
     handleClose();
   };
@@ -277,7 +280,7 @@ const Home = ({ form }) => {
                 </DialogContent>
                 <DialogActions>
                   <p
-                    onClick={handleClose}
+                    onClick={handleClose2}
                     className="inline-flex items-center cursor-pointer justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-blue-600 border border-blue-700 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     data-rounded="rounded-md"
                     data-primary="blue-600"
@@ -321,15 +324,15 @@ const Home = ({ form }) => {
         console.log(data.value);
         return (
           <>
-            <div className="  flex space-x-2">
+            <div className="  flex items-center justify-center">
               <div>
                 <Tooltip title="Edit" className="bg-blue">
-                  <IconButton className="bg-gray-200 h-8 w-8 hover:bg-gray-300">
-                    <FiEdit />
+                  <IconButton className="bg-gray-200  h-8 w-8 hover:bg-gray-300">
+                    <FiEdit className="text-blue-500" />
                   </IconButton>
                 </Tooltip>
               </div>
-              <div>
+              {/* <div>
                 <Tooltip title="Delete">
                   <IconButton
                     className="bg-gray-200 h-8 w-8 hover:bg-gray-300"
@@ -380,7 +383,7 @@ const Home = ({ form }) => {
                     </p>
                   </DialogActions>
                 </Dialog>
-              </div>
+              </div> */}
             </div>
           </>
         );
@@ -402,6 +405,10 @@ const Home = ({ form }) => {
   ];
   return (
     <>
+      <Head>
+        <title>Home | Rely Form</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <div className=" w-screen h-screen flex overflow-hidden ag-theme-alpine ag-style  ">
         <Sidebar />
         <div className="flex-1 h-[80%] p-7   ">
