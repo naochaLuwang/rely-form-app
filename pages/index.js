@@ -317,78 +317,78 @@ const Home = ({ form }) => {
         );
       },
     },
-    {
-      headerName: "Actions",
-      field: "formId",
-      cellRenderer: (data) => {
-        console.log(data.value);
-        return (
-          <>
-            <div className="  flex items-center justify-center">
-              <div>
-                <Tooltip title="Edit" className="bg-blue">
-                  <IconButton className="bg-gray-200  h-8 w-8 hover:bg-gray-300">
-                    <FiEdit className="text-blue-500" />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              {/* <div>
-                <Tooltip title="Delete">
-                  <IconButton
-                    className="bg-gray-200 h-8 w-8 hover:bg-gray-300"
-                    //
-                    onClick={() => {
-                      handleClickOpen();
-                      console.log(data.value);
-                      setFormId(data.value);
-                      setFormName(data.data.formName);
-                    }}
-                  >
-                    <DeleteIcon className="text-red-500" />
-                  </IconButton>
-                </Tooltip>
+    // {
+    //   headerName: "Actions",
+    //   field: "formId",
+    //   cellRenderer: (data) => {
+    //     console.log(data.value);
+    //     return (
+    //       <>
+    //         <div className="  flex items-center justify-center">
+    //           <div>
+    //             <Tooltip title="Edit" className="bg-blue">
+    //               <IconButton className="bg-gray-200  h-8 w-8 hover:bg-gray-300">
+    //                 <FiEdit className="text-blue-500" />
+    //               </IconButton>
+    //             </Tooltip>
+    //           </div>
+    //           <div>
+    //             <Tooltip title="Delete">
+    //               <IconButton
+    //                 className="bg-gray-200 h-8 w-8 hover:bg-gray-300"
+    //                 //
+    //                 onClick={() => {
+    //                   handleClickOpen();
+    //                   console.log(data.value);
+    //                   setFormId(data.value);
+    //                   setFormName(data.data.formName);
+    //                 }}
+    //               >
+    //                 <DeleteIcon className="text-red-500" />
+    //               </IconButton>
+    //             </Tooltip>
 
-                <Dialog
-                  open={open}
-                  onClose={handleClose}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <DialogTitle id="alert-dialog-title">
-                    Delete {formName}
-                  </DialogTitle>
-                  <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                      Are you sure you want to delete this form ?
-                    </DialogContentText>
-                  </DialogContent>
-                  <DialogActions>
-                    <p
-                      onClick={handleClose}
-                      className="inline-flex items-center cursor-pointer justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-blue-600 border border-blue-700 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                      data-rounded="rounded-md"
-                      data-primary="blue-600"
-                      data-primary-reset="{}"
-                    >
-                      Cancel
-                    </p>
-                    <p
-                      onClick={handleDelete}
-                      className="inline-flex items-center cursor-pointer justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-red-600 border border-blue-700 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                      data-rounded="rounded-md"
-                      data-primary="blue-600"
-                      data-primary-reset="{}"
-                    >
-                      Delete
-                    </p>
-                  </DialogActions>
-                </Dialog>
-              </div> */}
-            </div>
-          </>
-        );
-      },
-    },
+    //             <Dialog
+    //               open={open}
+    //               onClose={handleClose}
+    //               aria-labelledby="alert-dialog-title"
+    //               aria-describedby="alert-dialog-description"
+    //             >
+    //               <DialogTitle id="alert-dialog-title">
+    //                 Delete {formName}
+    //               </DialogTitle>
+    //               <DialogContent>
+    //                 <DialogContentText id="alert-dialog-description">
+    //                   Are you sure you want to delete this form ?
+    //                 </DialogContentText>
+    //               </DialogContent>
+    //               <DialogActions>
+    //                 <p
+    //                   onClick={handleClose}
+    //                   className="inline-flex items-center cursor-pointer justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-blue-600 border border-blue-700 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+    //                   data-rounded="rounded-md"
+    //                   data-primary="blue-600"
+    //                   data-primary-reset="{}"
+    //                 >
+    //                   Cancel
+    //                 </p>
+    //                 <p
+    //                   onClick={handleDelete}
+    //                   className="inline-flex items-center cursor-pointer justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-red-600 border border-blue-700 rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+    //                   data-rounded="rounded-md"
+    //                   data-primary="blue-600"
+    //                   data-primary-reset="{}"
+    //                 >
+    //                   Delete
+    //                 </p>
+    //               </DialogActions>
+    //             </Dialog>
+    //           </div>
+    //         </div>
+    //       </>
+    //     );
+    //   },
+    // },
     {
       headerName: "Stats",
       field: "formId",

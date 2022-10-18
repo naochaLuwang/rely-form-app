@@ -34,6 +34,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import Loader from "./Loader";
 
 import {
   BsInputCursor,
@@ -63,6 +64,7 @@ const FormBody = () => {
   const [minimumWeightage, setMinimumWeightage] = useState(0);
   const [maximumWeightage, setMaximumWeightage] = useState(0);
   const [averageWeightage, setAverageWeightage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const createdBy = "admin";
   const router = useRouter();
@@ -552,6 +554,7 @@ const FormBody = () => {
 
   // ? form submit
   const handleSubmit = async () => {
+    setLoading(true);
     const res = await axios.post("/api/form", {
       formName,
       formData,
@@ -566,6 +569,7 @@ const FormBody = () => {
     toast("Form created", { type: "success" });
     handleClose();
     router.push("/");
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -1481,12 +1485,12 @@ const FormBody = () => {
                                         Radio Properties
                                       </h1>
 
-                                      <IconButton
+                                      {/* <IconButton
                                         className="bg-gray-200 text-gray-700"
                                         onClick={() => setRadioOpen(false)}
                                       >
                                         <Close />
-                                      </IconButton>
+                                      </IconButton> */}
                                     </div>
 
                                     {/* <p className="text-lg mt-5 font-bold text-gray-500">
@@ -1708,7 +1712,7 @@ const FormBody = () => {
                                       <div
                                         onClick={() => {
                                           deleteComponent(radioIndex),
-                                            setTextOpen(false);
+                                            setRadioOpen(false);
                                         }}
                                         className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-white text-red-700 px-6 border border-red-700 cursor-pointer mt-2 space-x-2"
                                       >
@@ -1839,7 +1843,7 @@ const FormBody = () => {
                                 onClick={() => setCheckboxOpen(true)}
                                 className="bg-gray-200 text-green-700"
                               >
-                                <Settings />
+                                <BsPencilSquare />
                               </IconButton>
                               <IconButton
                                 aria-label="delete"
@@ -1870,19 +1874,19 @@ const FormBody = () => {
                                       <h1 className="text-3xl font-bold text-gray-700">
                                         Checkbox Properties
                                       </h1>
-                                      <IconButton
+                                      {/* <IconButton
                                         className="bg-gray-200 text-gray-700"
                                         onClick={() => setCheckboxOpen(false)}
                                       >
                                         <Close />
-                                      </IconButton>
+                                      </IconButton> */}
                                     </div>
 
-                                    <p className="text-lg mt-5 font-bold text-gray-500">
-                                      Question Text
+                                    <p className="text-lg mt-5 font-medium text-gray-500">
+                                      Question
                                     </p>
-                                    <input
-                                      className="form-input w-96 mt-2 mb-5  focus:ring-0 "
+                                    <textarea
+                                      className="form-input w-96 mt-2 mb-5   focus:ring-gray-500 rounded-md "
                                       type="text"
                                       placeholder="Enter text"
                                       value={formData[i].text}
@@ -1891,13 +1895,13 @@ const FormBody = () => {
                                       }
                                     />
 
-                                    <p className="text-lg font-bold text-gray-500">
+                                    <p className="text-lg font-medium text-gray-500">
                                       Options
                                     </p>
                                     {form.options.map((op, j) => (
                                       <div
                                         key={j}
-                                        className="flex items-center space-x-2 mt-3"
+                                        className="flex items-center  space-x-2 mt-3"
                                       >
                                         {form.inputType !== "text" ? (
                                           <input type={form.inputType} />
@@ -1907,10 +1911,10 @@ const FormBody = () => {
                                           />
                                         )}
 
-                                        <div className="flex items-center space-x-2">
+                                        <div className="flex items-center w-96 space-x-2">
                                           <input
                                             type="text"
-                                            className="text_input w-96 focus:ring-0"
+                                            className="text-input rounded-md w-96 focus:ring-0"
                                             placeholder="option"
                                             value={form.options[j].optionText}
                                             onChange={(e) => {
@@ -2019,10 +2023,10 @@ const FormBody = () => {
                                       </div>
                                     </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
+                                    {/* <h1 className="text-lg font-bold mt-5 text-gray-500">
                                       Duplicate Field
-                                    </h1>
-                                    <div
+                                    </h1> */}
+                                    {/* <div
                                       onClick={() =>
                                         duplicateCheckbox(radioIndex)
                                       }
@@ -2032,21 +2036,36 @@ const FormBody = () => {
                                       <p className="text-lg font-black">
                                         Duplicate
                                       </p>
-                                    </div>
+                                    </div> */}
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
+                                    {/* <h1 className="text-lg font-bold mt-5 text-gray-500">
                                       Delete Field
-                                    </h1>
-                                    <div
-                                      onClick={() => {
-                                        deleteComponent(i), setTextOpen(false);
-                                      }}
-                                      className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-red-700 text-white px-6 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <p className="text-lg font-bold">
-                                        Delete
-                                      </p>
-                                      <DeleteForever />
+                                    </h1> */}
+
+                                    <div className="flex items-center justify-start mt-5 space-x-3">
+                                      <div
+                                        onClick={() => {
+                                          deleteComponent(i),
+                                            setCheckboxOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-red-700 text-white px-6 border cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-lg font-bold">
+                                          Delete
+                                        </p>
+                                        <DeleteForever />
+                                      </div>
+
+                                      <div
+                                        onClick={() => {
+                                          setCheckboxOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-blue-500 text-white px-6 border cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-lg px-6 font-bold">
+                                          Save
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </Box>
@@ -2224,6 +2243,10 @@ const FormBody = () => {
     );
   };
 
+  if (loading) {
+    return <Loader />;
+  }
+
   return (
     <div className="max-w-screen relative  h-auto">
       <Toaster />
@@ -2235,7 +2258,6 @@ const FormBody = () => {
               onClick={() => newText()}
               className="w-32 py-2 px-4 shadow-xl text-gray-600 text-xs font-bold border-gray-500"
               variant="outlined"
-              disabled
             >
               <div className="flex items-center">
                 <BsInputCursor className="mr-2 text-2xl" />
@@ -2362,7 +2384,7 @@ const FormBody = () => {
                     className="w-fit border-white border px-8 py-2 text-lg font-bold cursor-pointer"
                     onClick={() => handleSubmit()}
                   >
-                    Create
+                    Save and Create
                   </button>
                 </Toolbar>
               </AppBar>
@@ -2388,7 +2410,7 @@ const FormBody = () => {
                     </FormControl>
                   </Box>
 
-                  <div className="flex">
+                  {/* <div className="flex">
                     <div>
                       <label htmlFor="min">Minimum Weightage</label>
                       <input
@@ -2414,6 +2436,24 @@ const FormBody = () => {
                         value={maximumWeightage}
                         onChange={(e) => setMaximumWeightage(e.target.value)}
                       />
+                    </div>
+                  </div> */}
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col space-y-2">
+                      <h1>
+                        Expected Feedback Weightage for management attention (*)
+                      </h1>
+                      <input
+                        className="text-input rounded-md bg-transparent"
+                        type="number"
+                        value={averageWeightage}
+                        onChange={(e) => setAverageWeightage(e.target.value)}
+                      />
+                    </div>
+                    <div className="flex flex-col space-y-2">
+                      <h1>Minimum Feedback Weightage : {minimumWeightage}</h1>
+                      <h1>Maximum Feedback Weightage : {maximumWeightage}</h1>
                     </div>
                   </div>
 
@@ -2590,7 +2630,7 @@ const FormBody = () => {
         </div>
         <div className=" flex w-full h-auto justify-center flex-1">
           <div>
-            <div className="bg-gray-100 w-[50rem] h-fit mt-20 ml-56 shadow-md  ">
+            <div className="bg-gray-100 w-[50rem] h-fit mt-10 ml-56 shadow-md  ">
               <div className="bg-blue-500 w-full h-3 rounded-t-md"></div>
               <div className=" pt-10 pb-10 px-10">
                 <input
@@ -2602,8 +2642,8 @@ const FormBody = () => {
                 />
 
                 <textarea
-                  className="form-input bg-transparent text-base font-semibold pl-5 w-full border-0 outline-0 focus:ring-0 mb-10 focus:border-b-2"
-                  placeholder=" Form Description"
+                  className="form-input bg-transparent text-base font-semibold w-full border-0 outline-0 focus:ring-0 mb-4 focus:border-b-2"
+                  placeholder=" Form Description (Optional)"
                   onChange={(e) => setFormDescription(e.target.value)}
                 />
 

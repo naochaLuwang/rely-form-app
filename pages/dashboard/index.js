@@ -17,10 +17,11 @@ const Dashboard = () => {
   const [gridApi, setGridApi] = useState();
   const router = useRouter();
   const [feedbackNumber, setFeedbackNumber] = useState(0);
+  const [seed, setSeed] = useState(1);
 
   const refreshData = () => {
     // onGridReady();
-    console.log("refresh");
+    setSeed(Math.random());
   };
 
   console.log(tableData);
@@ -267,7 +268,10 @@ const Dashboard = () => {
   return (
     <div className=" w-screen h-screen flex overflow-hidden ">
       <Sidebar />
-      <div className=" flex-1 px-7 h-[70%]  mt-10 ag-theme-alpine relative  ">
+      <div
+        key={seed}
+        className=" flex-1 px-7 h-[80%]  mt-10 ag-theme-alpine relative  "
+      >
         <h1 className="text-xl font-bold absolute -top-2">Form Feedback</h1>
 
         <div className="flex items-center   justify-between mb-3">

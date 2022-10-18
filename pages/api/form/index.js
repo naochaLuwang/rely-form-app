@@ -28,6 +28,8 @@ handler.post(async (req, res) => {
       return res.status(404).send({ message: "Form already exist" });
     }
 
+    const disable = await Form.updateMany({ status: true }, { status: false });
+
     const newForm = await new Form({
       formId,
       formName,
