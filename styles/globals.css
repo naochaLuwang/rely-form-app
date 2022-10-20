@@ -10,9 +10,11 @@ h1 , p {
 
 
 .header-one{
-  font-size:1rem;
+  font-size:14px;
+  font-weight: 500;
   
-  color: #fff;
+  
+  
   
   
 }
@@ -20,15 +22,16 @@ h1 , p {
 
 
 .ag-theme-alpine {
-    --ag-header-height: 30px;
-    --ag-header-foreground-color: white;
+    --ag-header-height: 14px;
+    --ag-borders: none;
+    --ag-header-foreground-color: black;
     --ag-header-background-color: black;
     --ag-header-cell-hover-background-color: rgb(80, 40, 140);
     --ag-header-cell-moving-background-color: rgb(80, 40, 140);
 }
 .ag-theme-alpine .ag-header {
-    background-color: #0070f3;
-      border: none;
+    
+     
     /* then add back a border between rows */
     --ag-borders-row: dashed 1px;
     --ag-row-border-color: rgb(150, 150, 200);

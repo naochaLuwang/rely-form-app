@@ -71,15 +71,13 @@ const Dashboard = () => {
     {
       headerName: "Sl No.",
       valueGetter: "node.rowIndex + 1",
-      cellClass: "text-small tracking-wide font-medium ",
+      cellClass: "text-xs tracking-wide font-medium ",
       flex: 0.7,
-
-      checkboxSelection: true,
     },
     {
       headerName: "Date",
       field: "createdAt",
-      cellClass: "text-small tracking-wide font-medium ",
+      cellClass: "text-xs tracking-wide font-medium ",
       filter: "agDateColumnFilter",
       filterParams: dateFilterParams,
       flex: 1,
@@ -93,7 +91,7 @@ const Dashboard = () => {
       headerName: "Name",
 
       field: "patient.name",
-      cellClass: "text-small tracking-wide font-medium ",
+      cellClass: "text-xs tracking-wide font-medium ",
       flex: 1.6,
       cellRenderer: (data) => {
         return (
@@ -107,12 +105,12 @@ const Dashboard = () => {
       headerName: "Mobile",
 
       field: "patient.primaryMobileNumber",
-      cellClass: "text-small tracking-wide font-medium ",
+      cellClass: "text-xs tracking-wide font-medium ",
     },
     {
       headerName: "Submitted At",
       field: "updatedAt",
-      cellClass: "text-small tracking-wide font-medium ",
+      cellClass: "text-xs tracking-wide font-medium ",
       flex: 1.5,
       width: 300,
       cellRenderer: (data) => {
@@ -149,6 +147,7 @@ const Dashboard = () => {
     {
       headerName: "Share",
       field: "formUrl",
+      flex: 0.7,
       cellRenderer: (data) => {
         return (
           <Link href={data.data.formUrl}>
@@ -161,7 +160,8 @@ const Dashboard = () => {
     },
     {
       headerName: "Status",
-
+      cellClass: "text-start ",
+      flex: 1,
       field: "isSubmitted",
       cellRenderer: (data) => {
         return (
@@ -170,9 +170,17 @@ const Dashboard = () => {
           // </h1>
           <>
             {data.data.isSubmitted ? (
-              <h1 className="text-green-500 font-bold">Submitted</h1>
+              <div className="flex  h-full items-center w-full ">
+                <h1 className="bg-green-500 text-white text-xs font-bold px-4 py-1.5 rounded-2xl">
+                  Submitted
+                </h1>
+              </div>
             ) : (
-              <h1 className="text-red-500 font-bold">Pending</h1>
+              <div className="flex w-full h-full items-center ">
+                <h1 className="bg-red-500 text-white  text-xs font-bold px-6 py-1.5 rounded-2xl">
+                  Pending
+                </h1>
+              </div>
             )}
           </>
         );
@@ -246,8 +254,8 @@ const Dashboard = () => {
 
   const getFilterType = () => {
     if (startDate !== "" && endDate !== "") return "inRange";
-    else if (startDate !== "") return "greaterThan";
-    else if (endDate !== "") return "lessThan";
+    else if (startDate !== "") return "greaterThanOrEqual";
+    else if (endDate !== "") return "lessThanOrEqual";
   };
 
   useEffect(() => {
@@ -274,10 +282,10 @@ const Dashboard = () => {
       >
         <h1 className="text-xl font-bold absolute -top-2">Form Feedback</h1>
 
-        <div className="flex items-center   justify-between mb-3">
-          <h1 className="text-sm text-gray-500 font-semibold ">
+        <div className="flex items-center mt-5   justify-between mb-3">
+          {/* <h1 className="text-sm text-gray-500 font-semibold ">
             {feedbackNumber} feedback found
-          </h1>
+          </h1> */}
 
           <div className="flex space-x-5 ">
             <div className="flex items-center space-x-2">
@@ -348,6 +356,7 @@ const Dashboard = () => {
           pagination={true}
           paginationPageSize={10}
           paginationAutoPageSize={true}
+          headerHeight={30}
         ></AgGridReact>
       </div>
     </div>
