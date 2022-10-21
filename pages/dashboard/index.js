@@ -133,11 +133,13 @@ const Dashboard = () => {
         return (
           <>
             {data.value < data.data.averageWeightage && data.value !== 0 ? (
-              <h1 className="text-red-500">
+              <h1 className="text-red-500 flex items-center justify-center w-fit h-full text-xs">
                 {data.value == 0 ? "" : data.value}
               </h1>
             ) : (
-              <h1>{data.value == 0 ? "" : data.value}</h1>
+              <h1 className="text-gray-600 text-xs flex items-center justify-center w-fit h-full">
+                {data.value == 0 ? "" : data.value}
+              </h1>
             )}
           </>
         );
@@ -151,7 +153,7 @@ const Dashboard = () => {
       cellRenderer: (data) => {
         return (
           <Link href={data.data.formUrl}>
-            <a target="_blank" rel="noopener noreferrer">
+            <a target="_blank" rel="noopener noreferrer" className="text-xs">
               Link
             </a>
           </Link>
@@ -193,12 +195,14 @@ const Dashboard = () => {
       cellRenderer: (data) => {
         return data.data.isSubmitted ? (
           <Link href={`/dashboard/${data.data._id}`}>
-            <p className="font-bold text-blue-500 hover:underline cursor-pointer">
+            <p className="font-bold text-blue-500 hover:underline flex items-center justify-center w-fit h-full cursor-pointer text-xs">
               View
             </p>
           </Link>
         ) : (
-          <h1 className="font-medium  text-gray-400">View</h1>
+          <h1 className="font-medium flex items-center justify-center w-fit h-full  text-gray-400 text-xs">
+            View
+          </h1>
         );
       },
     },
@@ -274,15 +278,14 @@ const Dashboard = () => {
 
   console.log(startDate, endDate);
   return (
-    <div className=" w-screen h-screen flex overflow-hidden ">
+    <div className=" w-screen h-screen bg-gray-50 flex overflow-hidden ">
       <Sidebar />
-      <div
-        key={seed}
-        className=" flex-1 px-7 h-[80%]  mt-10 ag-theme-alpine relative  "
-      >
-        <h1 className="text-xl font-bold absolute -top-2">Form Feedback</h1>
+      <div key={seed} className=" flex-1 px-7  bg-gray-50 mt-10  relative  ">
+        <h1 className="text-xl font-bold absolute -top-2 mb-3 text-gray-600">
+          Form Feedback
+        </h1>
 
-        <div className="flex items-center mt-5   justify-between mb-3">
+        <div className="flex items-center mt-7 bg-white px-6 rounded-xl shadow-lg   justify-between mb-3">
           {/* <h1 className="text-sm text-gray-500 font-semibold ">
             {feedbackNumber} feedback found
           </h1> */}
@@ -347,17 +350,19 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <AgGridReact
-          columnDefs={columnDefs}
-          // rowData={tableData}
-          ref={gridRef}
-          defaultColDef={defaultColDef}
-          onGridReady={onGridReady}
-          pagination={true}
-          paginationPageSize={10}
-          paginationAutoPageSize={true}
-          headerHeight={30}
-        ></AgGridReact>
+        <div className="ag-theme-alpine h-[80%] bg-white px-6 py-6 rounded-xl shadow-2xl w-full">
+          <AgGridReact
+            columnDefs={columnDefs}
+            // rowData={tableData}
+            ref={gridRef}
+            defaultColDef={defaultColDef}
+            onGridReady={onGridReady}
+            pagination={true}
+            paginationPageSize={10}
+            paginationAutoPageSize={true}
+            headerHeight={30}
+          ></AgGridReact>
+        </div>
       </div>
     </div>
   );

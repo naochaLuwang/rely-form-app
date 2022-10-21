@@ -409,33 +409,29 @@ const FormTemplate = ({ form }) => {
         <title>Home | Rely Form</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <div className=" w-screen h-screen flex overflow-hidden  ">
+      <div className=" w-screen h-screen flex bg-gray-50 overflow-hidden  ">
         <Sidebar />
         <div className="flex-1 h-full p-7    ">
           <div className="flex justify-between items-center ">
             <h1 className="text-2xl font-bold">Form Templates</h1>
             <div>
               <Link href="/form">
-                <p className="relative px-5 py-4 overflow-hidden font-medium text-white bg-green-500 border border-gray-100 rounded-lg shadow-inner group cursor-pointer">
-                  <span className="absolute top-0 left-0 w-0 h-0 transition-all duration-200 border-t-2 border-green-400 group-hover:w-full ease"></span>
-                  <span className="absolute bottom-0 right-0 w-0 h-0 transition-all duration-200 border-b-2 border-green-400 group-hover:w-full ease"></span>
-                  <span className="absolute top-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-green-400 group-hover:h-full ease"></span>
-                  <span className="absolute bottom-0 left-0 w-full h-0 transition-all duration-300 delay-200 bg-green-400 group-hover:h-full ease"></span>
-                  <span className="absolute inset-0 w-full h-full duration-300 delay-300 bg-green-500 opacity-0 group-hover:opacity-100"></span>
-                  <span className="relative transition-colors duration-300 delay-200 font-bold group-hover:text-white ease">
-                    + New Form
+                <p className="rounded-md px-3.5 mb-2 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-green-600 text-green-600 text-white">
+                  <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-green-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
+                  <span className="relative text-green-600 transition duration-300 group-hover:text-white ease">
+                    + Create
                   </span>
                 </p>
               </Link>
             </div>
           </div>
 
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center bg-white px-6 rounded-xl shadow-lg justify-between mb-3">
             {/* <h1 className="text-base text-gray-500 font-semibold ">
               {tableData?.length} templates found
             </h1> */}
 
-            <div className="flex space-x-5 ">
+            <div className="flex space-x-5  ">
               <div className="flex items-center space-x-2">
                 <input
                   type="date"
@@ -495,7 +491,7 @@ const FormTemplate = ({ form }) => {
             </div>
           </div>
 
-          <div className="ag-theme-alpine ag-style h-[80%] bg-white shadow-neutral-400    w-full ">
+          <div className="ag-theme-alpine ag-style h-[80%] bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
             <AgGridReact
               columnDefs={columnDefs}
               rowData={tableData}

@@ -136,7 +136,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
           <div className="max-w-screen lg:max-w-4xl mx-auto">
             <div className="w-full h-2 bg-blue-500 rounded-t-lg"></div>
             <div className="w-full border px-8 lg:px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">
-              <h1 className="text-lg lg:text-4xl font-bold mb-10">
+              <h1 className="text-lg lg:text-2xl text-gray-600 font-bold mb-10">
                 {formData?.formName}
               </h1>
               {/* <p className="absolute top-16">
@@ -145,38 +145,48 @@ const FormFeedbackPage = ({ formFeedback }) => {
               <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:pr-10 -mt-5">
                 <div className="flex flex-col">
                   <h1 className="lg:tracking-wider text-sm">
-                    <span className="font-semibold">Patient Name :</span>{" "}
+                    <span className="font-semibold text-sm text-gray-600">
+                      Name :
+                    </span>{" "}
                     {newForm?.patient.name}
                   </h1>
-                  <h1 className="tracking-wider">
-                    <span className="font-semibold">Age :</span>{" "}
+                  <h1 className="tracking-wider text-sm">
+                    <span className="font-semibold text-sm text-gray-600 ">
+                      Age :
+                    </span>{" "}
                     {newForm?.patient.ageY}
                   </h1>
-                  <h1 className="tracking-wider">
-                    <span className="font-semibold">Gender :</span>{" "}
+                  <h1 className="tracking-wider text-sm">
+                    <span className="font-semibold text-sm">Gender :</span>{" "}
                     {newForm?.patient.gender}
                   </h1>
-                  <h1 className="tracking-wider">
-                    <span className="font-semibold">Mobile :</span>{" "}
+                  <h1 className="tracking-wider text-sm">
+                    <span className="font-semibold text-sm">Mobile :</span>{" "}
                     {newForm?.patient.primaryMobileNumber}
                   </h1>
                 </div>
                 <div className="flex flex-col">
-                  <h1 className="tracking-wider">
+                  <h1 className="tracking-wider text-sm">
                     {" "}
-                    <span className="font-semibold">Patient Type :</span>{" "}
+                    <span className="font-semibold text-sm text-gray-600">
+                      Type :
+                    </span>{" "}
                     {newForm?.patient.patientType}
                   </h1>
-                  <h1 className="tracking-wider">
-                    <span className="font-semibold">IPD Number :</span>{" "}
+                  <h1 className="tracking-wider text-sm">
+                    <span className="font-semibold text-sm text-gray-600">
+                      IPD Number :
+                    </span>{" "}
                     {newForm?.patient.iPDNumber}
                   </h1>
                   {/* <h1 className="tracking-wider">
                     <span className="font-semibold">Reg Id :</span>{" "}
                     {newForm?.patient.regId}
                   </h1> */}
-                  <h1 className="tracking-wider">
-                    <span className="font-semibold">UHID :</span>{" "}
+                  <h1 className="tracking-wider text-sm">
+                    <span className="font-semibold text-gray-600 text-sm">
+                      UHID :
+                    </span>{" "}
                     {newForm?.patient.uhid}
                   </h1>
                 </div>
@@ -193,7 +203,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     >
                       {!formData.form[i].style.label && (
                         <div className="flex ">
-                          <h1 className="lg:text-lg text-sm font-bold">
+                          <h1 className="lg:text-base text-sm font-bold text-gray-600">
                             <span>
                               {i + 1}
                               {". "}
@@ -208,7 +218,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                         </div>
                       )}
                       <h1
-                        className=" text-lg font-bold"
+                        className=" text-base font-bold text-gray-700"
 
                         // onChange={(e) => changeText(e.target.value, i)}
                       >
@@ -320,11 +330,13 @@ const FormFeedbackPage = ({ formFeedback }) => {
                             unfilled &&
                             formData.form[i].required &&
                             formData.form[i].ansText == ""
-                              ? "lg:text-lg text-red-500 text-base font-bold"
-                              : "lg:text-lg text-base font-bold"
+                              ? "lg:text-base text-red-500 text-sm font-semibold "
+                              : "lg:text-base text-sm text-gray-700 font-semibold"
                           }
                         >
-                          <span className="lg:text-lg text-base">{i} .</span>
+                          <span className="lg:text-base text-sm text-gray-700">
+                            {i} .
+                          </span>
                           {formData.form[i].text}
                         </h1>
                         {formData.form[i].required && (
@@ -346,7 +358,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                               }
                               onChange={(e) => handleChange(e, i, j)}
                             />
-                            <p className="lg:text-base text-sm font-medium">
+                            <p className="lg:text-base text-sm font-medium text-gray-600">
                               {option.optionText}
                             </p>
                           </div>
@@ -362,8 +374,8 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       className="flex flex-col space-y-2 lg:mb-5 mb-2 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       <div className="flex ">
-                        <h1 className="lg:text-lg text-base font-bold">
-                          <span>
+                        <h1 className="lg:text-base text-sm font-semibold text-gray-700">
+                          <span className="lg:text-base text-sm font-semibold text-gray-700">
                             {i}
                             {". "}
                           </span>
@@ -386,7 +398,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                               }
                               onChange={() => handleCheckBox(i, j)}
                             />
-                            <p className="lg:text-base text-sm font-medium">
+                            <p className="lg:text-base text-sm font-medium text-gray-600">
                               {option.optionText}
                             </p>
                           </div>

@@ -31,6 +31,7 @@
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.4.0",
+    "react-live-clock": "^6.0.6",
     "react-loader-spinner": "^5.3.4",
     "sass": "^1.55.0",
     "uuid": "^9.0.0"

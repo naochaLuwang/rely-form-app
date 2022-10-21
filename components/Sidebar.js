@@ -6,6 +6,8 @@ import Setting from "../assets/images/Setting.png";
 import Chart_fill from "../assets/images/Chart_fill.png";
 import Link from "next/link";
 import { FcFeedback } from "react-icons/fc";
+import { AiFillHome } from "react-icons/ai";
+import { ChevronUpIcon } from "@heroicons/react/outline";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
@@ -27,11 +29,11 @@ const Sidebar = () => {
   return (
     <div
       className={`${
-        open ? "w-60" : "w-20"
-      } h-screen duration-300 transalte-transform ease-in-out bg-dark-purple p-5 pt-8 relative`}
+        open ? "w-60" : "w-16"
+      } h-screen duration-300 transalte-transform ease-in-out bg-white  pt-8 relative`}
     >
       <div
-        className={`absolute cursor-pointer -right-3 w-8 h-8 top-9 border-2 rounded-full border-dark-purple ${
+        className={`absolute cursor-pointer -right-3 w-8 h-8 z-20 top-9 border-2 rounded-full border-dark-purple ${
           !open && "rotate-180"
         }`}
         onClick={() => {
@@ -42,9 +44,9 @@ const Sidebar = () => {
         <Image src={control} alt="control" layout="fill" objectFit="contain" />
       </div>
 
-      <div className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2">
+      <div className="text-gray-600 text-sm pl-5 flex items-center gap-x-4 cursor-pointer p-2">
         <Link href="/">
-          <div className="relative w-7 h-7 flex-shrink-0">
+          <div className="relative w-7 h-7  flex-shrink-0">
             <Image
               src={logo}
               alt="menu icons"
@@ -71,46 +73,84 @@ const Sidebar = () => {
         </div>
       )} */}
 
-      <ul className="pt-4">
+      <ul className="pt-2">
         {Menus.map((menu, index) => (
           <Link key={index} href={menu.url}>
-            <li className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
-              <div className="relative w-7 h-7 flex-shrink-0">
-                <Image
-                  src={menu.src}
-                  alt="menu icons"
-                  layout="fill"
-                  objectFit="contain"
-                />
+            <div className="hover:border-l-[3px] group  border-blue-500">
+              <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-2 cursor-pointer p-2 hover:bg-light-white rounded-md">
+                <AiFillHome className="text-xl text-gray-600 group-hover:text-blue-500 " />
+
+                <span className={`${!open && "hidden"} text-end`}>
+                  {menu.title}
+                </span>
               </div>
-              <span className={`${!open && "hidden"}`}>{menu.title}</span>
-            </li>
+            </div>
           </Link>
         ))}
       </ul>
 
-      <ul onClick={() => setSubmenuOpen(!submenuOpen)}>
-        <li className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
-          <FcFeedback className="text-3xl" />
-          <span className={`${!open && "hidden"}`}>Feedback</span>
-        </li>
+      <ul
+        className="pt-2  "
+        onClick={() => {
+          if (!open) {
+            setOpen(true);
+          }
+          setSubmenuOpen(!submenuOpen);
+        }}
+      >
+        <div
+          className={`${
+            submenuOpen && "border-l-4 border-blue-500"
+          } hover:border-l-[3px] group  border-blue-500`}
+        >
+          <div
+            className={`${
+              submenuOpen && "text-blue-500"
+            } "text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-2 cursor-pointer p-2 hover:bg-light-white rounded-md`}
+          >
+            <FcFeedback
+              className={`${
+                submenuOpen && "text-blue-500"
+              } text-xl text-gray-600 group-hover:text-blue-500`}
+            />
+            <span
+              className={`${
+                !open && "hidden"
+              } flex items-center space w-full justify-between`}
+            >
+              Feedback{" "}
+              <ChevronUpIcon
+                className={`${
+                  submenuOpen && "rotate-180 text-blue-500"
+                } h-4 w-4 group-hover:text-blue-500 text-gray-600 `}
+              />
+            </span>
+          </div>
+        </div>
       </ul>
 
       {submenuOpen && (
         <ul
           className={`${
             !submenuOpen && "h-0"
-          } h-10 duration-2000 transition-all ease-in-out`}
+          } h-10 duration-2000  transition-all ease-in-out`}
         >
-          <li className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
-            <Link href="/">Add New Form</Link>
-          </li>
-          <li className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
-            <Link href="/a">View Form Templates</Link>
-          </li>
-          <li className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
-            <Link href="/b">View Feedbacks</Link>
-          </li>
+          <div className="w-full h-fit pl-10 hover:border-l-4 border-blue-500">
+            <li className="text-gray-600 hover:text-blue-500 font-medium text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
+              <Link href="/form">Add New Form</Link>
+            </li>
+          </div>
+          <div className="w-full h-fit pl-10 hover:border-l-4 border-blue-500">
+            <li className="text-gray-600 hover:text-blue-500 font-medium text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
+              <Link href="/formTemplate">View Form Templates</Link>
+            </li>
+          </div>
+
+          <div className="w-full h-fit pl-10 hover:border-l-4 border-blue-500">
+            <li className="text-gray-600 hover:text-blue-500 font-medium text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
+              <Link href="/dashboard">View Feedbacks</Link>
+            </li>
+          </div>
         </ul>
       )}
     </div>
