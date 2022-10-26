@@ -1,43 +1,68 @@
 import { AgGridReact } from "ag-grid-react";
 import { SearchIcon } from "@heroicons/react/outline";
-import React, { useEffect, useState, useRef, useMemo } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import moment from "moment";
 import Link from "next/link";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import ShareIcon from "@mui/icons-material/Share";
+import { IconButton } from "@mui/material";
 
 import { FaFileExport } from "react-icons/fa";
 import { FcRefresh } from "react-icons/fc";
-import FormHeader from "../../components/FormHeader";
-import Sidebar from "../../components/Sidebar";
 
-const Dashboard = () => {
+import { useSession } from "next-auth/react";
+
+import Sidebar from "../../components/Sidebar";
+import FormHeader from "../../components/FormHeader";
+
+const Dashboard = ({ form }) => {
   const [tableData, setTableData] = useState([]);
   const [gridApi, setGridApi] = useState();
-  const router = useRouter();
+
   const [feedbackNumber, setFeedbackNumber] = useState(0);
   const [seed, setSeed] = useState(1);
+  const [record, setRecord] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [openSidebar, setOpen] = useState(false);
+
+  const { status } = useSession();
+
+  const router = useRouter();
+
+  const handleOpen = () => {
+    setOpen(!openSidebar);
+  };
 
   const refreshData = () => {
     // onGridReady();
     setSeed(Math.random());
   };
 
-  console.log(tableData);
+  const handleModal = () => {
+    setShowModal(true);
+  };
+
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
+  console.log(form);
 
   const today = new Date();
   const gridRef = useRef();
 
   const date = today.setDate(today.getDate());
   const defaultValue = new Date(date).toISOString();
-  console.log(defaultValue);
+
   const todaysDate = defaultValue.split("T")[0];
-  console.log(todaysDate);
-  // const defaultValue = new Date(date).toISOString().split("T")[0]; // yyyy-mm-dd
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(todaysDate);
 
+  // !! parameters for date filter
   const dateFilterParams = {
     // provide comparator function
     comparator: function (filterLocalDateAtMidnight, cellValue) {
@@ -47,7 +72,7 @@ const Dashboard = () => {
         return 0;
       }
 
-      // In the example application, dates are stored as dd/mm/yyyy
+      //  dates are stored as dd/mm/yyyy
       // We create a Date object for comparison against the filter date
 
       console.log(dateAsString);
@@ -114,7 +139,6 @@ const Dashboard = () => {
       flex: 1.5,
       width: 300,
       cellRenderer: (data) => {
-        // return moment(data.updatedAt).format("DD/MM/YYYY");
         return (
           <>
             {data.data.isSubmitted
@@ -152,9 +176,11 @@ const Dashboard = () => {
       flex: 0.7,
       cellRenderer: (data) => {
         return (
-          <Link href={data.data.formUrl}>
-            <a target="_blank" rel="noopener noreferrer" className="text-xs">
-              Link
+          <Link href={data.value}>
+            <a target="_blank">
+              <IconButton className="h-8 w-8">
+                <ShareIcon className="text-blue-500 h-6 w-6" />
+              </IconButton>
             </a>
           </Link>
         );
@@ -165,6 +191,7 @@ const Dashboard = () => {
       cellClass: "text-start ",
       flex: 1,
       field: "isSubmitted",
+
       cellRenderer: (data) => {
         return (
           // <h1 className="text-green-500 font-bold">
@@ -210,15 +237,12 @@ const Dashboard = () => {
 
   const defaultColDef = {
     headerClass: function (params) {
-      // logic to return the correct class
       return "header-one";
     },
-    // sortable: true,
+
     editable: false,
     flex: 1,
     resizeable: true,
-    // filter: true,
-    // floatingFilter: true,
   };
 
   const onGridReady = (params) => {
@@ -228,19 +252,10 @@ const Dashboard = () => {
       .then(
         (resp) => (
           params.api.applyTransaction({ add: resp }),
-          setFeedbackNumber(resp.length)
+          setFeedbackNumber(resp.length),
+          setRecord(params.api.getDisplayedRowCount())
         )
       );
-
-    //  setFeedbackNumber(params.api.getDisplayedRowCount());
-  };
-
-  // useEffect(() => {
-  //   getUsers();
-  // }, []);
-
-  const handleRefresh = () => {
-    getUsers();
   };
 
   const getUsers = () => {
@@ -256,11 +271,25 @@ const Dashboard = () => {
     gridApi.api.setQuickFilter(e.target.value);
   };
 
+  const onSelectChange = (e) => {
+    gridApi.api.setQuickFilter(e.target.value);
+    const count = gridApi.api.getDisplayedRowCount();
+    setRecord(count);
+  };
   const getFilterType = () => {
     if (startDate !== "" && endDate !== "") return "inRange";
     else if (startDate !== "") return "greaterThanOrEqual";
     else if (endDate !== "") return "lessThanOrEqual";
   };
+
+  useEffect(() => {
+    if (gridApi) {
+      gridApi.api.setQuickFilter("false");
+      const count = gridApi.api.getDisplayedRowCount();
+      setRecord(count);
+      // getFormTemplates();
+    }
+  }, [gridApi]);
 
   useEffect(() => {
     if (gridApi) {
@@ -272,100 +301,150 @@ const Dashboard = () => {
       });
 
       gridApi.api.onFilterChanged();
+      const count = gridApi.api.getDisplayedRowCount();
+      setRecord(count);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
-  console.log(startDate, endDate);
+  if (status === "unauthenticated") {
+    router.push("/signin");
+  }
+
   return (
-    <div className=" w-screen h-screen bg-gray-50 flex overflow-hidden ">
-      <Sidebar />
-      <div key={seed} className=" flex-1 px-7  bg-gray-50 mt-10  relative  ">
-        <h1 className="text-xl font-bold absolute -top-2 mb-3 text-gray-600">
-          Form Feedback
-        </h1>
+    <>
+      {status === "authenticated" && (
+        <>
+          <Head>
+            <title>Dashboard | Rely Form</title>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+            <meta http-equiv="X-UA-Compatible" content="IE=7" />
+            <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+            <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+            <meta name="keywords" content="Form Feedback , Feedback Form" />
+          </Head>
+          <div className=" w-screen h-screen bg-gray-50 flex overflow-hidden ">
+            <Sidebar open={openSidebar} />
 
-        <div className="flex items-center mt-7 bg-white px-6 rounded-xl shadow-lg   justify-between mb-3">
-          {/* <h1 className="text-sm text-gray-500 font-semibold ">
-            {feedbackNumber} feedback found
-          </h1> */}
-
-          <div className="flex space-x-5 ">
-            <div className="flex items-center space-x-2">
-              <input
-                type="date"
-                className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                placeholder="dd-mm-yyyy"
-                value={startDate}
-                onChange={(e) =>
-                  //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
-                  setStartDate(e.target.value)
-                }
-              />
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <h1 className="text-sm font-semibold">To</h1>
-              <input
-                type="date"
-                value={endDate}
-                className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                onChange={(e) => setEndDate(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-3 ">
-            <div className="max-w-xs">
-              <div className=" mt-1 relative p-3 runded-md  ">
-                <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
-                  <SearchIcon className="h-5 w-5 text-gray-500" />
-                </div>
-                <input
-                  className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                  type="search"
-                  placeholder="search"
-                  onChange={onFilterTextChange}
+            <div key={seed} className=" flex-1  bg-gray-50   relative  ">
+              <div className="w-full h-10">
+                <FormHeader
+                  handleOpen={handleOpen}
+                  openSidebar={openSidebar}
+                  title="Form Feedback"
                 />
               </div>
-            </div>
-            <button
-              className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
-              onClick={refreshData}
-            >
-              <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
-                <h1>Refresh</h1>
-                <FcRefresh className="text-sm text-gray-600" />
-              </div>
-            </button>
-            <button
-              className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
-              onClick={onExportClick}
-            >
-              <div className="flex items-center text-white text-sm font-semibold space-x-2">
-                <h1>Export</h1>
-                <FaFileExport />
-              </div>
-            </button>
-          </div>
-        </div>
+              <div className="w-full flex flex-col h-screen px-7">
+                <div className="flex items-center mt-7 px-7 bg-white  rounded-xl shadow-lg   justify-between mb-3">
+                  <div className="flex space-x-5 ">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="date"
+                        className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                        placeholder="dd-mm-yyyy"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                      />
+                    </div>
 
-        <div className="ag-theme-alpine h-[80%] bg-white px-6 py-6 rounded-xl shadow-2xl w-full">
-          <AgGridReact
-            columnDefs={columnDefs}
-            // rowData={tableData}
-            ref={gridRef}
-            defaultColDef={defaultColDef}
-            onGridReady={onGridReady}
-            pagination={true}
-            paginationPageSize={10}
-            paginationAutoPageSize={true}
-            headerHeight={30}
-          ></AgGridReact>
-        </div>
-      </div>
-    </div>
+                    <div className="flex items-center space-x-2">
+                      <h1 className="text-sm font-semibold">To</h1>
+                      <input
+                        type="date"
+                        value={endDate}
+                        className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <select
+                      name="status"
+                      id="status"
+                      className="bg-gray-50 form-input block w-96  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      onChange={onSelectChange}
+                    >
+                      <option value="false">Pending</option>
+                      <option value="true">Submitted</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center space-x-3 ">
+                    <div className="max-w-xs">
+                      <div className=" mt-1 relative p-3 runded-md  ">
+                        <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
+                          <SearchIcon className="h-5 w-5 text-gray-500" />
+                        </div>
+                        <input
+                          className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                          type="search"
+                          placeholder="search"
+                          onChange={onFilterTextChange}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
+                      onClick={refreshData}
+                    >
+                      <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
+                        <h1>Refresh</h1>
+                        <FcRefresh className="text-sm text-gray-600" />
+                      </div>
+                    </button>
+                    <button
+                      className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
+                      onClick={onExportClick}
+                    >
+                      <div className="flex items-center text-white text-sm font-semibold space-x-2">
+                        <h1>Export</h1>
+                        <FaFileExport />
+                      </div>
+                    </button>
+                  </div>
+                </div>
+
+                <h1 className="text-sm mb-2  text-gray-600">
+                  {record} record(s) found
+                </h1>
+
+                <div className="ag-theme-alpine  h-[70%] bg-white px-6 py-6 rounded-xl shadow-2xl w-full">
+                  <AgGridReact
+                    columnDefs={columnDefs}
+                    ref={gridRef}
+                    defaultColDef={defaultColDef}
+                    onGridReady={onGridReady}
+                    pagination={true}
+                    paginationPageSize={10}
+                    paginationAutoPageSize={true}
+                    headerHeight={30}
+                  ></AgGridReact>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 
 export default Dashboard;
+
+export async function getServerSideProps(context) {
+  const response = await fetch("https://rely-form.herokuapp.com/api/form");
+
+  const data = await response.json();
+
+  console.log(data);
+
+  return {
+    props: {
+      form: JSON.parse(JSON.stringify(data)),
+    },
+  };
+}

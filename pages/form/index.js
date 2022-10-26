@@ -1,14 +1,15 @@
 import React, { useEffect } from "react";
-import { useRouter } from "next/router";
+
 import FormBody from "../../components/FormBody";
-import FormHeader from "../../components/FormHeader";
+
+import Sidebar from "../../components/Sidebar";
 
 const Form = () => {
   return (
-    <>
-      <FormHeader />
+    <div className="flex">
+      <Sidebar />
       <FormBody />
-    </>
+    </div>
   );
 };
 

@@ -37,7 +37,6 @@ handler.post(async (req, res) => {
 
     await newPatient.save();
     res.json(newPatient);
-    await db.disconnect();
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

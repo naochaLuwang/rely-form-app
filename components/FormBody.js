@@ -75,6 +75,7 @@ const FormBody = () => {
   const [multilineOpen, setMultilineOpen] = React.useState(false);
   const [radioOpen, setRadioOpen] = React.useState(false);
   const [checkboxOpen, setCheckboxOpen] = React.useState(false);
+  const [fieldOpen, setFieldOpen] = useState(false);
 
   const formEndRef = useRef(null);
 
@@ -568,8 +569,7 @@ const FormBody = () => {
     });
     toast("Form created", { type: "success" });
     handleClose();
-    router.push("/");
-    setLoading(false);
+    router.push("/formTemplate");
   };
 
   useEffect(() => {
@@ -582,7 +582,7 @@ const FormBody = () => {
       <div>
         {formData?.map((form, i) => {
           switch (form.inputType) {
-            // ** text
+            // ! create a new text field in Form UI
             case "text":
               return (
                 <Draggable key={i} draggableId={i + "id"} index={i}>
@@ -713,7 +713,7 @@ const FormBody = () => {
                                     </div>
 
                                     <p className="text-lg mt-5 font-bold text-gray-500">
-                                      Field Label
+                                      Label
                                     </p>
                                     <input
                                       className="form-input w-96 mt-2 rounded-sm  focus:ring-0 "
@@ -735,11 +735,11 @@ const FormBody = () => {
                                           }}
                                         />
                                       }
-                                      label="Hide Field Label"
+                                      label="Hide Label"
                                     />
 
                                     <p className="text-lg font-bold text-gray-500">
-                                      Placeholder Text
+                                      Placeholder
                                     </p>
                                     <input
                                       className="form-input w-96 mt-2 mb-5 rounded-sm   focus:ring-0 "
@@ -765,7 +765,7 @@ const FormBody = () => {
                                     />
 
                                     <p className="mt-5 font-bold text-lg text-gray-500">
-                                      Required Field
+                                      Required
                                     </p>
 
                                     <FormControlLabel
@@ -814,32 +814,30 @@ const FormBody = () => {
                                       </div>
                                     </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Duplicate Field
-                                    </h1>
-                                    <div
-                                      onClick={() => duplicateText(i)}
-                                      className="max-w-fit flex items-center shadow-lg rounded-md bg-green-500 text-white py-3 px-4 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <ContentCopyTwoTone />
-                                      <p className="text-lg font-black">
-                                        Duplicate
-                                      </p>
-                                    </div>
+                                    <div className="flex items-center mt-5 space-x-3">
+                                      <div
+                                        onClick={() => {
+                                          deleteComponent(i),
+                                            setTextOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-white text-red-700 px-6 border border-red-700 cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium">
+                                          Delete
+                                        </p>
+                                        <DeleteForever />
+                                      </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Delete Field
-                                    </h1>
-                                    <div
-                                      onClick={() => {
-                                        deleteComponent(i), setTextOpen(false);
-                                      }}
-                                      className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-red-700 text-white px-6 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <p className="text-lg font-bold">
-                                        Delete
-                                      </p>
-                                      <DeleteForever />
+                                      <div
+                                        onClick={() => {
+                                          setTextOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg text-white bg-blue-500 px-6 border  cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium px-4">
+                                          Save
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </Box>
@@ -1360,6 +1358,7 @@ const FormBody = () => {
                 </Draggable>
               );
 
+            // !! add new radio in the form UI
             case "radio":
               return (
                 <Draggable key={i} draggableId={i + "id"} index={i}>
@@ -1382,7 +1381,7 @@ const FormBody = () => {
                             className={`${
                               snapshot.isDragging &&
                               "border-green-400 border-2 bg-opacity-10"
-                            } flex items-center justify-between px-10 bg-white h-auto py-8 mb-5 shadow-lg`}
+                            } flex items-center justify-between px-10 rounded-lg bg-white h-auto py-8 mb-5 shadow-md`}
                           >
                             <div
                               className="w-full flex flex-col cursor-pointer  "
@@ -1390,10 +1389,6 @@ const FormBody = () => {
                               onClick={() => handleRadioDialog(i)}
                             >
                               <div className="flex items-center space-x-1">
-                                {/* <p className="font-bold">
-                                  {formData[i].questionNo}.
-                                </p> */}
-
                                 <input
                                   type="text"
                                   className={`
@@ -1447,21 +1442,20 @@ const FormBody = () => {
                             </div>
 
                             <div className="flex items-center space-x-2 justify-end">
-                              <IconButton
+                              <div
                                 onClick={() => handleRadioDialog(i)}
-                                className="bg-gray-200 text-green-700"
+                                className="bg-gray-200 h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-300 text-green-500 hover:text-green-700 duration-200 ease-out"
                               >
-                                <BsPencilSquare />
-                              </IconButton>
-                              <IconButton
-                                aria-label="delete"
-                                className="text-red-700 bg-gray-200"
+                                <BsPencilSquare className="h-6 w-6" />
+                              </div>
+                              <div
+                                className="bg-gray-200 h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-300 text-red-500 hover:text-red-700 duration-200 ease-out"
                                 onClick={() => {
                                   deleteComponent(i);
                                 }}
                               >
                                 <Delete />
-                              </IconButton>
+                              </div>
 
                               {/* radio properties */}
                               <Drawer
@@ -1745,6 +1739,7 @@ const FormBody = () => {
                 </Draggable>
               );
 
+            // !! add a new checkbox in form UI
             case "checkbox":
               return (
                 <Draggable key={i} draggableId={i + "id"} index={i}>
@@ -1839,21 +1834,20 @@ const FormBody = () => {
                             </div>
 
                             <div className="flex items-center space-x-2 justify-end">
-                              <IconButton
+                              <div
                                 onClick={() => setCheckboxOpen(true)}
-                                className="bg-gray-200 text-green-700"
+                                className="bg-gray-200 h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-300 text-green-500 hover:text-green-700 duration-200 ease-out"
                               >
                                 <BsPencilSquare />
-                              </IconButton>
-                              <IconButton
-                                aria-label="delete"
-                                className="text-red-700 bg-gray-200"
+                              </div>
+                              <div
+                                className="bg-gray-200 h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-300 text-red-500 hover:text-red-700 duration-200 ease-out"
                                 onClick={() => {
                                   deleteComponent(i);
                                 }}
                               >
                                 <Delete />
-                              </IconButton>
+                              </div>
                               <Drawer
                                 anchor={"right"}
                                 open={checkboxOpen}
@@ -2247,27 +2241,34 @@ const FormBody = () => {
     return <Loader />;
   }
 
+  // ! Form Builder UI
   return (
-    <div className="max-w-screen relative  h-auto">
+    <div className="max-w-screen relative  flex-1 h-auto">
       <Toaster />
       <div className="flex relative justify-between">
-        <div className=" w-[20rem] bg-slate-200  fixed top-0 py-16 px-8 h-screen">
-          <h1 className="mb-5 font-bold text-blue-800 text-2xl">Form Fields</h1>
-          <div className="grid grid-cols-2  gap-4 ">
-            <Button
+        <div
+          className={` w-[20rem] 
+            bg-white border fixed top-0 py-8 px-8 h-screen`}
+        >
+          <h1 className="mb-5 font-semibold text-gray-800 text-xl">
+            Form Fields
+          </h1>
+          <div
+            className={`grid-cols-2 grid
+              gap-4`}
+          >
+            <button
               onClick={() => newText()}
-              className="w-32 py-2 px-4 shadow-xl text-gray-600 text-xs font-bold border-gray-500"
-              variant="outlined"
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
               <div className="flex items-center">
                 <BsInputCursor className="mr-2 text-2xl" />
                 <h1 className="text-sm font-semibold">Text</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
-              className="w-32 py-3 px-4 shadow-xl text-gray-600 text-xs font-bold border-gray-500"
-              variant="outlined"
+            <button
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
               disabled
               onClick={() => newTextNumeric()}
             >
@@ -2275,11 +2276,10 @@ const FormBody = () => {
                 <TiSortNumerically className="mr-2 text-2xl" />
                 <h1 className="text-sm font-semibold mt-1">Number</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
-              className="w-32 py-3 shadow-xl px-4 text-gray-600 text-xs font-bold border-gray-500"
-              variant="outlined"
+            <button
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
               onClick={() => newMultiline()}
               disabled
             >
@@ -2287,76 +2287,70 @@ const FormBody = () => {
                 <BsTextareaResize className="mr-2 text-2xl" />
                 <h1 className="text-sm font-semibold mt-1">Multiline</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
+            <button
               onClick={() => newRadio()}
-              className="w-32 py-3 px-4 shadow-xl text-gray-600 text-xs font-bold border-gray-500"
-              variant="outlined"
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
               <div className="flex items-center">
                 <BsUiRadios className="text-2xl mr-2" />
                 <h1 className="text-sm font-semibold mt-1">Radio</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
+            <button
               onClick={() => newCheckBox()}
-              className="w-32 py-3 px-4 shadow-xl  text-gray-600 text-xs font-bold border-gray-500"
-              variant="outlined"
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
               <div className="flex items-center">
                 <BsUiChecks className="text-2xl mr-2" />
                 <h1 className="text-sm font-semibold mt-1">Checkbox</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
+            <button
               onClick={() => newRange()}
-              className="w-32 py-3 px-4 shadow-xl text-gray-600 font-bold border-gray-500"
-              variant="outlined"
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
               disabled
             >
               Range
-            </Button>
+            </button>
 
-            <Button
+            <button
               onClick={() => newName()}
-              className="w-32 py-3 px-4 shadow-xl text-gray-600 font-bold border-gray-500"
-              variant="outlined"
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
               disabled
             >
               <div className="flex items-center">
                 <BsPersonCircle className="text-2xl mr-2" />
                 <h1 className="text-sm font-semibold mt-1">Name</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
+            <button
               onClick={() => newEmail()}
-              className="w-32 py-3 px-4 shadow-xl text-gray-600 font-bold border-gray-500"
-              variant="outlined"
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
               disabled
             >
               <div className="flex items-center">
                 <HiMail className="text-2xl mr-2" />
                 <h1 className="text-sm font-semibold mt-1">Email</h1>
               </div>
-            </Button>
+            </button>
 
-            <Button
-              variant="contained"
+            <button
               disabled={formData.length < 1}
               className={`${
-                formData.length < 1 && "shadow-none"
-              } w-full shadow-xl col-span-2 py-3 px-4 text-gray-600 bg-blue-700 font-bold border-blue-500`}
+                formData.length < 1 && "shadow-none text-gray-600 bg-gray-300"
+              } w-full shadow-xl col-span-2 py-3 px-4 rounded-md  text-gray-600 bg-blue-700 font-bold border-blue-500`}
               onClick={handleClickOpen}
             >
-              <div className="flex items-center">
+              <div className="flex items-center justify-center">
                 <h1 className="text-sm font-bold mt-1 text-white">Preview</h1>
                 <VscPreview className="text-2xl ml-2 text-white" />
               </div>
-            </Button>
+            </button>
             <Dialog
               fullScreen
               open={open}
@@ -2388,9 +2382,11 @@ const FormBody = () => {
                   </button>
                 </Toolbar>
               </AppBar>
-              <div className="max-w-screen">
-                <div className="max-w-5xl mx-auto flex flex-col space-y-5  h-auto bg-slate-100 mt-20 shadow-md py-10 px-10">
-                  <h1 className="text-2xl font-bold">{formName} </h1>
+              <div className="max-w-screen bg-gray-50 h-screen ">
+                <div className="max-w-5xl mx-auto flex flex-col space-y-5 rounded-lg  h-auto bg-white mt-20 shadow-md py-10 px-10">
+                  <h1 className="text-2xl font-semibold text-gray-600">
+                    {formName}{" "}
+                  </h1>
                   <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
@@ -2410,38 +2406,9 @@ const FormBody = () => {
                     </FormControl>
                   </Box>
 
-                  {/* <div className="flex">
-                    <div>
-                      <label htmlFor="min">Minimum Weightage</label>
-                      <input
-                        type="text"
-                        disabled
-                        value={minimumWeightage}
-                        onChange={(e) => setMinimumWeightage(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="min">Average Weightage</label>
-                      <input
-                        type="number"
-                        value={averageWeightage}
-                        onChange={(e) => setAverageWeightage(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="min">Maximum Weightage</label>
-                      <input
-                        type="text"
-                        disabled
-                        value={maximumWeightage}
-                        onChange={(e) => setMaximumWeightage(e.target.value)}
-                      />
-                    </div>
-                  </div> */}
-
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col space-y-2">
-                      <h1>
+                      <h1 className="text-base text-gray-500">
                         Expected Feedback Weightage for management attention (*)
                       </h1>
                       <input
@@ -2452,8 +2419,12 @@ const FormBody = () => {
                       />
                     </div>
                     <div className="flex flex-col space-y-2">
-                      <h1>Minimum Feedback Weightage : {minimumWeightage}</h1>
-                      <h1>Maximum Feedback Weightage : {maximumWeightage}</h1>
+                      <h1 className="text-sm text-gray-500">
+                        Minimum Weightage : {minimumWeightage}
+                      </h1>
+                      <h1 className="text-sm text-gray-500">
+                        Maximum Weightage : {maximumWeightage}
+                      </h1>
                     </div>
                   </div>
 
@@ -2464,7 +2435,7 @@ const FormBody = () => {
                           <div key={i}>
                             {!formData[i].style.label && (
                               <div className="flex space-x-2">
-                                <h1 className="font-semibold">
+                                <h1 className="font-semibold text-gray-600">
                                   {formData[i].labelText}
                                 </h1>
                                 {formData[i].required && (
@@ -2557,7 +2528,10 @@ const FormBody = () => {
                         return (
                           <div className="flex flex-col space-y-3">
                             <div className="flex items-center space-x-3">
-                              <h1 key={i} className="font-semibold text-lg ">
+                              <h1
+                                key={i}
+                                className="font-semibold text-base text-gray-600 "
+                              >
                                 {i + 1}
                                 {"."} {formData[i].text}
                               </h1>
@@ -2574,7 +2548,9 @@ const FormBody = () => {
                                     disabled
                                   />
 
-                                  <p>{option.optionText}</p>
+                                  <p className="text-sm font-medium text-gray-500">
+                                    {option.optionText}
+                                  </p>
                                 </div>
                               );
                             })}
@@ -2630,7 +2606,7 @@ const FormBody = () => {
         </div>
         <div className=" flex w-full h-auto justify-center flex-1">
           <div>
-            <div className="bg-gray-100 w-[50rem] h-fit mt-10 ml-56 shadow-md  ">
+            <div className="bg-gray-50 w-[50rem] h-fit mt-10 ml-56 shadow-md  ">
               <div className="bg-blue-500 w-full h-3 rounded-t-md"></div>
               <div className=" pt-10 pb-10 px-10">
                 <input
@@ -2642,7 +2618,8 @@ const FormBody = () => {
                 />
 
                 <textarea
-                  className="form-input bg-transparent text-base font-semibold w-full border-0 outline-0 focus:ring-0 mb-4 focus:border-b-2"
+                  rows="1"
+                  className="form-input bg-transparent text-gray-600 text-base font-semibold w-full border-0 outline-0 focus:ring-0 mb-4 focus:border-b-2"
                   placeholder=" Form Description (Optional)"
                   onChange={(e) => setFormDescription(e.target.value)}
                 />

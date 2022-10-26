@@ -1,18 +1,22 @@
 import React from "react";
-import { ThreeDots } from "react-loader-spinner";
+import { Puff } from "react-loader-spinner";
 const Loader = () => {
   return (
-    <div className="w-screen h-screen flex items-center justify-center">
-      <ThreeDots
-        height="80"
-        width="80"
-        radius="9"
+    <div className="w-screen h-screen flex flex-col space-y-3 items-center justify-center">
+      <Puff
+        height="100"
+        width="100"
+        radius={1}
         color="#4fa94d"
-        ariaLabel="three-dots-loading"
+        ariaLabel="puff-loading"
         wrapperStyle={{}}
-        wrapperClassName=""
+        wrapperClass=""
         visible={true}
       />
+
+      <p className="text-2xl tracking-wider text-gray-500 animate-pulse duration-200 ease-in-out ">
+        Submitting........
+      </p>
     </div>
   );
 };

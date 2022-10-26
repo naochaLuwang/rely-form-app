@@ -22,6 +22,7 @@ import { ImStatsBars } from "react-icons/im";
 import dbConnect from "../utils/db";
 import Head from "next/head";
 import Sidebar from "../components/Sidebar";
+import FormHeader from "../components/FormHeader";
 const FormTemplate = ({ form }) => {
   const [tableData, setTableData] = useState(form);
   const [gridApi, setGridApi] = useState(null);
@@ -30,6 +31,7 @@ const FormTemplate = ({ form }) => {
   const [formStatus, setFormStatus] = useState(false);
   const [formName, setFormName] = useState("");
   const [formId, setFormId] = useState("");
+  const [record, setRecord] = useState(0);
 
   const gridRef = useRef();
 
@@ -84,6 +86,14 @@ const FormTemplate = ({ form }) => {
 
   const onFilterTextChange = (e) => {
     gridApi.api.setQuickFilter(e.target.value);
+    const count = gridApi.api.getDisplayedRowCount();
+    setRecord(count);
+  };
+
+  const onSelectStatusChange = (e) => {
+    gridApi.api.setQuickFilter(e.target.value);
+    const count = gridApi.api.getDisplayedRowCount();
+    setRecord(count);
   };
 
   const getFilterType = () => {
@@ -92,6 +102,13 @@ const FormTemplate = ({ form }) => {
     else if (endDate !== "") return "lessThan";
   };
 
+  useEffect(() => {
+    if (gridApi) {
+      gridApi.api.setQuickFilter("true");
+      const count = gridApi.api.getDisplayedRowCount();
+      setRecord(count);
+    }
+  }, [gridApi]);
   useEffect(() => {
     if (gridApi) {
       var dateFilterComponent = gridApi.api.getFilterInstance("createdAt");
@@ -103,6 +120,7 @@ const FormTemplate = ({ form }) => {
 
       gridApi.api.onFilterChanged();
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
@@ -228,9 +246,13 @@ const FormTemplate = ({ form }) => {
           <div className="flex justify-between items-center w-24">
             <div>
               {data.data.status ? (
-                <h1 className="text-green-500 text-xs font-medium">Active</h1>
+                <h1 className="text-white text-xs  bg-green-500 px-5 py-1.5 rounded-full font-medium">
+                  Active
+                </h1>
               ) : (
-                <h1 className=" text-grey-500 text-xs font-medium">Disabled</h1>
+                <h1 className=" text-white rounded-full text-xs px-4 py-1.5 bg-gray-500  font-medium">
+                  Inactive
+                </h1>
               )}
             </div>
 
@@ -411,98 +433,114 @@ const FormTemplate = ({ form }) => {
       </Head>
       <div className=" w-screen h-screen flex bg-gray-50 overflow-hidden  ">
         <Sidebar />
-        <div className="flex-1 h-full p-7    ">
-          <div className="flex justify-between items-center ">
-            <h1 className="text-2xl font-bold">Form Templates</h1>
-            <div>
-              <Link href="/form">
-                <p className="rounded-md px-3.5 mb-2 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-green-600 text-green-600 text-white">
-                  <span className="absolute w-64 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-green-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-                  <span className="relative text-green-600 transition duration-300 group-hover:text-white ease">
-                    + Create
-                  </span>
-                </p>
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex items-center bg-white px-6 rounded-xl shadow-lg justify-between mb-3">
-            {/* <h1 className="text-base text-gray-500 font-semibold ">
+        <div className="flex-1 h-full     ">
+          <FormHeader title="Form Templates" />
+          <div className="px-7 h-full">
+            <div className="flex items-center bg-white px-6 rounded-xl shadow-lg mt-5 justify-between mb-3">
+              {/* <h1 className="text-base text-gray-500 font-semibold ">
               {tableData?.length} templates found
             </h1> */}
 
-            <div className="flex space-x-5  ">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="date"
-                  className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                  placeholder="dd-mm-yyyy"
-                  value={startDate}
-                  onChange={(e) =>
-                    //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
-                    setStartDate(e.target.value)
-                  }
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <h1 className="text-sm font-semibold">To</h1>
-                <input
-                  type="date"
-                  value={endDate}
-                  className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-3 ">
-              <div className="max-w-xs">
-                <div className=" mt-1 relative p-3 runded-md  ">
-                  <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
-                    <SearchIcon className="h-5 w-5 text-gray-500" />
-                  </div>
+              <div className="flex space-x-5   ">
+                <div className="flex items-center space-x-2">
                   <input
+                    type="date"
                     className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                    type="search"
-                    placeholder="search"
-                    onChange={onFilterTextChange}
+                    placeholder="dd-mm-yyyy"
+                    value={startDate}
+                    onChange={(e) =>
+                      //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
+                      setStartDate(e.target.value)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <h1 className="text-sm font-semibold">To</h1>
+                  <input
+                    type="date"
+                    value={endDate}
+                    className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                    onChange={(e) => setEndDate(e.target.value)}
                   />
                 </div>
               </div>
-              <button
-                className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
-                onClick={handleRefresh}
-              >
-                <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
-                  <h1>Refresh</h1>
-                  <FcRefresh className="text-sm text-gray-600" />
-                </div>
-              </button>
-              <button
-                className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
-                onClick={onExportClick}
-              >
-                <div className="flex items-center text-white text-sm font-semibold space-x-2">
-                  <h1>Export</h1>
-                  <FaFileExport />
-                </div>
-              </button>
-            </div>
-          </div>
 
-          <div className="ag-theme-alpine ag-style h-[80%] bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
-            <AgGridReact
-              columnDefs={columnDefs}
-              rowData={tableData}
-              defaultColDef={defaultColDef}
-              onGridReady={onGridReady}
-              pagination={true}
-              ref={gridRef}
-              paginationPageSize={10}
-              paginationAutoPageSize={true}
-              headerHeight={30}
-            ></AgGridReact>
+              <div>
+                <select
+                  name="status"
+                  id="status"
+                  className="bg-gray-50 form-input block w-40  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                  onChange={onSelectStatusChange}
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+
+              <div>
+                <select
+                  name="formType"
+                  id="formType"
+                  className="bg-gray-50 form-input block w-40 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                  onChange={onSelectStatusChange}
+                >
+                  <option value="">Form Type</option>
+                  <option value="IPD">IPD</option>
+                  <option value="OPD">OPD</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-3 ">
+                <div className="max-w-xs">
+                  <div className=" mt-1 relative p-3 runded-md  ">
+                    <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
+                      <SearchIcon className="h-5 w-5 text-gray-500" />
+                    </div>
+                    <input
+                      className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      type="search"
+                      placeholder="search"
+                      onChange={onFilterTextChange}
+                    />
+                  </div>
+                </div>
+                <button
+                  className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
+                  onClick={handleRefresh}
+                >
+                  <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
+                    <h1>Refresh</h1>
+                    <FcRefresh className="text-sm text-gray-600" />
+                  </div>
+                </button>
+                <button
+                  className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
+                  onClick={onExportClick}
+                >
+                  <div className="flex items-center text-white text-sm font-semibold space-x-2">
+                    <h1>Export</h1>
+                    <FaFileExport />
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <h1 className="text-sm mb-2 ">{record} record(s) found</h1>
+
+            <div className="ag-theme-alpine ag-style h-[65%]  bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
+              <AgGridReact
+                columnDefs={columnDefs}
+                rowData={tableData}
+                defaultColDef={defaultColDef}
+                onGridReady={onGridReady}
+                pagination={true}
+                ref={gridRef}
+                paginationPageSize={10}
+                paginationAutoPageSize={true}
+                headerHeight={30}
+              ></AgGridReact>
+            </div>
           </div>
         </div>
       </div>
