@@ -111,7 +111,7 @@ const FormHeader = ({ handleOpen, openSidebar, title }) => {
               </div>
             </MenuItem>
 
-            <MenuItem onClick={() => signOut()}>
+            <MenuItem onClick={() => signOut({ redirect: false })}>
               <div className="flex items-center space-x-3">
                 <LogoutOutlinedIcon fontSize="small" className="text-red-700" />
                 <p className="font-medium text-base text-gray-500">Logout</p>
