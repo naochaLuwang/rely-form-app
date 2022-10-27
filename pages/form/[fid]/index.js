@@ -157,16 +157,18 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     {newForm?.patient.ageY}
                   </h1>
                   <h1 className="tracking-wider text-sm">
-                    <span className="font-semibold text-sm">Gender :</span>{" "}
+                    <span className="font-semibold text-sm text-gray-600">
+                      Gender :
+                    </span>{" "}
                     {newForm?.patient.gender}
                   </h1>
-                  <h1 className="tracking-wider text-sm">
+                  <h1 className="tracking-wider text-sm text-gray-600">
                     <span className="font-semibold text-sm">Mobile :</span>{" "}
                     {newForm?.patient.primaryMobileNumber}
                   </h1>
                 </div>
                 <div className="flex flex-col">
-                  <h1 className="tracking-wider text-sm">
+                  <h1 className="tracking-wider text-sm ">
                     {" "}
                     <span className="font-semibold text-sm text-gray-600">
                       Type :
@@ -201,7 +203,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       key={i}
                       className="flex flex-col space-y-2 mb-5 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
-                      <h1 className="text-lg font-bold">
+                      <h1 className="text-lg font-semibold text-gray-600">
                         {formData.form[i].label}
                       </h1>
                     </div>
@@ -214,7 +216,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     >
                       {!formData.form[i].style.label && (
                         <div className="flex ">
-                          <h1 className="text-lg font-bold">
+                          <h1 className="text-sm font-semibold text-gray-700">
                             {formData.form[i].labelText}
                           </h1>
                           {formData.form[i].required && (
@@ -241,7 +243,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     >
                       {!formData.form[i].style.label && (
                         <div className="flex ">
-                          <h1 className="text-lg font-bold">
+                          <h1 className="text-sm font-semibold text-gray-700">
                             {formData.form[i].labelText}
                           </h1>
                           {formData.form[i].required && (
@@ -268,7 +270,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     >
                       {!formData.form[i].style.label && (
                         <div className="flex ">
-                          <h1 className="text-lg font-bold">
+                          <h1 className="text-sm  font-semibold text-gray-700">
                             {formData.form[i].labelText}
                           </h1>
                           {formData.form[i].required && (
