@@ -560,10 +560,8 @@ export default FormTemplate;
 
 export async function getServerSideProps(context) {
   await dbConnect();
-  const url =
-    process.env.NODE_ENV === "production"
-      ? process.env.HOST_URL
-      : "http://localhost:3000";
+  const url = "https://rely-form.herokuapp.com";
+
   const response = await fetch(`${url}/api/form`);
   const data = await response.json();
 
