@@ -1,23 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import control from "../assets/images/control.png";
+
 import logo from "../assets/images/logo.jpeg";
-import Setting from "../assets/images/Setting.png";
+
 import Chart_fill from "../assets/images/Chart_fill.png";
 import Link from "next/link";
 import { FcFeedback } from "react-icons/fc";
 import { AiFillHome } from "react-icons/ai";
 import { ChevronUpIcon } from "@heroicons/react/outline";
+import { useGlobalState } from "./FormHeader";
 
-const Sidebar = ({ open, subOpen }) => {
-  // const [open, setOpen] = useState(openSidebar);
-  const [openSidebar, setOpenSidebar] = useState(false);
+const Sidebar = ({ subOpen }) => {
+  const [open, setOpen] = useGlobalState("open");
+
   const [submenuOpen, setSubmenuOpen] = useState(false);
 
+  console.log(open);
+
   useEffect(() => {
-    setOpenSidebar(open);
-    setSubmenuOpen(subOpen);
-  }, [open, subOpen]);
+    setOpen(false);
+    setSubmenuOpen(false);
+  }, [setOpen]);
 
   const Menus = [
     { title: "Home", src: Chart_fill, url: "/" },
@@ -36,8 +39,8 @@ const Sidebar = ({ open, subOpen }) => {
   return (
     <div
       className={`${
-        openSidebar ? "w-60" : "w-16"
-      } h-screen duration-300 transalte-transform ease-in-out bg-white border shadow-lg  pt-8 relative`}
+        open ? "w-60" : "w-16"
+      } h-screen duration-300 transalte-transform ease-in-out bg-white border shadow-lg  pt-3  sticky left-0 top-0`}
     >
       {/* <div
         className={`absolute cursor-pointer -right-3 w-8 h-8 z-20 top-9 border-2 rounded-full border-dark-purple ${
@@ -63,22 +66,10 @@ const Sidebar = ({ open, subOpen }) => {
           </div>
         </Link>
 
-        <span className={`${!openSidebar && "hidden"} font-bold text-lg `}>
+        <span className={`${!open && "hidden"} font-bold text-lg `}>
           Rely Form
         </span>
       </div>
-
-      {/* {open && (
-        <div className="flex flex-col mt-5 duration-500">
-          <div className="flex items-center text-white space-x-4 font-bold">
-            <div className="w-12 h-12 rounded-full bg-light-white"></div>
-            <div className="flex flex-col space-y-2">
-              <p>Admin</p>
-              <p className="font-light">admin@gmail.com</p>
-            </div>
-          </div>
-        </div>
-      )} */}
 
       <ul className="pt-2">
         {Menus.map((menu, index) => (
@@ -87,7 +78,7 @@ const Sidebar = ({ open, subOpen }) => {
               <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-2 cursor-pointer p-2 hover:bg-light-white rounded-md">
                 <AiFillHome className="text-xl text-gray-600 group-hover:text-blue-500 " />
 
-                <span className={`${!openSidebar && "hidden"} text-end`}>
+                <span className={`${!open && "hidden"} text-end`}>
                   {menu.title}
                 </span>
               </div>
@@ -99,8 +90,8 @@ const Sidebar = ({ open, subOpen }) => {
       <ul
         className="pt-2  "
         onClick={() => {
-          if (!openSidebar) {
-            setOpenSidebar(true);
+          if (!open) {
+            setOpen(!open);
           }
           setSubmenuOpen(!submenuOpen);
         }}
@@ -126,7 +117,7 @@ const Sidebar = ({ open, subOpen }) => {
             />
             <span
               className={`${
-                !openSidebar && "hidden"
+                !open && "hidden"
               } flex items-center space w-full justify-between`}
             >
               Feedback{" "}

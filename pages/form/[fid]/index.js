@@ -195,19 +195,26 @@ const FormFeedbackPage = ({ formFeedback }) => {
 
             {newForm?.form?.map((element, i) => {
               switch (element.inputType) {
+                case "label":
+                  return (
+                    <div
+                      key={i}
+                      className="flex flex-col space-y-2 mb-5 border bg-white px-10 py-4 rounded-lg shadow-sm"
+                    >
+                      <h1 className="text-lg font-bold">
+                        {formData.form[i].label}
+                      </h1>
+                    </div>
+                  );
                 case "text":
                   return (
                     <div
                       key={i}
-                      className="flex flex-col space-y-2 lg:mb-5 mb-2  bg-white px-10 py-4 rounded-lg shadow-sm"
+                      className="flex flex-col space-y-2 mb-5 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       {!formData.form[i].style.label && (
                         <div className="flex ">
-                          <h1 className="lg:text-base text-sm font-bold text-gray-600">
-                            <span>
-                              {i + 1}
-                              {". "}
-                            </span>
+                          <h1 className="text-lg font-bold">
                             {formData.form[i].labelText}
                           </h1>
                           {formData.form[i].required && (
@@ -217,13 +224,12 @@ const FormFeedbackPage = ({ formFeedback }) => {
                           )}
                         </div>
                       )}
-                      <h1
-                        className=" text-base font-bold text-gray-700"
-
-                        // onChange={(e) => changeText(e.target.value, i)}
-                      >
-                        {formData.form[i].text}
-                      </h1>
+                      <input
+                        className="form-input w-96 rounded-md border focus:border-gray-400 bg-transparent  focus:outline-0 focus:ring-0"
+                        type={formData.form[i].inputType}
+                        value={formData.form[i].text}
+                        onChange={(e) => changeText(e.target.value, i)}
+                      />
                     </div>
                   );
 
@@ -236,10 +242,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       {!formData.form[i].style.label && (
                         <div className="flex ">
                           <h1 className="text-lg font-bold">
-                            <span>
-                              {i + 1}
-                              {". "}
-                            </span>
                             {formData.form[i].labelText}
                           </h1>
                           {formData.form[i].required && (
@@ -267,10 +269,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       {!formData.form[i].style.label && (
                         <div className="flex ">
                           <h1 className="text-lg font-bold">
-                            <span>
-                              {i + 1}
-                              {". "}
-                            </span>
                             {formData.form[i].labelText}
                           </h1>
                           {formData.form[i].required && (
@@ -282,8 +280,8 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       )}
 
                       <textarea
-                        className="w-full bg-transparent"
-                        rows="10"
+                        className="w-full bg-transparent rounded-md"
+                        rows="5"
                         value={formData.form[i].text}
                         onChange={(e) => changeText(e.target.value, i)}
                       ></textarea>
@@ -334,9 +332,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
                               : "lg:text-base text-sm text-gray-700 font-semibold"
                           }
                         >
-                          <span className="lg:text-base text-sm text-gray-700">
-                            {i} .
-                          </span>
                           {formData.form[i].text}
                         </h1>
                         {formData.form[i].required && (
@@ -375,10 +370,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
                     >
                       <div className="flex ">
                         <h1 className="lg:text-base text-sm font-semibold text-gray-700">
-                          <span className="lg:text-base text-sm font-semibold text-gray-700">
-                            {i}
-                            {". "}
-                          </span>
                           {formData.form[i].text}
                         </h1>
                         {formData.form[i].required && (

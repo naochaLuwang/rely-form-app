@@ -7,7 +7,12 @@ import { MenuList } from "@mui/material";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Badge from "@mui/material/Badge";
-const FormHeader = ({ handleOpen, openSidebar, title }) => {
+import { createGlobalState } from "react-hooks-global-state";
+
+const initialState = { open: false };
+export const { useGlobalState } = createGlobalState(initialState);
+const FormHeader = ({ title }) => {
+  const [openSidebar, setOpenSidebar] = useGlobalState("open");
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -15,9 +20,18 @@ const FormHeader = ({ handleOpen, openSidebar, title }) => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const handleOpen = () => {
+    setOpenSidebar(!openSidebar);
+  };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const callbackUrl =
+    process.env.NODE_ENV === "production"
+      ? "https://rely-form.herokuapp.com"
+      : "http://localhost:3000";
 
   useEffect(() => {
     if (session) {
@@ -26,7 +40,7 @@ const FormHeader = ({ handleOpen, openSidebar, title }) => {
     }
   }, [session, name]);
   return (
-    <div className=" flex flex-1 px-8 py-3 items-center justify-between bg-white shadow-lg rounded-md">
+    <div className=" flex sticky top-0 z-50 flex-1 px-8 py-3 items-center justify-between bg-white shadow-lg rounded-md">
       <div className="flex items-center space-x-2">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +129,7 @@ const FormHeader = ({ handleOpen, openSidebar, title }) => {
               onClick={() =>
                 signOut({
                   redirect: false,
-                  callbackUrl: "https://rely-form.herokuapp.com",
+                  callbackUrl: callbackUrl,
                 })
               }
             >

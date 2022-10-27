@@ -19,6 +19,7 @@
     "axios": "^0.27.2",
     "bcrypt": "^5.1.0",
     "chart.js": "^3.9.1",
+    "file-saver": "^2.0.5",
     "lottie-react": "^2.3.1",
     "moment": "^2.29.4",
     "mongoose": "^6.6.3",
@@ -31,13 +32,16 @@
     "react-beautiful-dnd": "^13.1.1",
     "react-chartjs-2": "^4.3.1",
     "react-dom": "18.2.0",
+    "react-hooks-global-state": "^2.0.0",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.4.0",
     "react-live-clock": "^6.0.6",
     "react-loader-spinner": "^5.3.4",
     "react-toastify": "^9.0.8",
     "sass": "^1.55.0",
-    "uuid": "^9.0.0"
+    "sheetjs-style": "^0.15.8",
+    "uuid": "^9.0.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.0/xlsx-0.19.0.tgz"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.3",

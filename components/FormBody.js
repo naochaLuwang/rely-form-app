@@ -26,6 +26,7 @@ import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import Drawer from "@mui/material/Drawer";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
+import FormHeader from "./FormHeader";
 
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import toast, { Toaster } from "react-hot-toast";
@@ -76,6 +77,7 @@ const FormBody = () => {
   const [radioOpen, setRadioOpen] = React.useState(false);
   const [checkboxOpen, setCheckboxOpen] = React.useState(false);
   const [fieldOpen, setFieldOpen] = useState(false);
+  const [labelText, setLabelText] = useState("");
 
   const formEndRef = useRef(null);
 
@@ -104,15 +106,17 @@ const FormBody = () => {
     return result;
   };
 
+  // !! preview function
   const handleClickOpen = () => {
+    console.log(formData);
     const filteredData = formData.filter((element) =>
       element.inputType.includes("radio")
     );
 
-    let lastIndex = filteredData[0].options.length - 1;
+    let lastIndex = filteredData[0]?.options.length - 1 || 0;
 
-    let minWeight = filteredData[0].options[0].weightage;
-    let maxWeight = filteredData[0].options[lastIndex].weightage;
+    let minWeight = filteredData[0]?.options[0].weightage || 0;
+    let maxWeight = filteredData[0]?.options[lastIndex].weightage || 0;
 
     setMinimumWeightage(minWeight);
 
@@ -128,6 +132,16 @@ const FormBody = () => {
     setOpen(false);
   };
 
+  const newLabel = () => {
+    setFormData([
+      ...formData,
+      {
+        label: labelText,
+        inputType: "label",
+      },
+    ]);
+  };
+
   const newName = () => {
     setFormData([
       ...formData,
@@ -135,13 +149,6 @@ const FormBody = () => {
         label: "Name",
         text: "",
         inputType: "name",
-        style: {
-          fontSize: "",
-          weight: false,
-          italic: false,
-          underline: false,
-          alignment: "",
-        },
       },
     ]);
   };
@@ -153,13 +160,6 @@ const FormBody = () => {
         label: "Email",
         text: "",
         inputType: "email",
-        style: {
-          fontSize: "",
-          weight: false,
-          italic: false,
-          underline: false,
-          alignment: "",
-        },
       },
     ]);
   };
@@ -233,6 +233,18 @@ const FormBody = () => {
   const handleLabel = (i) => {
     const newFormData = [...formData];
     newFormData[i].style.label = !newFormData[i].style.label;
+    setFormData(newFormData);
+  };
+
+  const changeLabel = (i, text) => {
+    const newFormData = [...formData];
+    newFormData[i].label = text;
+    setFormData(newFormData);
+  };
+
+  const changeCredential = (i, text) => {
+    const newFormData = [...formData];
+    newFormData[i].text = text;
     setFormData(newFormData);
   };
 
@@ -559,6 +571,7 @@ const FormBody = () => {
     const res = await axios.post("/api/form", {
       formName,
       formData,
+      formDescription,
       formId,
       formType,
       minimumWeightage,
@@ -610,7 +623,7 @@ const FormBody = () => {
                               snapshot.isDragging &&
                               "border-green-300 border-2 border-dashed bg-opacity-10"
                             }
-                              bg-white w-full flex space-x-3 items-center px-6 py-10 space-y-3  shadow-lg h-fit mb-5`}
+                              bg-white w-full flex rounded-lg space-x-3 items-center px-6 py-6 space-y-3  shadow-lg h-fit mb-5`}
                           >
                             <div
                               onClick={() => setTextOpen(true)}
@@ -623,7 +636,7 @@ const FormBody = () => {
                                     disabled
                                     placeholder="Single Line"
                                     value={formData[i].labelText}
-                                    className="w-full bg-transparent form-input border-0 outline-0 font-semibold focus:ring-0 focus:border-b-2 -ml-3"
+                                    className="w-full bg-transparent text-gray-600 form-input border-0 outline-0 font-semibold focus:ring-0 focus:border-b-2 -ml-3"
                                   />
                                 </div>
                               ) : (
@@ -657,7 +670,7 @@ const FormBody = () => {
                                       : "underline"
                                   } "form-input w-full text-${
                                     formData[i].style.fontSize
-                                  }  focus:ring-0 focus:outline-0 focus:border-gray-500 bg-transparent`}
+                                  }  focus:ring-0 focus:outline-0 rounded-md focus:border-gray-500 bg-transparent`}
                                   type={formData[i].inputType}
                                   placeholder={formData[i].placeholderText}
                                   value={formData[i].text}
@@ -675,7 +688,7 @@ const FormBody = () => {
                                 className="h-10 w-10 text-green-700 font-light bg-gray-200"
                                 onClick={() => setTextOpen(true)}
                               >
-                                <Settings />
+                                <Settings className="text-green-700" />
                               </IconButton>
                               <IconButton
                                 className="text-red-700 bg-gray-200 h-10 w-10"
@@ -684,7 +697,7 @@ const FormBody = () => {
                                   deleteComponent(i);
                                 }}
                               >
-                                <Delete />
+                                <Delete className="text-red-700" />
                               </IconButton>
                               <Drawer
                                 anchor={"right"}
@@ -704,19 +717,19 @@ const FormBody = () => {
                                       <h1 className="text-3xl font-bold text-gray-700">
                                         Text Properties
                                       </h1>
-                                      <IconButton
+                                      {/* <IconButton
                                         className="bg-gray-200 text-blue-700"
                                         onClick={() => setTextOpen(false)}
                                       >
                                         <Close />
-                                      </IconButton>
+                                      </IconButton> */}
                                     </div>
 
                                     <p className="text-lg mt-5 font-bold text-gray-500">
                                       Label
                                     </p>
                                     <input
-                                      className="form-input w-96 mt-2 rounded-sm  focus:ring-0 "
+                                      className="form-input w-96 mt-2 rounded-md shadow-sm  focus:ring-0 "
                                       type={formData[i].inputType}
                                       placeholder="Enter text"
                                       value={formData[i].labelText}
@@ -875,7 +888,7 @@ const FormBody = () => {
                             className={`${
                               snapshot.isDragging &&
                               "border-green-300 border-2 border-dashed bg-opacity-10"
-                            } w-full flex space-x-3 items-center px-6 py-10 space-y-3 bg-white shadow-lg h-fit mb-5`}
+                            } w-full flex space-x-3 items-center px-6 py-6 rounded-lg space-y-3 bg-white shadow-lg h-fit mb-5`}
                           >
                             <div
                               key={"right"}
@@ -889,7 +902,7 @@ const FormBody = () => {
                                     disabled
                                     placeholder="Number"
                                     value={formData[i].labelText}
-                                    className="w-full form-input bg-transparent border-0 outline-0 font-semibold focus:ring-0 focus:border-b-2 -ml-3"
+                                    className="w-full form-input bg-transparent border-0 outline-0 font-semibold text-gray-600 focus:ring-0 focus:border-b-2 -ml-3"
                                   />
                                 </div>
                               ) : (
@@ -923,7 +936,7 @@ const FormBody = () => {
                                       : "underline"
                                   } "form-input w-full text-${
                                     formData[i].style.fontSize
-                                  }  focus:ring-0 focus:outline-0 bg-transparent focus:border-gray-500`}
+                                  }  focus:ring-0 focus:outline-0 bg-transparent rounded-md focus:border-gray-500`}
                                   type={formData[i].inputType}
                                   placeholder={formData[i].placeholderText}
                                   value={formData[i].text}
@@ -941,7 +954,7 @@ const FormBody = () => {
                                 className="h-10 w-10 bg-gray-200 text-green-700"
                                 onClick={() => setNumericOpen(true)}
                               >
-                                <Settings />
+                                <Settings className="text-green-700" />
                               </IconButton>
                               <IconButton
                                 className="text-red-700 bg-gray-200 h-10 w-10"
@@ -950,7 +963,7 @@ const FormBody = () => {
                                   deleteComponent(i);
                                 }}
                               >
-                                <Delete />
+                                <Delete className="text-red-700" />
                               </IconButton>
                               <Drawer
                                 anchor={"right"}
@@ -967,21 +980,21 @@ const FormBody = () => {
                                       <h1 className="text-3xl font-bold text-gray-700">
                                         Number Properties
                                       </h1>
-                                      <IconButton
+                                      {/* <IconButton
                                         className="bg-gray-200 text-gray-700 "
                                         onClick={() => setNumericOpen(false)}
                                       >
                                         <Close />
-                                      </IconButton>
+                                      </IconButton> */}
                                     </div>
 
                                     <p className="text-lg mt-5 font-bold text-gray-500">
-                                      Field Label
+                                      Label
                                     </p>
                                     <input
                                       className="form-input w-96 mt-2  rounded-sm focus:ring-0 "
                                       type="text"
-                                      placeholder="Enter text"
+                                      placeholder="Enter label"
                                       value={formData[i].labelText}
                                       onChange={(e) =>
                                         changeLabelText(e.target.value, i)
@@ -998,17 +1011,17 @@ const FormBody = () => {
                                           }}
                                         />
                                       }
-                                      label="Hide Field Label"
+                                      label="Hide Label"
                                     />
 
                                     <p className="text-lg font-bold text-gray-500">
-                                      Placeholder Text
+                                      Placeholder
                                     </p>
                                     <input
                                       className="form-input w-96 mt-2 mb-5   focus:ring-0 "
                                       type="text"
                                       value={formData[i].placeholderText}
-                                      placeholder="Enter placeholder text"
+                                      placeholder="Enter placeholder"
                                       onChange={(e) =>
                                         changePlaceHolderText(e.target.value, i)
                                       }
@@ -1077,32 +1090,30 @@ const FormBody = () => {
                                       </div>
                                     </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Duplicate Field
-                                    </h1>
-                                    <div
-                                      onClick={() => duplicateText(i)}
-                                      className="max-w-fit flex items-center shadow-lg rounded-md bg-green-500 text-white py-3 px-4 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <ContentCopyTwoTone />
-                                      <p className="text-lg font-black">
-                                        Duplicate
-                                      </p>
-                                    </div>
+                                    <div className="flex items-center mt-5 space-x-3">
+                                      <div
+                                        onClick={() => {
+                                          deleteComponent(i),
+                                            setNumericOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-white text-red-700 px-6 border border-red-700 cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium">
+                                          Delete
+                                        </p>
+                                        <DeleteForever />
+                                      </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Delete Field
-                                    </h1>
-                                    <div
-                                      onClick={() => {
-                                        deleteComponent(i), setTextOpen(false);
-                                      }}
-                                      className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-red-700 text-white px-6 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <p className="text-lg font-bold">
-                                        Delete
-                                      </p>
-                                      <DeleteForever />
+                                      <div
+                                        onClick={() => {
+                                          setNumericOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg text-white bg-blue-500 px-6 border  cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium px-4">
+                                          Save
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </Box>
@@ -1140,7 +1151,7 @@ const FormBody = () => {
                             className={`${
                               snapshot.isDragging &&
                               "border-green-400 border-2 border-dashed bg-opacity-10"
-                            } w-full flex space-x-3 items-center px-6 py-10 space-y-3 bg-white shadow-lg h-fit mb-5`}
+                            } w-full flex space-x-3 items-center px-6 py-6 space-y-3 rounded-lg bg-white shadow-lg h-fit mb-5`}
                           >
                             <div
                               key={"right"}
@@ -1154,7 +1165,7 @@ const FormBody = () => {
                                     disabled
                                     placeholder="Multiline"
                                     value={formData[i].labelText}
-                                    className="w-full bg-transparent form-input border-0 outline-0 font-semibold focus:ring-0 focus:border-b-2 -ml-3"
+                                    className="w-full bg-transparent text-gray-600 form-input border-0 outline-0 font-semibold focus:ring-0 focus:border-b-2 -ml-3"
                                   />
                                 </div>
                               ) : (
@@ -1164,7 +1175,7 @@ const FormBody = () => {
                               <div className="w-full flex ">
                                 <textarea
                                   rows="3"
-                                  className="w-full h-20 bg-transparent"
+                                  className="w-full h-20 bg-transparent rounded-md"
                                   disabled
                                   placeholder={formData[i].placeholderText}
                                   value={formData[i].text}
@@ -1180,7 +1191,7 @@ const FormBody = () => {
                                 className="h-10 w-10 bg-gray-200 text-green-700"
                                 onClick={() => setMultilineOpen(true)}
                               >
-                                <Settings />
+                                <Settings className="text-green-700" />
                               </IconButton>
                               <IconButton
                                 className="text-red-700 bg-gray-200 h-10 w-10"
@@ -1189,7 +1200,7 @@ const FormBody = () => {
                                   deleteComponent(i);
                                 }}
                               >
-                                <Delete />
+                                <Delete className="text-red-700" />
                               </IconButton>
                               <Drawer
                                 anchor={"right"}
@@ -1209,21 +1220,21 @@ const FormBody = () => {
                                       <h1 className="text-3xl font-bold text-gray-700">
                                         Multiline Properties
                                       </h1>
-                                      <IconButton
+                                      {/* <IconButton
                                         className="bg-gray-200 text-black"
                                         onClick={() => setMultilineOpen(false)}
                                       >
                                         <Close />
-                                      </IconButton>
+                                      </IconButton> */}
                                     </div>
 
                                     <p className="text-lg mt-5 font-bold text-gray-500">
-                                      Field Label
+                                      Label
                                     </p>
                                     <input
-                                      className="form-input w-96 mt-2   focus:ring-0 "
+                                      className="form-input w-96 mt-2 rounded-md  focus:ring-0 "
                                       type="text"
-                                      placeholder="Enter text"
+                                      placeholder="Enter label"
                                       value={formData[i].labelText}
                                       onChange={(e) =>
                                         changeLabelText(e.target.value, i)
@@ -1240,14 +1251,14 @@ const FormBody = () => {
                                           }}
                                         />
                                       }
-                                      label="Hide Field Label"
+                                      label="Hide Label"
                                     />
 
                                     <p className="text-lg font-bold text-gray-500">
-                                      Placeholder Text
+                                      Placeholder
                                     </p>
                                     <input
-                                      className="form-input w-96 mt-2 mb-5   focus:ring-0 "
+                                      className="form-input w-96 mt-2 mb-5 rounded-md  focus:ring-0 "
                                       placeholder="Enter placeholder text"
                                       type="text"
                                       value={formData[i].placeholderText}
@@ -1261,17 +1272,13 @@ const FormBody = () => {
                                     </p>
 
                                     <textarea
-                                      className="w-full"
+                                      className="w-96 rounded-md"
                                       rows="5"
                                       value={formData[i].text}
                                       onChange={(e) =>
                                         changeText(e.target.value, i)
                                       }
                                     ></textarea>
-
-                                    <p className="mt-5 font-bold text-lg text-gray-500">
-                                      Required Field
-                                    </p>
 
                                     <FormControlLabel
                                       control={
@@ -1319,32 +1326,30 @@ const FormBody = () => {
                                       </div>
                                     </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Duplicate Field
-                                    </h1>
-                                    <div
-                                      onClick={() => duplicateText(i)}
-                                      className="max-w-fit flex items-center shadow-lg rounded-md bg-green-500 text-white py-3 px-4 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <ContentCopyTwoTone />
-                                      <p className="text-lg font-black">
-                                        Duplicate
-                                      </p>
-                                    </div>
+                                    <div className="flex items-center mt-5 space-x-3">
+                                      <div
+                                        onClick={() => {
+                                          deleteComponent(i),
+                                            setMultilineOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-white text-red-700 px-6 border border-red-700 cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium">
+                                          Delete
+                                        </p>
+                                        <DeleteForever />
+                                      </div>
 
-                                    <h1 className="text-lg font-bold mt-5 text-gray-500">
-                                      Delete Field
-                                    </h1>
-                                    <div
-                                      onClick={() => {
-                                        deleteComponent(i), setTextOpen(false);
-                                      }}
-                                      className="max-w-fit flex items-center py-3 rounded-md shadow-lg bg-red-700 text-white px-6 border cursor-pointer mt-2 space-x-2"
-                                    >
-                                      <p className="text-lg font-bold">
-                                        Delete
-                                      </p>
-                                      <DeleteForever />
+                                      <div
+                                        onClick={() => {
+                                          setMultilineOpen(false);
+                                        }}
+                                        className="max-w-fit flex items-center py-3 rounded-md shadow-lg text-white bg-blue-500 px-6 border  cursor-pointer mt-2 space-x-2"
+                                      >
+                                        <p className="text-base font-medium px-4">
+                                          Save
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
                                 </Box>
@@ -1409,7 +1414,7 @@ const FormBody = () => {
                                       : "underline"
                                   } "form-input w-full bg-transparent -ml-3  outline-0 border-0  focus:ring-0 focus:border-b-2"`}
                                   value={formData[i].text}
-                                  placeholder="Enter question text"
+                                  placeholder="Question"
                                   disabled
                                 />
                               </div>
@@ -1762,7 +1767,7 @@ const FormBody = () => {
                             className={`${
                               snapshot.isDragging &&
                               "border-green-400 border-2 bg-opacity-10"
-                            } flex items-center justify-between px-10 bg-white h-auto py-8 mb-5 shadow-lg`}
+                            } flex items-center justify-between px-10 bg-white h-auto py-6 rounded-lg mb-5 shadow-lg`}
                           >
                             <div
                               className="w-full flex flex-col cursor-pointer  "
@@ -1796,14 +1801,14 @@ const FormBody = () => {
                                       : "underline"
                                   } "form-input w-full bg-transparent -ml-3  outline-0 border-0  focus:ring-0 focus:border-b-2"`}
                                   value={formData[i].text}
-                                  placeholder="Enter question text"
+                                  placeholder="Question"
                                   disabled
                                 />
                               </div>
                               {form.options.map((op, j) => (
                                 <div
                                   key={j}
-                                  className="flex items-center space-x-2 mt-3"
+                                  className="flex items-center space-x-2 mt-2"
                                 >
                                   {form.inputType !== "text" ? (
                                     <input
@@ -2123,6 +2128,62 @@ const FormBody = () => {
                 </Draggable>
               );
 
+            // !! add a new label in form UI
+            case "label":
+              return (
+                <Draggable key={i} draggableId={i + "id"} index={i}>
+                  {(provided, snapshot) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <div>
+                        <div className="mb-0">
+                          <div className="w-full flex items-center justify-center mb-0">
+                            <DragIndicatorIcon
+                              className={`rotate-90 ${
+                                snapshot.isDragging && "text-green-500"
+                              }`}
+                            />
+                          </div>
+                          <div
+                            className={`${
+                              snapshot.isDragging &&
+                              "border-green-300 border-2 border-dashed bg-opacity-10"
+                            }
+                              bg-white w-full flex space-x-3 rounded-lg items-center px-6 py-10 space-y-3  shadow-lg h-fit mb-5`}
+                          >
+                            <div className="w-full flex flex-col space-y-2">
+                              <div className="flex space-x-5">
+                                <input
+                                  className="w-full bg-transparent text-input rounded-md"
+                                  type="text"
+                                  placeholder="Enter Label"
+                                  value={formData[i].label}
+                                  onChange={(e) =>
+                                    changeLabel(i, e.target.value)
+                                  }
+                                />
+                                <IconButton
+                                  aria-label="delete"
+                                  onClick={() => {
+                                    deleteComponent(i);
+                                  }}
+                                >
+                                  <Delete className="text-red-500" />
+                                </IconButton>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </Draggable>
+              );
+
+            // !! add a name field in form UI
             case "name":
               return (
                 <Draggable key={i} draggableId={i + "id"} index={i}>
@@ -2149,14 +2210,18 @@ const FormBody = () => {
                               bg-white w-full flex space-x-3 items-center px-6 py-10 space-y-3  shadow-lg h-fit mb-5`}
                           >
                             <div className="w-full flex flex-col space-y-2">
-                              <h1>{formData[i].label}</h1>
+                              <h1 className="font-medium">
+                                {formData[i].label}
+                              </h1>
                               <div className="flex space-x-5">
                                 <input
-                                  className="w-full bg-transparent"
+                                  className="w-full bg-transparent rounded-md"
                                   type="text"
                                   placeholder="Enter name"
                                   value={formData[i].text}
-                                  disabled
+                                  onChange={(e) =>
+                                    changeCredential(i, e.target.value)
+                                  }
                                 />
                                 <IconButton
                                   aria-label="delete"
@@ -2164,7 +2229,7 @@ const FormBody = () => {
                                     deleteComponent(i);
                                   }}
                                 >
-                                  <Delete />
+                                  <Delete className="text-red-500" />
                                 </IconButton>
                               </div>
                             </div>
@@ -2176,6 +2241,7 @@ const FormBody = () => {
                 </Draggable>
               );
 
+            // !! add an email field i form UI
             case "email":
               return (
                 <Draggable key={i} draggableId={i + "id"} index={i}>
@@ -2205,11 +2271,13 @@ const FormBody = () => {
                               <h1>{formData[i].label}</h1>
                               <div className="flex space-x-5">
                                 <input
-                                  className="w-full bg-transparent"
+                                  className="w-full bg-transparent rounded-md text-input"
                                   type="text"
                                   placeholder="Enter email"
                                   value={formData[i].text}
-                                  disabled
+                                  onChange={(e) =>
+                                    changeCredential(i, e.target.value)
+                                  }
                                 />
                                 <IconButton
                                   aria-label="delete"
@@ -2217,7 +2285,7 @@ const FormBody = () => {
                                     deleteComponent(i);
                                   }}
                                 >
-                                  <Delete />
+                                  <Delete className="text-red-500" />
                                 </IconButton>
                               </div>
                             </div>
@@ -2245,47 +2313,26 @@ const FormBody = () => {
   return (
     <div className="max-w-screen relative  flex-1 h-auto">
       <Toaster />
+      <FormHeader title={formName || "Untitled"} />
       <div className="flex relative justify-between">
         <div
           className={` w-[20rem] 
-            bg-white border fixed top-0 py-8 px-8 h-screen`}
+            bg-white border  fixed top-14 py-8 px-8 h-screen`}
         >
-          <h1 className="mb-5 font-semibold text-gray-800 text-xl">
+          {/* <h1 className="mb-5 font-semibold text-gray-800 text-xl">
             Form Fields
-          </h1>
+          </h1> */}
           <div
             className={`grid-cols-2 grid
               gap-4`}
           >
             <button
-              onClick={() => newText()}
+              onClick={() => newLabel()}
               className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
               <div className="flex items-center">
                 <BsInputCursor className="mr-2 text-2xl" />
-                <h1 className="text-sm font-semibold">Text</h1>
-              </div>
-            </button>
-
-            <button
-              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
-              disabled
-              onClick={() => newTextNumeric()}
-            >
-              <div className="flex items-center">
-                <TiSortNumerically className="mr-2 text-2xl" />
-                <h1 className="text-sm font-semibold mt-1">Number</h1>
-              </div>
-            </button>
-
-            <button
-              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
-              onClick={() => newMultiline()}
-              disabled
-            >
-              <div className="flex items-center">
-                <BsTextareaResize className="mr-2 text-2xl" />
-                <h1 className="text-sm font-semibold mt-1">Multiline</h1>
+                <h1 className="text-sm font-semibold">Label</h1>
               </div>
             </button>
 
@@ -2308,19 +2355,47 @@ const FormBody = () => {
                 <h1 className="text-sm font-semibold mt-1">Checkbox</h1>
               </div>
             </button>
-
             <button
-              onClick={() => newRange()}
-              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
-              disabled
+              onClick={() => newText()}
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
-              Range
+              <div className="flex items-center">
+                <BsInputCursor className="mr-2 text-2xl" />
+                <h1 className="text-sm font-semibold">Text</h1>
+              </div>
             </button>
 
             <button
-              onClick={() => newName()}
-              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              onClick={() => newTextNumeric()}
+            >
+              <div className="flex items-center">
+                <TiSortNumerically className="mr-2 text-2xl" />
+                <h1 className="text-sm font-semibold mt-1">Number</h1>
+              </div>
+            </button>
+
+            <button
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              onClick={() => newMultiline()}
+            >
+              <div className="flex items-center">
+                <BsTextareaResize className="mr-2 text-2xl" />
+                <h1 className="text-sm font-semibold mt-1">Multiline</h1>
+              </div>
+            </button>
+
+            {/* <button
+              onClick={() => newRange()}
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
               disabled
+            >
+              Range
+            </button> */}
+
+            <button
+              onClick={() => newName()}
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
               <div className="flex items-center">
                 <BsPersonCircle className="text-2xl mr-2" />
@@ -2330,8 +2405,7 @@ const FormBody = () => {
 
             <button
               onClick={() => newEmail()}
-              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-gray-500 text-gray-600 text-xs font-bold "
-              disabled
+              className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
             >
               <div className="flex items-center">
                 <HiMail className="text-2xl mr-2" />
@@ -2382,12 +2456,15 @@ const FormBody = () => {
                   </button>
                 </Toolbar>
               </AppBar>
-              <div className="max-w-screen bg-gray-50 h-screen ">
-                <div className="max-w-5xl mx-auto flex flex-col space-y-5 rounded-lg  h-auto bg-white mt-20 shadow-md py-10 px-10">
-                  <h1 className="text-2xl font-semibold text-gray-600">
+              <div className="max-w-screen bg-gray-50 h-auto">
+                <div className="max-w-5xl mx-auto flex flex-col  rounded-lg  h-auto bg-white mt-20 shadow-md py-10 px-10 ">
+                  <h1 className="text-2xl leading-none font-semibold text-gray-600">
                     {formName}{" "}
                   </h1>
-                  <Box sx={{ minWidth: 120 }}>
+                  <p className="text-sm mt-2  font-medium text-gray-500">
+                    {formDescription}
+                  </p>
+                  <Box sx={{ minWidth: 120 }} className="mt-5">
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Select Form Type
@@ -2406,7 +2483,7 @@ const FormBody = () => {
                     </FormControl>
                   </Box>
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center mt-2 justify-between">
                     <div className="flex flex-col space-y-2">
                       <h1 className="text-base text-gray-500">
                         Expected Feedback Weightage for management attention (*)
@@ -2430,11 +2507,22 @@ const FormBody = () => {
 
                   {formData.map((form, i) => {
                     switch (form.inputType) {
+                      case "label":
+                        return (
+                          <div key={i}>
+                            <div className="flex space-x-2 mt-5">
+                              <h1 className="font-semibold text-gray-600">
+                                {formData[i].label}
+                              </h1>
+                            </div>
+                          </div>
+                        );
+
                       case "text":
                         return (
                           <div key={i}>
                             {!formData[i].style.label && (
-                              <div className="flex space-x-2">
+                              <div className="flex space-x-2 mt-5">
                                 <h1 className="font-semibold text-gray-600">
                                   {formData[i].labelText}
                                 </h1>
@@ -2446,7 +2534,7 @@ const FormBody = () => {
                               </div>
                             )}
                             <input
-                              className=" border w-96 h-10 border-gray-400 bg-transparent"
+                              className=" border w-96 h-10 rounded-md shadow-md mt-1 border-gray-400 bg-transparent"
                               type="text"
                               value={formData[i].text}
                               placeholder={formData[i].placeholderText}
@@ -2459,8 +2547,8 @@ const FormBody = () => {
                         return (
                           <div key={i}>
                             {!formData[i].style.label && (
-                              <div className="flex space-x-2">
-                                <h1 className="font-semibold">
+                              <div className="flex space-x-2 mt-5">
+                                <h1 className="font-semibold text-gray-600">
                                   {formData[i].labelText}
                                 </h1>
                                 {formData[i].required && (
@@ -2471,7 +2559,7 @@ const FormBody = () => {
                               </div>
                             )}
                             <input
-                              className=" border w-96 h-10 border-gray-400 bg-transparent"
+                              className=" border w-96 h-10 border-gray-400 rounded-md shadow-md mt-1 bg-transparent"
                               type="text"
                               value={formData[i].text}
                               placeholder={formData[i].placeholderText}
@@ -2484,8 +2572,8 @@ const FormBody = () => {
                         return (
                           <div key={i}>
                             {!formData[i].style.label && (
-                              <div className="flex space-x-2">
-                                <h1 className="font-semibold">
+                              <div className="flex space-x-2 mt-5">
+                                <h1 className="font-semibold text-gray-500">
                                   {formData[i].labelText}
                                 </h1>
                                 {formData[i].required && (
@@ -2496,7 +2584,7 @@ const FormBody = () => {
                               </div>
                             )}
                             <textarea
-                              className=" border w-full border-gray-400 bg-transparent"
+                              className=" border w-full rounded-md shadow-md mt-2 border-gray-400 bg-transparent"
                               rows="5"
                               value={formData[i].text}
                               placeholder={formData[i].placeholderText}
@@ -2506,7 +2594,7 @@ const FormBody = () => {
                         );
                       case "name":
                         return (
-                          <h1 className="font-bold" key={i}>
+                          <h1 className="font-bold mt-5" key={i}>
                             {formData[i].label} :{" "}
                             <span className="border-b-2 font-medium border-b-black">
                               {formData[i].text}
@@ -2516,7 +2604,7 @@ const FormBody = () => {
 
                       case "email":
                         return (
-                          <h1 className="font-bold" key={i}>
+                          <h1 className="font-bold mt-5" key={i}>
                             {formData[i].label} :{" "}
                             <span className="border-b-2 font-medium border-b-black">
                               {formData[i].text}
@@ -2526,17 +2614,48 @@ const FormBody = () => {
 
                       case "radio":
                         return (
-                          <div className="flex flex-col space-y-3">
+                          <div className="flex flex-col space-y-3 mt-5">
                             <div className="flex items-center space-x-3">
                               <h1
                                 key={i}
                                 className="font-semibold text-base text-gray-600 "
                               >
-                                {i + 1}
-                                {"."} {formData[i].text}
+                                {formData[i].text}
                               </h1>
+                              {formData[i].required && (
+                                <p className="text-red-700">*</p>
+                              )}
                             </div>
 
+                            {form.options.map((option, j) => {
+                              return (
+                                <div
+                                  key={j}
+                                  className="flex items-center  space-x-2"
+                                >
+                                  <input
+                                    type={formData[i].inputType}
+                                    disabled
+                                  />
+
+                                  <p className="text-sm font-medium text-gray-500">
+                                    {option.optionText}
+                                  </p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        );
+
+                      case "checkbox":
+                        return (
+                          <div className="flex flex-col mt-5 space-y-3">
+                            <h1
+                              key={i}
+                              className="font-semibold text-base text-gray-600"
+                            >
+                              {formData[i].text}
+                            </h1>
                             {form.options.map((option, j) => {
                               return (
                                 <div
@@ -2557,34 +2676,9 @@ const FormBody = () => {
                           </div>
                         );
 
-                      case "checkbox":
-                        return (
-                          <div className="flex flex-col space-y-3">
-                            <h1 key={i} className="font-semibold text-lg">
-                              {i + 1} {"."}
-                              {formData[i].text}
-                            </h1>
-                            {form.options.map((option, j) => {
-                              return (
-                                <div
-                                  key={j}
-                                  className="flex items-center space-x-2"
-                                >
-                                  <input
-                                    type={formData[i].inputType}
-                                    disabled
-                                  />
-
-                                  <p>{option.optionText}</p>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        );
-
                       case "range":
                         return (
-                          <div className="flex flex-col space-y-3">
+                          <div className="flex flex-col mt-5 space-y-3">
                             <h1 key={i}>{formData[i].text}</h1>
                             <Slider
                               defaultValue={formData[i].value}

@@ -13,9 +13,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { IconButton } from "@mui/material";
 import { ImSwitch } from "react-icons/im";
-import { FiEdit } from "react-icons/fi";
 import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
 import axios from "axios";
 import Link from "next/link";
 import { ImStatsBars } from "react-icons/im";
@@ -23,6 +21,9 @@ import dbConnect from "../utils/db";
 import Head from "next/head";
 import Sidebar from "../components/Sidebar";
 import FormHeader from "../components/FormHeader";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
+
 const FormTemplate = ({ form }) => {
   const [tableData, setTableData] = useState(form);
   const [gridApi, setGridApi] = useState(null);
@@ -40,6 +41,19 @@ const FormTemplate = ({ form }) => {
   const defaultValue = new Date(date)?.toISOString().split("T")[0];
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState(defaultValue);
+
+  const fileType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
+  const fileName = "Form Feedback";
+
+  const exportToExcel = async (excelData) => {
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
+  };
 
   const dateFilterParams = {
     // provide comparator function
@@ -73,10 +87,6 @@ const FormTemplate = ({ form }) => {
   const onGridReady = (params) => {
     setGridApi(params);
   };
-
-  // useEffect(() => {
-  //   getFormTemplates();
-  // }, []);
 
   const getFormTemplates = async () => {
     const response = await axios.get("/api/form");
@@ -195,8 +205,6 @@ const FormTemplate = ({ form }) => {
       valueGetter: "node.rowIndex + 1",
       cellClass: "text-xs tracking-wide font-medium ",
       flex: 0.7,
-
-      //   checkboxSelection: true,
     },
     {
       headerName: "Form Name",
@@ -516,7 +524,7 @@ const FormTemplate = ({ form }) => {
                 </button>
                 <button
                   className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
-                  onClick={onExportClick}
+                  onClick={() => exportToExcel(tableData)}
                 >
                   <div className="flex items-center text-white text-sm font-semibold space-x-2">
                     <h1>Export</h1>
@@ -552,7 +560,11 @@ export default FormTemplate;
 
 export async function getServerSideProps(context) {
   await dbConnect();
-  const response = await fetch("https://rely-form.herokuapp.com/api/form");
+  const url =
+    process.env.NODE_ENV === "production"
+      ? process.env.HOST_URL
+      : "http://localhost:3000";
+  const response = await fetch(`${url}/api/form`);
   const data = await response.json();
 
   console.log(data);

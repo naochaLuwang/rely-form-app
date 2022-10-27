@@ -6,8 +6,9 @@ import Sidebar from "../../components/Sidebar";
 
 const Form = () => {
   return (
-    <div className="flex">
+    <div className="flex ">
       <Sidebar />
+
       <FormBody />
     </div>
   );

@@ -436,7 +436,11 @@ const Dashboard = ({ form }) => {
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  const response = await fetch("https://rely-form.herokuapp.com/api/form");
+  const url =
+    process.env.NODE_ENV === "production"
+      ? process.env.HOST_URL
+      : "http://localhost:3000";
+  const response = await fetch(`${url}/api/form`);
 
   const data = await response.json();
 
