@@ -28,10 +28,7 @@ const FormHeader = ({ title }) => {
     setAnchorEl(null);
   };
 
-  const callbackUrl =
-    process.env.NODE_ENV === "production"
-      ? "https://rely-form.herokuapp.com"
-      : "http://localhost:3000";
+  const callbackUrl = "https://rely-form.herokuapp.com";
 
   useEffect(() => {
     if (session) {
