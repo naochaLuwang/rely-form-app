@@ -16,6 +16,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
   const [loading, setLoading] = useState(false);
   const [unfilled, setUnfilled] = useState(false);
 
+  console.log(newForm);
   useEffect(() => {
     const handleStart = () => {
       setLoading(true);
@@ -101,16 +102,21 @@ const FormFeedbackPage = ({ formFeedback }) => {
 
     // setLoading(true);
 
-    const res = await axios.put(`/api/formFeedback/${newForm.patient.regId}`, {
-      isSubmitted: true,
+    console.log(newForm);
 
-      overallScore: scoreWeightage,
-      formDatas,
-    });
+    const res = await axios.put(
+      `/api/formFeedback/${newForm.formId}/${newForm.patient.regId}`,
+      {
+        isSubmitted: true,
+
+        overallScore: scoreWeightage,
+        formDatas,
+      }
+    );
     // toast("Form saved successfully", { type: "success" });
 
     router.push("/success");
-    // setLoading(false);
+    setLoading(false);
   };
 
   const changeText = (text, i) => {

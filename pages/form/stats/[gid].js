@@ -58,7 +58,7 @@ const GraphStats = ({ formFeedback }) => {
   formFeedback.map((form, i) => {
     switch (form.overallScore) {
       case 1:
-        datas[i] += 1;
+        datas[0] += 1;
 
         break;
       case 2:

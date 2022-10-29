@@ -23,6 +23,8 @@ import Sidebar from "../components/Sidebar";
 import FormHeader from "../components/FormHeader";
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const FormTemplate = ({ form }) => {
   const [tableData, setTableData] = useState(form);
@@ -34,7 +36,13 @@ const FormTemplate = ({ form }) => {
   const [formId, setFormId] = useState("");
   const [record, setRecord] = useState(0);
 
+  const [Status, setStatus] = useState(true);
+  const [type, setType] = useState("IPD");
+
+  const { status } = useSession();
+
   const gridRef = useRef();
+  const router = useRouter();
 
   const today = new Date();
   const date = today.setDate(today.getDate());
@@ -102,6 +110,20 @@ const FormTemplate = ({ form }) => {
 
   const onSelectStatusChange = (e) => {
     gridApi.api.setQuickFilter(e.target.value);
+    const count = gridApi.api.getDisplayedRowCount();
+    setRecord(count);
+  };
+
+  const onSelectTypeChange = async (e) => {
+    setType(e.target.value);
+
+    const response = await fetch(`api/filter/${Status}/${e.target.value}`);
+    const data = response.json();
+
+    console.log(data);
+
+    // setTableData(data);
+
     const count = gridApi.api.getDisplayedRowCount();
     setRecord(count);
   };
@@ -191,7 +213,7 @@ const FormTemplate = ({ form }) => {
   const handleDelete = async () => {
     console.log(formId);
     await axios.put(`/api/form/${formId}`, {
-      status: false,
+      Status: false,
       isDeleted: true,
     });
     getFormTemplates();
@@ -433,125 +455,135 @@ const FormTemplate = ({ form }) => {
       },
     },
   ];
+  if (status === "unauthenticated") {
+    router.push("/signin");
+  }
   return (
     <>
-      <Head>
-        <title>Home | Rely Form</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </Head>
-      <div className=" w-screen h-screen flex bg-gray-50 overflow-hidden  ">
-        <Sidebar />
-        <div className="flex-1 h-full     ">
-          <FormHeader title="Form Templates" />
-          <div className="px-7 h-full">
-            <div className="flex items-center bg-white px-6 rounded-xl shadow-lg mt-5 justify-between mb-3">
-              {/* <h1 className="text-base text-gray-500 font-semibold ">
+      {status === "authenticated" && (
+        <>
+          <Head>
+            <title>Home | Rely Form</title>
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+          </Head>
+          <div className=" w-screen h-screen flex bg-gray-50 overflow-hidden  ">
+            <Sidebar />
+            <div className="flex-1 h-full     ">
+              <FormHeader title="Form Templates" />
+              <div className="px-7 h-full">
+                <div className="flex items-center bg-white px-6 rounded-xl shadow-lg mt-5 justify-between mb-3">
+                  {/* <h1 className="text-base text-gray-500 font-semibold ">
               {tableData?.length} templates found
             </h1> */}
 
-              <div className="flex space-x-5   ">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="date"
-                    className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                    placeholder="dd-mm-yyyy"
-                    value={startDate}
-                    onChange={(e) =>
-                      //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
-                      setStartDate(e.target.value)
-                    }
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <h1 className="text-sm font-semibold">To</h1>
-                  <input
-                    type="date"
-                    value={endDate}
-                    className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                    onChange={(e) => setEndDate(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <select
-                  name="status"
-                  id="status"
-                  className="bg-gray-50 form-input block w-40  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                  onChange={onSelectStatusChange}
-                >
-                  <option value="true">Active</option>
-                  <option value="false">Inactive</option>
-                </select>
-              </div>
-
-              <div>
-                <select
-                  name="formType"
-                  id="formType"
-                  className="bg-gray-50 form-input block w-40 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                  onChange={onSelectStatusChange}
-                >
-                  <option value="">Form Type</option>
-                  <option value="IPD">IPD</option>
-                  <option value="OPD">OPD</option>
-                </select>
-              </div>
-
-              <div className="flex items-center space-x-3 ">
-                <div className="max-w-xs">
-                  <div className=" mt-1 relative p-3 runded-md  ">
-                    <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
-                      <SearchIcon className="h-5 w-5 text-gray-500" />
+                  <div className="flex space-x-5   ">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="date"
+                        className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                        placeholder="dd-mm-yyyy"
+                        value={startDate}
+                        onChange={(e) =>
+                          //   setStartDate(moment(e.target.value).format("YYYY/MM/DD"))
+                          setStartDate(e.target.value)
+                        }
+                      />
                     </div>
-                    <input
-                      className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
-                      type="search"
-                      placeholder="search"
-                      onChange={onFilterTextChange}
-                    />
+
+                    <div className="flex items-center space-x-2">
+                      <h1 className="text-sm font-semibold">To</h1>
+                      <input
+                        type="date"
+                        value={endDate}
+                        className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                        onChange={(e) => setEndDate(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <select
+                      name="status"
+                      id="status"
+                      className="bg-gray-50 form-input block w-40  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      onChange={onSelectStatusChange}
+                    >
+                      <option value="true">Active</option>
+                      <option value="false">Inactive</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <select
+                      name="formType"
+                      id="formType"
+                      className="bg-gray-50 form-input block w-40 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      onChange={onSelectTypeChange}
+                    >
+                      <option value="">Form Type</option>
+                      <option value="IPD">IPD</option>
+                      <option value="OPD">OPD</option>
+                    </select>
+                  </div>
+
+                  <div className="flex items-center space-x-3 ">
+                    <div className="max-w-xs">
+                      <div className=" mt-1 relative p-3 runded-md  ">
+                        <div className="absolute inset-y-0 pl-3 flex items-center pointer-events-none">
+                          <SearchIcon className="h-5 w-5 text-gray-500" />
+                        </div>
+                        <input
+                          className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                          type="search"
+                          placeholder="search"
+                          onChange={onFilterTextChange}
+                        />
+                      </div>
+                    </div>
+                    <button
+                      className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
+                      onClick={handleRefresh}
+                    >
+                      <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
+                        <h1>Refresh</h1>
+                        <FcRefresh className="text-sm text-gray-600" />
+                      </div>
+                    </button>
+                    <button
+                      className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
+                      onClick={() => exportToExcel(tableData)}
+                    >
+                      <div className="flex items-center text-white text-sm font-semibold space-x-2">
+                        <h1>Export</h1>
+                        <FaFileExport />
+                      </div>
+                    </button>
                   </div>
                 </div>
-                <button
-                  className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
-                  onClick={handleRefresh}
-                >
-                  <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
-                    <h1>Refresh</h1>
-                    <FcRefresh className="text-sm text-gray-600" />
-                  </div>
-                </button>
-                <button
-                  className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
-                  onClick={() => exportToExcel(tableData)}
-                >
-                  <div className="flex items-center text-white text-sm font-semibold space-x-2">
-                    <h1>Export</h1>
-                    <FaFileExport />
-                  </div>
-                </button>
+
+                <h1 className="text-sm mb-2 ">{record} record(s) found</h1>
+
+                <div className="ag-theme-alpine ag-style h-[65%]  bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
+                  <AgGridReact
+                    columnDefs={columnDefs}
+                    rowData={tableData}
+                    defaultColDef={defaultColDef}
+                    onGridReady={onGridReady}
+                    pagination={true}
+                    ref={gridRef}
+                    paginationPageSize={10}
+                    paginationAutoPageSize={true}
+                    headerHeight={30}
+                  ></AgGridReact>
+                </div>
               </div>
-            </div>
-
-            <h1 className="text-sm mb-2 ">{record} record(s) found</h1>
-
-            <div className="ag-theme-alpine ag-style h-[65%]  bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
-              <AgGridReact
-                columnDefs={columnDefs}
-                rowData={tableData}
-                defaultColDef={defaultColDef}
-                onGridReady={onGridReady}
-                pagination={true}
-                ref={gridRef}
-                paginationPageSize={10}
-                paginationAutoPageSize={true}
-                headerHeight={30}
-              ></AgGridReact>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </>
   );
 };
