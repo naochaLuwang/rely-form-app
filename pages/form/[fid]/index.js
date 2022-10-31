@@ -43,10 +43,17 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(newForm);
   };
 
-  const handleCheckBox = (i, j) => {
+  const handleCheckBox = (i, j, e) => {
     const newFormData = { ...newForm };
+
     newFormData.form[i].options[j].isChecked =
       !newFormData.form[i].options[j].isChecked;
+
+    if (newFormData.form[i].options[j].isChecked === true) {
+      newFormData.form[i].ansText = e.target.value;
+    } else {
+      newFormData.form[i].ansText = "";
+    }
     setNewForm(newFormData);
     console.log(newForm);
   };
@@ -85,6 +92,21 @@ const FormFeedbackPage = ({ formFeedback }) => {
       (element) => element.required && element.ansText !== ""
     );
     console.log(filledFields);
+
+    // const filterCheckbox = newFormData.form.filter(
+    //   (element) => element.inputType.includes("checkbox") && element.required
+    // );
+    // console.log(filterCheckbox);
+
+    // const filledCheckbox = filterCheckbox.filter(
+    //   (element) => element.ansText !== ""
+    // );
+    // console.log(requiredFields.length);
+    // console.log(filledCheckbox.length);
+    // console.log(filledFields.length + filledCheckbox.length);
+
+    console.log(requiredFields.length);
+    console.log(filledFields.length);
 
     if (requiredFields.length !== filledFields.length) {
       // return alert("All * fields are required");
@@ -377,7 +399,15 @@ const FormFeedbackPage = ({ formFeedback }) => {
                       className="flex flex-col space-y-2 lg:mb-5 mb-2 border bg-white px-10 py-4 rounded-lg shadow-sm"
                     >
                       <div className="flex ">
-                        <h1 className="lg:text-base text-sm font-semibold text-gray-700">
+                        <h1
+                          className={
+                            unfilled &&
+                            formData.form[i].required &&
+                            formData.form[i].ansText == ""
+                              ? "lg:text-base text-red-500 text-sm font-semibold "
+                              : "lg:text-base text-sm text-gray-700 font-semibold"
+                          }
+                        >
                           {formData.form[i].text}
                         </h1>
                         {formData.form[i].required && (
@@ -395,7 +425,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
                               checked={
                                 newForm.form[i].options[j].isChecked === true
                               }
-                              onChange={() => handleCheckBox(i, j)}
+                              onChange={(e) => handleCheckBox(i, j, e)}
                             />
                             <p className="lg:text-base text-sm font-medium text-gray-600">
                               {option.optionText}

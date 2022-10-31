@@ -519,7 +519,7 @@ const FormBody = () => {
 
         questionNo: radioIndex,
 
-        ans: [],
+        ansText: "",
         required: true,
         options: [{ optionText: "", isChecked: false }],
         style: {
@@ -1988,6 +1988,24 @@ const FormBody = () => {
                                     ) : (
                                       ""
                                     )}
+
+                                    <div className="flex items-center space-x-2 mt-5">
+                                      <p className="font-medium text-lg text-gray-500">
+                                        Required
+                                      </p>
+
+                                      <FormControlLabel
+                                        control={
+                                          <Switch
+                                            checked={formData[i].required}
+                                            onChange={() => changeRequired(i)}
+                                            inputprops={{
+                                              "aria-label": "controlled",
+                                            }}
+                                          />
+                                        }
+                                      />
+                                    </div>
 
                                     <p className="mt-5 text-lg font-bold text-gray-500">
                                       Text Style

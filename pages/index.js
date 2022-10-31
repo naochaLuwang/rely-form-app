@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import { useSession, signOut } from "next-auth/react";
 import FormHeader from "../components/FormHeader";
+import Clock from "react-live-clock";
 
 // import Clock from "react-live-clock";
 
@@ -45,7 +46,14 @@ const Home = () => {
 
               <div className="w-full px-8">
                 <h1>Welcome , {session?.user.name}</h1>
-                {session && <button onClick={() => signOut()}>Sign Out</button>}
+                <Clock
+                  format={"h:mm:ss A"}
+                  ticking={true}
+                  timezone={"Asia/Kolkata"}
+                  noSsr={true}
+                />
+
+                {/* {session && <button onClick={() => signOut()}>Sign Out</button>} */}
               </div>
             </div>
           </div>
