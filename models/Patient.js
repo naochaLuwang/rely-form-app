@@ -14,22 +14,22 @@ const patientSchema = new mongoose.Schema(
     regId: {
       type: Number,
     },
-    uhid: {
+    uhId: {
       type: String,
     },
     salutationName: {
       type: String,
     },
-    patientName: {
+    name: {
       type: String,
     },
     gender: {
       type: String,
     },
-    ageY: {
+    age: {
       type: Number,
     },
-    primaryMobileNumber: {
+    mobileNumber: {
       type: String,
     },
   },

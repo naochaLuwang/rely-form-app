@@ -5,38 +5,37 @@ import Patient from "../../models/Patient";
 
 const handler = nc();
 
+const patientData = [];
+
 handler.post(async (req, res) => {
   try {
     await dbConnect();
-    const {
-      patientType,
-      iPDID,
-      iPDNumber,
+    const { patients } = req.body;
 
-      regId,
-      uhid,
-      salutationName,
-      patientName,
-      gender,
-      ageY,
-      primaryMobileNumber,
-    } = req.body;
+    for (let i = 0; i < patients.length; i++) {
+      const response = await Patient.findOne({
+        patientType: patients[i].patientType,
+        regId: patients[i].regId,
+      });
 
-    const newPatient = await new Patient({
-      patientType,
-      iPDID,
-      iPDNumber,
-      regId,
-      uhid,
-      salutationName,
-      patientName,
-      gender,
-      ageY,
-      primaryMobileNumber,
-    });
+      if (!response) {
+        patientData.push({
+          name: patients[i].name,
+          gender: patients[i].gender,
+          age: patients[i].age,
+          regId: patients[i].regId,
+          uhId: patients[i].uhId,
+          salutationName: patients[i].salutationName,
+          patientType: patients[i].patientType,
+        });
+      }
+    }
 
-    await newPatient.save();
-    res.json(newPatient);
+    if (patientData) {
+      const newPatient = await Patient.insertMany(patientData);
+
+      return res.status(200).json(newPatient);
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

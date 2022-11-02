@@ -157,11 +157,16 @@ const Sidebar = ({ subOpen }) => {
                 <Link href="/dashboard">View Feedbacks</Link>
               </li>
             </div>
+            <div className="w-full h-fit pl-10 hover:border-l-4 hover:border-blue-500 border-l-4 border-white">
+              <li className="text-gray-600 hover:text-blue-500 font-medium text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-light-white rounded-md">
+                <Link href="/uploadData">Import Excel Data</Link>
+              </li>
+            </div>
           </ul>
         )}
       </div>
 
-      <ul className="pt-2">
+      <ul className={` ${submenuOpen && "mt-10"}`}>
         <Link href="/consult">
           <div className="hover:border-l-4 group border-l-4  border-white   hover:border-blue-500">
             <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-1 cursor-pointer p-2 hover:bg-light-white rounded-md">

@@ -284,7 +284,7 @@ const Dashboard = ({ form }) => {
 
   useEffect(() => {
     if (gridApi) {
-      gridApi.api.setQuickFilter("true");
+      gridApi.api.setQuickFilter("false");
       const count = gridApi.api.getDisplayedRowCount();
       setRecord(count);
       // getFormTemplates();
@@ -368,8 +368,8 @@ const Dashboard = ({ form }) => {
                       className="bg-gray-50 form-input block w-96  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
                       onChange={onSelectChange}
                     >
-                      <option value="true">Submitted</option>
                       <option value="false">Pending</option>
+                      <option value="true">Submitted</option>
                     </select>
                   </div>
 
