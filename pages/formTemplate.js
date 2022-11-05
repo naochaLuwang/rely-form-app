@@ -608,8 +608,8 @@ export default FormTemplate;
 
 export async function getServerSideProps(context) {
   await dbConnect();
-  // const url = "https://rely-form.herokuapp.com";
-  const url = "http://localhost:3000";
+  const url = "https://rely-form.herokuapp.com";
+  // const url = "http://localhost:3000";
 
   const status = true;
   const type = "IPD";
