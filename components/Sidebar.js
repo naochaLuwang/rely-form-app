@@ -10,18 +10,18 @@ import { FcFeedback } from "react-icons/fc";
 import { AiFillHome } from "react-icons/ai";
 import { ChevronUpIcon } from "@heroicons/react/outline";
 import { useGlobalState } from "./FormHeader";
-
+// import { createGlobalState } from "react-hooks-global-state";
 const Sidebar = ({ subOpen }) => {
   const [open, setOpen] = useGlobalState("open");
 
-  const [submenuOpen, setSubmenuOpen] = useState(false);
+  const [submenuOpen, setSubmenuOpen] = useGlobalState("submenu");
 
   console.log(open);
 
-  useEffect(() => {
-    setOpen(false);
-    setSubmenuOpen(false);
-  }, [setOpen]);
+  // useEffect(() => {
+  //   setOpen(false);
+  //   setSubmenuOpen(false);
+  // }, [setOpen, setSubmenuOpen]);
 
   const Menus = [
     { title: "Home", src: Chart_fill, url: "/" },
@@ -120,7 +120,7 @@ const Sidebar = ({ subOpen }) => {
               <span
                 className={`${
                   !open && "hidden"
-                } flex items-center space w-full justify-between`}
+                } flex items-center space w-full  justify-between`}
               >
                 Feedback{" "}
                 <ChevronUpIcon
@@ -168,8 +168,8 @@ const Sidebar = ({ subOpen }) => {
 
       <ul className={` ${submenuOpen && "mt-10"}`}>
         <Link href="/consult">
-          <div className="hover:border-l-4 group border-l-4  border-white   hover:border-blue-500">
-            <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-1 cursor-pointer p-2 hover:bg-light-white rounded-md">
+          <div className="hover:border-l-4 group border-l-4  border-white    hover:border-blue-500">
+            <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-1 cursor-pointer p-2  hover:bg-light-white rounded-md">
               <div className="relative w-6 h-6 z-30 flex-shrink-0">
                 <Image
                   src={consultations}

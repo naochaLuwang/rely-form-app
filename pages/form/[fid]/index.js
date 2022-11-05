@@ -1,15 +1,56 @@
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 // import toast, { Toaster } from "react-hot-toast";
-import Success from "../../success";
+import CloseIcon from "@mui/icons-material/Close";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
+import Router from "next/router";
+import { RotatingLines } from "react-loader-spinner";
 import FormFeedback from "../../../models/FormFeedback";
 import dbConnect from "../../../utils/db";
-import Router from "next/router";
+import Success from "../../success";
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
 
-import Loader from "../../../components/Loader";
+import { Dialog, DialogTitle, IconButton } from "@mui/material";
 
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
 const FormFeedbackPage = ({ formFeedback }) => {
   const [formData, setFormData] = useState(formFeedback);
   const [newForm, setNewForm] = useState(formData);
@@ -17,19 +58,19 @@ const FormFeedbackPage = ({ formFeedback }) => {
   const [unfilled, setUnfilled] = useState(false);
 
   console.log(newForm);
-  useEffect(() => {
-    const handleStart = () => {
-      setLoading(true);
-    };
-    let handleComplete = () => {
-      setTimeout(() => {
-        setLoading(false);
-      }, 500);
-    };
-    Router.events.on("routeChangeStart", handleStart);
-    Router.events.on("routeChangeComplete", handleComplete);
-    Router.events.on("routeChangeError", handleComplete);
-  }, []);
+  // useEffect(() => {
+  //   // const handleStart = () => {
+  //   //   setLoading(true);
+  //   // };
+  //   // let handleComplete = () => {
+  //   //   setTimeout(() => {
+  //   //     setLoading(false);
+  //   //   }, 500);
+  //   // };
+  //   Router.events.on("routeChangeStart", handleStart);
+  //   Router.events.on("routeChangeComplete", handleComplete);
+  //   Router.events.on("routeChangeError", handleComplete);
+  // }, []);
   const router = useRouter();
 
   const formDatas = newForm?.form;
@@ -58,6 +99,10 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(newForm);
   };
 
+  const handleClose = () => {
+    setLoading(false);
+  };
+
   const updateRange = (value, index) => {
     let newRange = { ...newForm };
     newRange.form[index].value = value;
@@ -65,6 +110,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(newRange);
   };
   const handleSubmit = async () => {
+    setLoading(true);
     let overallScore = 0;
 
     const newFormData = { ...newForm };
@@ -138,7 +184,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
     // toast("Form saved successfully", { type: "success" });
 
     router.push("/success");
-    setLoading(false);
   };
 
   const changeText = (text, i) => {
@@ -149,18 +194,28 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(newText.form[i].text);
   };
 
-  if (loading) {
-    return <Loader />;
-  }
   return (
     <>
-      {/* <Toaster /> */}
-
-      {/* <FormHeader /> */}
       {formData?.isSubmitted ? (
         <Success />
       ) : (
         <div className="max-w-screen h-auto bg-slate-100  lg:py-10 py-2 lg:px-10 px-2  lg:block">
+          <BootstrapDialog
+            onClose={handleClose}
+            aria-labelledby="customized-dialog-title"
+            open={loading}
+          >
+            <div className="w-96 h-auto flex flex-col items-center justify-center">
+              <RotatingLines
+                strokeColor="blue"
+                strokeWidth="5"
+                animationDuration="0.75"
+                width="60"
+                visible={true}
+              />
+              <p>Submitting Form ...</p>
+            </div>
+          </BootstrapDialog>
           <div className="max-w-screen lg:max-w-4xl mx-auto">
             <div className="w-full h-2 bg-blue-500 rounded-t-lg"></div>
             <div className="w-full border px-8 lg:px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">

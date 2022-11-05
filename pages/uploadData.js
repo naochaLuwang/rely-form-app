@@ -4,7 +4,7 @@ import Head from "next/head";
 import Sidebar from "../components/Sidebar";
 import FormHeader from "../components/FormHeader";
 import { read, utils } from "xlsx";
-import { useTable } from "react-table";
+import { useTable, usePagination } from "react-table";
 import axios from "axios";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
@@ -20,6 +20,14 @@ import * as XLSX from "xlsx";
 import { AppBar, Slide, Toolbar, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { RotatingLines } from "react-loader-spinner";
+import Lottie from "lottie-react";
+import success from "../assets/success.json";
+const style = {
+  height: 100,
+  width: 100,
+};
+
+// missing data dialog transition
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -68,6 +76,7 @@ const UploadData = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [completed, setCompleted] = useState(false);
 
   const router = useRouter();
 
@@ -115,12 +124,15 @@ const UploadData = () => {
           const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
           //   setUsers(rows);
           const patientData = rows.filter(
-            (user) => user.name && user.mobileNumber
+            (user) => user.name && user.mobileNumber && user.regId
           );
           setPatients(patientData);
 
           const missing = rows.filter(
-            (user) => user.name === undefined || user.mobileNumber === undefined
+            (user) =>
+              user.name === undefined ||
+              user.mobileNumber === undefined ||
+              user.regId === undefined
           );
           setMissingData(missing);
         }
@@ -135,11 +147,17 @@ const UploadData = () => {
       patients: patients,
     });
 
-    await axios.post(`/api/createUser`);
+    const response = await axios.post(`/api/createUser`);
 
-    setLoading(false);
-    handleClose();
-    router.push("/dashboard");
+    if (response) {
+      setCompleted(true);
+    }
+
+    setTimeout(() => {
+      router.push("/dashboard");
+      // setLoading(false);
+      // handleClose();
+    }, [500]);
   };
 
   const columns = useMemo(
@@ -176,8 +194,32 @@ const UploadData = () => {
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data });
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page, // Instead of using 'rows', we'll use page,
+    // which has only the rows for the active page
+
+    // The rest of these things are super handy, too ;)
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
+    {
+      columns,
+      data,
+      initialState: { pageIndex: 0, pageSize: 10 },
+    },
+    usePagination
+  );
 
   return (
     <>
@@ -246,16 +288,25 @@ const UploadData = () => {
                     open={modalOpen}
                   >
                     {loading ? (
-                      <div className="w-96 flex flex-col py-10 items-center jsutify-center">
-                        <RotatingLines
-                          strokeColor="blue"
-                          strokeWidth="5"
-                          animationDuration="0.75"
-                          width="60"
-                          visible={true}
-                        />
-                        <p>Uploading data ...</p>
-                      </div>
+                      <>
+                        {completed ? (
+                          <div className="w-96 flex flex-col py-10 items-center justify-center ">
+                            <Lottie animationData={success} style={style} />
+                            <p>Data uploaded successfully</p>
+                          </div>
+                        ) : (
+                          <div className="w-96 flex flex-col py-10 items-center justify-center">
+                            <RotatingLines
+                              strokeColor="blue"
+                              strokeWidth="5"
+                              animationDuration="0.75"
+                              width="60"
+                              visible={true}
+                            />
+                            <p>Uploading data ...</p>
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <>
                         <BootstrapDialogTitle
@@ -266,18 +317,18 @@ const UploadData = () => {
                         </BootstrapDialogTitle>
 
                         <DialogContent dividers>
-                          <h1 className="w-96 text-sm text-red-500 mb-3">
-                            {missingData.length > 0 &&
-                              `${missingData.length} record(s)
-                        found with missing data `}
-
-                            <span
-                              onClick={handleDialogOpen}
-                              className="text-blue-500 ml-5 cursor-pointer hover:underline"
-                            >
-                              {missingData.length > 0 && "View"}
-                            </span>
-                          </h1>
+                          {missingData.length > 0 && (
+                            <h1 className="w-96 text-sm text-red-500 mb-3">
+                              {missingData.length} record(s) found with missing
+                              data{" "}
+                              <span
+                                onClick={handleDialogOpen}
+                                className="text-blue-500 ml-5 cursor-pointer hover:underline"
+                              >
+                                View
+                              </span>
+                            </h1>
+                          )}
 
                           <h1 className="w-96 text-sm  mb-3 text-green-600">
                             {patients.length} record(s) will be inserted
@@ -372,14 +423,12 @@ const UploadData = () => {
                 </h1> */}
 
                 {patients.length > 0 && (
-                  <div className="mt-5 w-full h-[65%] bg-white rounded-md shadow-md px-2 py-2 relative">
-                    <table
-                      {...getTableProps()}
-                      className="w-full  rounded-lg border-blue-500"
-                    >
+                  <div className="mt-5 w-full h-[65%] bg-white rounded-md shadow-md px-10 py-4 relative">
+                    <table {...getTableProps()} className="w-full px-10  ">
                       <thead>
                         {headerGroups.map((headerGroup) => (
                           <tr
+                            className="border-b-2  "
                             key={headerGroup.id}
                             {...headerGroup.getHeaderGroupProps()}
                           >
@@ -387,7 +436,7 @@ const UploadData = () => {
                               <th
                                 key={column.id}
                                 {...column.getHeaderProps()}
-                                className="text-sm p-2 text-start"
+                                className="text-sm p-2 text-start pl-10"
                               >
                                 {column.render("Header")}
                               </th>
@@ -395,17 +444,22 @@ const UploadData = () => {
                           </tr>
                         ))}
                       </thead>
+
                       <tbody {...getTableBodyProps()}>
-                        {rows.map((row) => {
+                        {page.map((row) => {
                           prepareRow(row);
                           return (
-                            <tr key={row.id} {...row.getRowProps()}>
+                            <tr
+                              key={row.id}
+                              {...row.getRowProps()}
+                              className="even:bg-blue-50"
+                            >
                               {row.cells.map((cell) => {
                                 return (
                                   <td
                                     key={cell.id}
                                     {...cell.getCellProps()}
-                                    className="text-sm border p-2 "
+                                    className="text-xs font-medium text-gray-600  pl-10 p-2  "
                                   >
                                     {cell.render("Cell")}
                                   </td>
@@ -417,10 +471,40 @@ const UploadData = () => {
                       </tbody>
                     </table>
 
-                    <div className="absolute w-full h-10 bottom-0 border-2 p-2 shadow-sm -left-0 ">
-                      <h1 className="text-sm text-red-500">
+                    <div className="absolute w-full h-10 bottom-0 border-2 p-2 flex justify-end pr-10 space-x-2 shadow-sm -left-0 ">
+                      {/* <h1 className="text-sm text-red-500">
                         {missingData.length} record(s) found with missing data
-                      </h1>
+                      </h1> */}
+                      <button
+                        onClick={() => gotoPage(0)}
+                        disabled={!canPreviousPage}
+                      >
+                        {"<<"}
+                      </button>{" "}
+                      <button
+                        onClick={() => previousPage()}
+                        disabled={!canPreviousPage}
+                      >
+                        {"<"}
+                      </button>{" "}
+                      <button
+                        onClick={() => nextPage()}
+                        disabled={!canNextPage}
+                      >
+                        {">"}
+                      </button>{" "}
+                      <button
+                        onClick={() => gotoPage(pageCount - 1)}
+                        disabled={!canNextPage}
+                      >
+                        {">>"}
+                      </button>{" "}
+                      <span>
+                        Page{" "}
+                        <strong>
+                          {pageIndex + 1} of {pageOptions.length}
+                        </strong>{" "}
+                      </span>
                     </div>
                   </div>
                 )}

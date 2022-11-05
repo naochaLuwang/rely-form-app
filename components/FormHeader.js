@@ -9,10 +9,11 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Badge from "@mui/material/Badge";
 import { createGlobalState } from "react-hooks-global-state";
 
-const initialState = { open: false };
+const initialState = { open: false, submenu: false };
 export const { useGlobalState } = createGlobalState(initialState);
 const FormHeader = ({ title }) => {
   const [openSidebar, setOpenSidebar] = useGlobalState("open");
+  const [openSubmenu, setOpenSubmenu] = useGlobalState("submenu");
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -22,6 +23,9 @@ const FormHeader = ({ title }) => {
   };
 
   const handleOpen = () => {
+    if (openSidebar) {
+      setOpenSubmenu(false);
+    }
     setOpenSidebar(!openSidebar);
   };
   const handleClose = () => {
@@ -111,7 +115,7 @@ const FormHeader = ({ title }) => {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuList sx={{ width: 200, maxWidth: "100%" }}>
+          <MenuList sx={{ width: 200, maxWidth: "100%", outline: "none" }}>
             <MenuItem onClick={handleClose}>
               <div className="flex items-center space-x-3">
                 <AccountCircleOutlinedIcon

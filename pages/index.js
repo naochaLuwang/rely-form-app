@@ -3,7 +3,7 @@ import Head from "next/head";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
 
-import { useSession, signOut } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import FormHeader from "../components/FormHeader";
 import Clock from "react-live-clock";
 
@@ -31,10 +31,17 @@ const Home = () => {
       {status === "authenticated" && (
         <>
           <Head>
-            <title>Form Templates | Rely Form</title>
+            <title>Home | Rely Form</title>
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1.0"
+            />
+            <meta http-equiv="X-UA-Compatible" content="IE=7" />
+            <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+            <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+            <meta
+              name="description"
+              content="Rely Form , hospital feedback form"
             />
           </Head>
           <div className="w-screen h-screen bg-gray-50 flex overflow-hidden">
@@ -44,8 +51,10 @@ const Home = () => {
                 <FormHeader handleOpen={handleOpen} open={open} />
               </div>
 
-              <div className="w-full px-8">
-                <h1>Welcome , {session?.user.name}</h1>
+              <div className="w-full px-8 flex items-center  pt-5 space-x-2">
+                <h1 className="text-gray-700">
+                  Welcome , {session?.user.name}
+                </h1>
                 <Clock
                   format={"h:mm:ss A"}
                   ticking={true}
@@ -62,5 +71,16 @@ const Home = () => {
     </>
   );
 };
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  console.log(session);
+
+  return {
+    props: {
+      session,
+    },
+  };
+}
 
 export default Home;

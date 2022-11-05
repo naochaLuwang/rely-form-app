@@ -34,7 +34,9 @@ const FormTemplate = ({ form }) => {
   const [formStatus, setFormStatus] = useState(false);
   const [formName, setFormName] = useState("");
   const [formId, setFormId] = useState("");
-  const [record, setRecord] = useState(0);
+  const [record, setRecord] = useState(null);
+  const [statusChange, setStatusChange] = useState(true);
+  const [typeChange, setTypeChange] = useState("IPD");
 
   const [Status, setStatus] = useState(true);
   const [type, setType] = useState("IPD");
@@ -106,26 +108,39 @@ const FormTemplate = ({ form }) => {
     gridApi.api.setQuickFilter(e.target.value);
     const count = gridApi.api.getDisplayedRowCount();
     setRecord(count);
+
+    if (e.target.value === "") {
+      setRecord(null);
+    }
   };
 
-  const onSelectStatusChange = (e) => {
+  const onSelectStatusChange = async (e) => {
+    setStatusChange(e.target.value);
+
+    const response = await fetch(`api/search/${e.target.value}/${typeChange}`);
+    const data = await response.json();
+
     gridApi.api.setQuickFilter(e.target.value);
-    const count = gridApi.api.getDisplayedRowCount();
-    setRecord(count);
+
+    // const count = gridApi.api.getDisplayedRowCount();
+    // setRecord(count);
+    setTableData(data);
   };
 
   const onSelectTypeChange = async (e) => {
-    setType(e.target.value);
+    setTypeChange(e.target.value);
 
-    const response = await fetch(`api/filter/${Status}/${e.target.value}`);
+    const response = await fetch(
+      `api/search/${statusChange}/${e.target.value}`
+    );
     const data = response.json();
 
     console.log(data);
 
-    // setTableData(data);
+    setTableData(data);
 
-    const count = gridApi.api.getDisplayedRowCount();
-    setRecord(count);
+    // const count = gridApi.api.getDisplayedRowCount();
+    // setRecord(count);
   };
 
   const getFilterType = () => {
@@ -134,13 +149,13 @@ const FormTemplate = ({ form }) => {
     else if (endDate !== "") return "lessThan";
   };
 
-  useEffect(() => {
-    if (gridApi) {
-      gridApi.api.setQuickFilter("true");
-      const count = gridApi.api.getDisplayedRowCount();
-      setRecord(count);
-    }
-  }, [gridApi]);
+  // useEffect(() => {
+  //   if (gridApi) {
+  //     gridApi.api.setQuickFilter("true");
+  //     const count = gridApi.api.getDisplayedRowCount();
+  //     setRecord(count);
+  //   }
+  // }, [gridApi]);
   useEffect(() => {
     if (gridApi) {
       var dateFilterComponent = gridApi.api.getFilterInstance("createdAt");
@@ -523,7 +538,6 @@ const FormTemplate = ({ form }) => {
                       className="bg-gray-50 form-input block w-40 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
                       onChange={onSelectTypeChange}
                     >
-                      <option value="">Form Type</option>
                       <option value="IPD">IPD</option>
                       <option value="OPD">OPD</option>
                     </select>
@@ -564,7 +578,9 @@ const FormTemplate = ({ form }) => {
                   </div>
                 </div>
 
-                <h1 className="text-sm mb-2 ">{record} record(s) found</h1>
+                <h1 className="text-sm mb-2 ">
+                  {record !== null ? record : tableData.length} record(s) found
+                </h1>
 
                 <div className="ag-theme-alpine ag-style h-[65%]  bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
                   <AgGridReact
@@ -592,12 +608,15 @@ export default FormTemplate;
 
 export async function getServerSideProps(context) {
   await dbConnect();
-  const url = "https://rely-form.herokuapp.com";
+  // const url = "https://rely-form.herokuapp.com";
+  const url = "http://localhost:3000";
 
-  const response = await fetch(`${url}/api/form`);
+  const status = true;
+  const type = "IPD";
+
+  // const response = await fetch(`${url}/api/form/`);
+  const response = await fetch(`${url}/api/search/${status}/${type}`);
   const data = await response.json();
-
-  console.log(data);
 
   return {
     props: {

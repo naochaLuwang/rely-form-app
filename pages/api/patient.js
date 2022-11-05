@@ -27,6 +27,7 @@ handler.post(async (req, res) => {
           uhId: patients[i].uhId,
           salutationName: patients[i].salutationName,
           patientType: patients[i].patientType,
+          mobileNumber: patients[i].mobileNumber.toString(),
         });
       }
     }

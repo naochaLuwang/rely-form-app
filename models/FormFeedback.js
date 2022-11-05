@@ -23,6 +23,15 @@ const formFeedbackSchema = new mongoose.Schema(
     overallScore: {
       type: Number,
     },
+    averageWeightage: {
+      type: Number,
+    },
+    maximumWeightage: {
+      type: Number,
+    },
+    minimumWeightage: {
+      type: Number,
+    },
     patient: {
       salutationName: String,
       name: String,

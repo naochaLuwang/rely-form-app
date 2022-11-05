@@ -251,7 +251,8 @@ const Dashboard = ({ form }) => {
       .then((resp) => resp.json())
       .then(
         (resp) => (
-          params.api.applyTransaction({ add: resp }),
+          setTableData(resp),
+          // params.api.applyTransaction({ add: resp }),
           setFeedbackNumber(resp.length),
           setRecord(params.api.getDisplayedRowCount())
         )
@@ -267,8 +268,8 @@ const Dashboard = ({ form }) => {
     gridApi.api.exportDataAsCsv();
   };
 
-  const onFilterTextChange = (e) => {
-    gridApi.api.setQuickFilter(e.target.value);
+  const onHandleSearch = (e) => {
+    gridApi.api.setQuickFilter();
   };
 
   const onSelectChange = (e) => {
@@ -383,7 +384,7 @@ const Dashboard = ({ form }) => {
                           className="bg-gray-50 form-input block w-full pl-10 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
                           type="search"
                           placeholder="search"
-                          onChange={onFilterTextChange}
+                          onChange={onHandleSearch}
                         />
                       </div>
                     </div>
@@ -415,6 +416,7 @@ const Dashboard = ({ form }) => {
                 <div className="ag-theme-alpine  h-[70%] bg-white px-6 py-6 rounded-xl shadow-2xl w-full">
                   <AgGridReact
                     columnDefs={columnDefs}
+                    rowData={tableData}
                     ref={gridRef}
                     defaultColDef={defaultColDef}
                     onGridReady={onGridReady}
