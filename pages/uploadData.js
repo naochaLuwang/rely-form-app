@@ -70,6 +70,31 @@ BootstrapDialogTitle.propTypes = {
   children: PropTypes.node,
   onClose: PropTypes.func.isRequired,
 };
+
+const excelTemplate = [
+  {
+    SalutationName: "Mr",
+    Name: "John Doe",
+    MobileNumber: "123456789",
+    Gender: "Male",
+    Age: 18,
+    RegId: 1,
+    UhId: 1,
+  },
+];
+
+const fileType =
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+const fileExtension = ".xlsx";
+const fileName = "UserData";
+
+const downloadFormTemplate = async () => {
+  const ws = XLSX.utils.json_to_sheet(excelTemplate);
+  const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+  const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  const data = new Blob([excelBuffer], { type: fileType });
+  FileSaver.saveAs(data, "Template" + ".xlsx");
+};
 const UploadData = () => {
   const { status } = useSession();
   const [missingData, setMissingData] = useState([]);
@@ -83,23 +108,18 @@ const UploadData = () => {
 
   const data = useMemo(() => patients, [patients]);
 
-  const fileType =
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-  const fileExtension = ".xlsx";
-  const fileName = "UserData";
-
   const missingDatas = [];
 
   const exportToExcel = async (excelData) => {
     for (let i = 0; i < excelData.length; i++) {
       missingDatas.push({
-        salutationName: excelData[i].salutationName,
-        name: excelData[i].name,
-        mobileNumber: excelData[i].mobileNumber,
-        gender: excelData[i].gender,
-        age: excelData[i].age,
-        regId: excelData[i].regId,
-        uhId: excelData[i].uhId,
+        SalutationName: excelData[i].salutationName,
+        Name: excelData[i].name,
+        MobileNumber: excelData[i].mobileNumber,
+        Gender: excelData[i].gender,
+        Age: excelData[i].age,
+        RegId: excelData[i].regId,
+        UhId: excelData[i].uhId,
       });
     }
     const ws = XLSX.utils.json_to_sheet(missingDatas);
@@ -138,15 +158,15 @@ const UploadData = () => {
           const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
           //   setUsers(rows);
           const patientData = rows.filter(
-            (user) => user.name && user.mobileNumber && user.regId
+            (user) => user.Name && user.MobileNumber && user.RegId
           );
           setPatients(patientData);
 
           const missing = rows.filter(
             (user) =>
-              user.name === undefined ||
-              user.mobileNumber === undefined ||
-              user.regId === undefined
+              user.Name === undefined ||
+              user.MobileNumber === undefined ||
+              user.RegId === undefined
           );
           setMissingData(missing);
         }
@@ -178,31 +198,31 @@ const UploadData = () => {
     () => [
       {
         Header: "Name",
-        accessor: "name",
+        accessor: "Name",
       },
       {
         Header: "Mobile",
-        accessor: "mobileNumber",
+        accessor: "MobileNumber",
       },
       {
         Header: "Gender",
-        accessor: "gender",
+        accessor: "Gender",
       },
       {
         Header: "Age",
-        accessor: "age",
+        accessor: "Age",
       },
       {
         Header: "Reg Id",
-        accessor: "regId",
+        accessor: "RegId",
       },
       {
         Header: "UHID",
-        accessor: "uhId",
+        accessor: "UhId",
       },
       {
         Header: "Patient Type",
-        accessor: "patientType",
+        accessor: "PatientType",
       },
     ],
     []
@@ -290,15 +310,23 @@ const UploadData = () => {
                     />
                   </div>
 
-                  <button
-                    onClick={handleClickOpen}
-                    className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-indigo-600 text-indigo-600 text-white"
-                  >
-                    <span className="absolute w-96 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-indigo-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-                    <span className="relative text-indigo-600 transition duration-300 group-hover:text-white ease">
-                      Upload Data
-                    </span>
-                  </button>
+                  <div className="flex space-x-5">
+                    <button
+                      onClick={downloadFormTemplate}
+                      className="px-5 py-2.5 font-medium bg-blue-50 hover:bg-blue-100 hover:text-blue-600 text-blue-500 rounded-lg text-sm"
+                    >
+                      Download template
+                    </button>
+                    <button
+                      onClick={handleClickOpen}
+                      className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-indigo-600 text-indigo-600 text-white"
+                    >
+                      <span className="absolute w-96 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-indigo-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
+                      <span className="relative text-indigo-600 transition duration-300 group-hover:text-white ease">
+                        Upload Data
+                      </span>
+                    </button>
+                  </div>
 
                   <BootstrapDialog
                     onClose={handleClose}
@@ -420,13 +448,13 @@ const UploadData = () => {
                             className="text-sm text-center font-medium odd:bg-blue-100 h-10"
                           >
                             <td>{i + 1}</td>
-                            <td>{data.name}</td>
-                            <td>{data.mobileNumber}</td>
-                            <td>{data.gender}</td>
-                            <td>{data.age}</td>
-                            <td>{data.regId}</td>
-                            <td>{data.uhId}</td>
-                            <td>{data.patientType}</td>
+                            <td>{data.Name}</td>
+                            <td>{data.MobileNumber}</td>
+                            <td>{data.Gender}</td>
+                            <td>{data.Age}</td>
+                            <td>{data.RegId}</td>
+                            <td>{data.UhId}</td>
+                            <td>{data.PatientType}</td>
                           </tr>
                         ))}
                       </table>

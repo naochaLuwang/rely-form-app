@@ -20,14 +20,14 @@ handler.post(async (req, res) => {
 
       if (!response) {
         patientData.push({
-          name: patients[i].name,
-          gender: patients[i].gender,
-          age: patients[i].age,
-          regId: patients[i].regId,
-          uhId: patients[i].uhId,
-          salutationName: patients[i].salutationName,
-          patientType: patients[i].patientType,
-          mobileNumber: patients[i].mobileNumber.toString(),
+          name: patients[i].Name,
+          gender: patients[i].Gender,
+          age: patients[i].Age,
+          regId: patients[i].RegId,
+          uhId: patients[i].UhId,
+          salutationName: patients[i].SalutationName,
+          patientType: patients[i].PatientType,
+          mobileNumber: patients[i].MobileNumber.toString(),
         });
       }
     }
