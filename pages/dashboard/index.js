@@ -19,7 +19,7 @@ import Sidebar from "../../components/Sidebar";
 import FormHeader from "../../components/FormHeader";
 
 const Dashboard = ({ form }) => {
-  const [tableData, setTableData] = useState([]);
+  const [tableData, setTableData] = useState(form);
   const [gridApi, setGridApi] = useState();
 
   const [feedbackNumber, setFeedbackNumber] = useState(0);
@@ -31,6 +31,8 @@ const Dashboard = ({ form }) => {
   const { status } = useSession();
 
   const router = useRouter();
+
+  console.log(tableData);
 
   const handleOpen = () => {
     setOpen(!openSidebar);
@@ -247,35 +249,38 @@ const Dashboard = ({ form }) => {
 
   const onGridReady = (params) => {
     setGridApi(params);
-    fetch("/api/formFeedback")
-      .then((resp) => resp.json())
-      .then(
-        (resp) => (
-          setTableData(resp),
-          // params.api.applyTransaction({ add: resp }),
-          setFeedbackNumber(resp.length),
-          setRecord(params.api.getDisplayedRowCount())
-        )
-      );
+    // fetch("/api/formFeedback")
+    //   .then((resp) => resp.json())
+    //   .then(
+    //     (resp) => (
+    //       setTableData(resp),
+    //       // params.api.applyTransaction({ add: resp }),
+    //       setFeedbackNumber(resp.length),
+    //       setRecord(params.api.getDisplayedRowCount())
+    //     )
+    //   );
   };
 
-  const getUsers = () => {
-    fetch("/api/formFeedback")
-      .then((resp) => resp.json())
-      .then((resp) => setTableData(resp));
-  };
+  // const getUsers = () => {
+  //   fetch("/api/formFeedback")
+  //     .then((resp) => resp.json())
+  //     .then((resp) => setTableData(resp));
+  // };
   const onExportClick = () => {
     gridApi.api.exportDataAsCsv();
   };
 
   const onHandleSearch = (e) => {
-    gridApi.api.setQuickFilter();
+    gridApi.api.setQuickFilter(e.target.value);
   };
 
-  const onSelectChange = (e) => {
+  const onSelectChange = async (e) => {
+    const response = await fetch(`/api/dashboard/${e.target.value}`);
+    const data = await response.json();
+    setTableData(data);
     gridApi.api.setQuickFilter(e.target.value);
-    const count = gridApi.api.getDisplayedRowCount();
-    setRecord(count);
+    // const count = gridApi.api.getDisplayedRowCount();
+    // setRecord(count);
   };
   const getFilterType = () => {
     if (startDate !== "" && endDate !== "") return "inRange";
@@ -369,7 +374,9 @@ const Dashboard = ({ form }) => {
                       className="bg-gray-50 form-input block w-96  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
                       onChange={onSelectChange}
                     >
-                      <option value="false">Pending</option>
+                      <option className="border p-5" value="false">
+                        Pending
+                      </option>
                       <option value="true">Submitted</option>
                     </select>
                   </div>
@@ -438,8 +445,12 @@ const Dashboard = ({ form }) => {
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  const url = "https://rely-form.herokuapp.com";
-  const response = await fetch(`${url}/api/form`);
+  // const url = "https://rely-form.herokuapp.com";
+
+  const url = "http://localhost:3000";
+
+  const submitted = false;
+  const response = await fetch(`${url}/api/dashboard/${submitted}`);
 
   const data = await response.json();
 

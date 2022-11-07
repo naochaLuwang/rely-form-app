@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Sidebar from "../components/Sidebar";
 import { useRouter } from "next/router";
@@ -14,13 +14,15 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [subOpen, setSubOpen] = useState(false);
 
-  const Router = useRouter();
+  const router = useRouter();
 
   console.log(session?.user);
 
-  if (status === "unauthenticated") {
-    Router.push("/signin");
-  }
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/signin");
+    }
+  }, [status]);
 
   const handleOpen = () => {
     setOpen(!open);

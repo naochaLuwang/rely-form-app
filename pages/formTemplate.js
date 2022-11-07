@@ -133,11 +133,15 @@ const FormTemplate = ({ form }) => {
     const response = await fetch(
       `api/search/${statusChange}/${e.target.value}`
     );
-    const data = response.json();
+    const data = await response.json();
+
+    if (data.length < 0) {
+      setTableData([]);
+    } else {
+      setTableData(data);
+    }
 
     console.log(data);
-
-    setTableData(data);
 
     // const count = gridApi.api.getDisplayedRowCount();
     // setRecord(count);
@@ -149,13 +153,13 @@ const FormTemplate = ({ form }) => {
     else if (endDate !== "") return "lessThan";
   };
 
-  // useEffect(() => {
-  //   if (gridApi) {
-  //     gridApi.api.setQuickFilter("true");
-  //     const count = gridApi.api.getDisplayedRowCount();
-  //     setRecord(count);
-  //   }
-  // }, [gridApi]);
+  useEffect(() => {
+    if (gridApi) {
+      gridApi.api.setQuickFilter("true");
+      // const count = gridApi.api.getDisplayedRowCount();
+      // setRecord(count);
+    }
+  }, [gridApi]);
   useEffect(() => {
     if (gridApi) {
       var dateFilterComponent = gridApi.api.getFilterInstance("createdAt");
@@ -609,12 +613,10 @@ export default FormTemplate;
 export async function getServerSideProps(context) {
   await dbConnect();
   const url = "https://rely-form.herokuapp.com";
-  // const url = "http://localhost:3000";
 
   const status = true;
   const type = "IPD";
 
-  // const response = await fetch(`${url}/api/form/`);
   const response = await fetch(`${url}/api/search/${status}/${type}`);
   const data = await response.json();
 
