@@ -464,16 +464,17 @@ const Dashboard = ({ form }) => {
                         />
                       </div>
                     </div>
+
                     <button
-                      className="max-w-fit px-4 text-sm py-2 border shadow-md bg-slate-200 rounded-md"
                       onClick={refreshData}
+                      className="relative z-30 inline-flex items-center justify-center w-auto px-4 py-2 overflow-hidden  text-gray-500 transition-all duration-500 border border-gray-200 rounded-md cursor-pointer group ease bg-gradient-to-b from-white to-gray-50 hover:from-gray-50 hover:to-white active:to-white"
                     >
-                      <div className="flex items-center text-gray-600 text-sm font-semibold space-x-2">
-                        <h1>Refresh</h1>
-                        <FcRefresh className="text-sm text-gray-600" />
-                      </div>
+                      <span className="w-full h-0.5 absolute bottom-0 group-active:bg-transparent left-0 bg-gray-100"></span>
+                      <span className="h-full w-0.5 absolute bottom-0 group-active:bg-transparent right-0 bg-gray-100"></span>
+                      Refresh{" "}
+                      <FcRefresh className="text-sm ml-2 text-gray-600 font-medium" />
                     </button>
-                    <button
+                    {/* <button
                       className="max-w-fit px-4 text-sm py-2 border shadow-md bg-blue-500 rounded-md"
                       onClick={onExportClick}
                     >
@@ -481,6 +482,18 @@ const Dashboard = ({ form }) => {
                         <h1>Export</h1>
                         <FaFileExport />
                       </div>
+                    </button> */}
+
+                    <button
+                      className="inline-flex items-center justify-center px-4 py-2 text-base font-medium leading-6 text-white whitespace-no-wrap bg-blue-600 border border-blue-700 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 "
+                      data-rounded="rounded-md"
+                      data-primary="blue-600"
+                      data-primary-reset="{}"
+                    >
+                      Export{" "}
+                      <span className="ml-2">
+                        <FaFileExport />
+                      </span>
                     </button>
                   </div>
                 </div>

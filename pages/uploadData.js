@@ -88,8 +88,21 @@ const UploadData = () => {
   const fileExtension = ".xlsx";
   const fileName = "UserData";
 
+  const missingDatas = [];
+
   const exportToExcel = async (excelData) => {
-    const ws = XLSX.utils.json_to_sheet(excelData);
+    for (let i = 0; i < excelData.length; i++) {
+      missingDatas.push({
+        salutationName: excelData[i].salutationName,
+        name: excelData[i].name,
+        mobileNumber: excelData[i].mobileNumber,
+        gender: excelData[i].gender,
+        age: excelData[i].age,
+        regId: excelData[i].regId,
+        uhId: excelData[i].uhId,
+      });
+    }
+    const ws = XLSX.utils.json_to_sheet(missingDatas);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
