@@ -445,9 +445,9 @@ const Dashboard = ({ form }) => {
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  // const url = "https://rely-form.herokuapp.com";
+  const url = "https://rely-form.herokuapp.com";
 
-  const url = "http://localhost:3000";
+  // const url = "http://localhost:3000";
 
   const submitted = false;
   const response = await fetch(`${url}/api/dashboard/${submitted}`);
