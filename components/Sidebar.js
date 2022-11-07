@@ -88,7 +88,7 @@ const Sidebar = ({ subOpen }) => {
         ))}
       </ul>
 
-      <div className={!submenuOpen ? "h-0 mb-10" : "h-36"}>
+      <div className={!submenuOpen ? "h-0 mb-12" : "h-36"}>
         <ul
           className="pt-2   "
           onClick={() => {
@@ -120,7 +120,7 @@ const Sidebar = ({ subOpen }) => {
               <span
                 className={`${
                   !open && "hidden"
-                } flex items-center space w-full  justify-between`}
+                } flex items-center text-sm font-medium text-gray-600 space w-full   justify-between`}
               >
                 Feedback{" "}
                 <ChevronUpIcon
@@ -167,7 +167,7 @@ const Sidebar = ({ subOpen }) => {
       </div>
 
       <ul className={` ${submenuOpen && "mt-10"}`}>
-        <Link href="/consult">
+        <Link href="/consultation">
           <div className="hover:border-l-4 group border-l-4  border-white    hover:border-blue-500">
             <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-1 cursor-pointer p-2  hover:bg-light-white rounded-md">
               <div className="relative w-6 h-6 z-30 flex-shrink-0">

@@ -22,6 +22,7 @@ import { useRouter } from "next/router";
 import { RotatingLines } from "react-loader-spinner";
 import Lottie from "lottie-react";
 import success from "../assets/success.json";
+
 const style = {
   height: 100,
   width: 100,
@@ -220,6 +221,10 @@ const UploadData = () => {
     },
     usePagination
   );
+
+  if (status === "unauthenticated") {
+    router.push("/signin");
+  }
 
   return (
     <>

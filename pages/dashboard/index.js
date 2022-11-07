@@ -24,17 +24,20 @@ import { useSession } from "next-auth/react";
 
 import FormHeader from "../../components/FormHeader";
 import Sidebar from "../../components/Sidebar";
+import * as FileSaver from "file-saver";
+import * as XLSX from "xlsx";
 
 const Dashboard = ({ form }) => {
   const [tableData, setTableData] = useState(form);
-  const [gridApi, setGridApi] = useState();
 
-  const [feedbackNumber, setFeedbackNumber] = useState(0);
-  const [seed, setSeed] = useState(1);
+  const [gridApi, setGridApi] = useState();
   const [record, setRecord] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [openSidebar, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [pending, setPending] = useState(false);
+
+  const exportData = [];
 
   const { status } = useSession();
   const style = {
@@ -50,9 +53,16 @@ const Dashboard = ({ form }) => {
     setOpen(!openSidebar);
   };
 
-  const refreshData = () => {
-    // onGridReady();
-    setSeed(Math.random());
+  const refreshData = async () => {
+    if (pending === false) {
+      const response = await fetch(`/api/dashboard/false`);
+      const data = await response.json();
+      setTableData(data);
+    } else {
+      const response = await fetch(`/api/dashboard/true`);
+      const data = await response.json();
+      setTableData(data);
+    }
   };
 
   const handleModal = () => {
@@ -299,25 +309,31 @@ const Dashboard = ({ form }) => {
 
   const onGridReady = (params) => {
     setGridApi(params);
-    // fetch("/api/formFeedback")
-    //   .then((resp) => resp.json())
-    //   .then(
-    //     (resp) => (
-    //       setTableData(resp),
-    //       // params.api.applyTransaction({ add: resp }),
-    //       setFeedbackNumber(resp.length),
-    //       setRecord(params.api.getDisplayedRowCount())
-    //     )
-    //   );
   };
 
-  // const getUsers = () => {
-  //   fetch("/api/formFeedback")
-  //     .then((resp) => resp.json())
-  //     .then((resp) => setTableData(resp));
-  // };
+  const fileType =
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
+  const fileExtension = ".xlsx";
+  const fileName = "FeedbackData";
+
   const onExportClick = () => {
-    gridApi.api.exportDataAsCsv();
+    // gridApi.api.exportDataAsCsv();
+    for (let i = 0; i < tableData.length; i++) {
+      exportData.push({
+        SalutationName: tableData[i].patient.salutationName,
+        Name: tableData[i].patient.name,
+        Mobile: tableData[i].patient.primaryMobileNumber,
+        SubmittedAt: tableData[i].updatedAt,
+        Score: tableData[i].overallScore,
+        Status: `${tableData[i].isSubmitted ? "Submitted" : "Pending"}`,
+      });
+    }
+
+    const ws = XLSX.utils.json_to_sheet(exportData);
+    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: fileType });
+    FileSaver.saveAs(data, fileName + fileExtension);
   };
 
   const onHandleSearch = (e) => {
@@ -326,6 +342,7 @@ const Dashboard = ({ form }) => {
 
   const onSelectChange = async (e) => {
     setLoading(true);
+    setPending(!pending);
     const response = await fetch(`/api/dashboard/${e.target.value}`);
     const data = await response.json();
     setTableData(data);
@@ -387,7 +404,7 @@ const Dashboard = ({ form }) => {
           <div className=" w-screen h-screen bg-gray-50 flex overflow-hidden ">
             <Sidebar open={openSidebar} />
 
-            <div key={seed} className=" flex-1  bg-gray-50   relative  ">
+            <div className=" flex-1  bg-gray-50   relative  ">
               <div className="w-full h-10">
                 <FormHeader
                   handleOpen={handleOpen}
@@ -469,7 +486,7 @@ const Dashboard = ({ form }) => {
                 </div>
 
                 <h1 className="text-sm mb-2  text-gray-600">
-                  {record} record(s) found
+                  {tableData.length} record(s) found
                 </h1>
 
                 <div className="ag-theme-alpine  h-[70%] bg-white px-6 py-6 rounded-xl shadow-2xl w-full">
@@ -519,8 +536,6 @@ export default Dashboard;
 
 export async function getServerSideProps(context) {
   const url = "https://rely-form.herokuapp.com";
-
-  // const url = "http://localhost:3000";
 
   const submitted = false;
   const response = await fetch(`${url}/api/dashboard/${submitted}`);

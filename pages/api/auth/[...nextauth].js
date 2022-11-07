@@ -17,6 +17,7 @@ export default NextAuth({
       },
 
       async authorize(credentials, req) {
+        await dbConnect();
         const userId = credentials.userId;
         const password = credentials.password;
 

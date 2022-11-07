@@ -57,20 +57,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
   const [loading, setLoading] = useState(false);
   const [unfilled, setUnfilled] = useState(false);
 
-  console.log(newForm);
-  // useEffect(() => {
-  //   // const handleStart = () => {
-  //   //   setLoading(true);
-  //   // };
-  //   // let handleComplete = () => {
-  //   //   setTimeout(() => {
-  //   //     setLoading(false);
-  //   //   }, 500);
-  //   // };
-  //   Router.events.on("routeChangeStart", handleStart);
-  //   Router.events.on("routeChangeComplete", handleComplete);
-  //   Router.events.on("routeChangeError", handleComplete);
-  // }, []);
   const router = useRouter();
 
   const formDatas = newForm?.form;
@@ -110,7 +96,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
     console.log(newRange);
   };
   const handleSubmit = async () => {
-    setLoading(true);
     let overallScore = 0;
 
     const newFormData = { ...newForm };
@@ -166,6 +151,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
       return;
     } else {
       setUnfilled(false);
+      setLoading(true);
     }
 
     // setLoading(true);
@@ -205,7 +191,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
             aria-labelledby="customized-dialog-title"
             open={loading}
           >
-            <div className="w-96 h-auto flex flex-col items-center justify-center">
+            <div className="w-96 h-auto py-6 flex flex-col items-center justify-center">
               <RotatingLines
                 strokeColor="blue"
                 strokeWidth="5"

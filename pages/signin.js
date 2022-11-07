@@ -62,10 +62,11 @@ export default function SignIn() {
       <div className="flex-1 w-full h-full flex items-center justify-center">
         <form action="" className="flex flex-col space-y-3">
           <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
-          <label className="w-96 flex flex-col font-medium tracking-wider ">
+          <label className="w-96 flex flex-col text-gray-600 font-medium tracking-wider ">
             User Id
             <input
-              className="text-input mt-2 focus:outline-none focus:ring-0 shadow-md rounded-md border-2 border-gray-400"
+              required
+              className="text-input mt-2 focus:outline-none bg-gray-50 focus:bg-white focus:ring-0 shadow-md rounded-md border-2 border-gray-400"
               type="text"
               id="userId"
               name="userId"
@@ -73,10 +74,11 @@ export default function SignIn() {
               onChange={(e) => setUserId(e.target.value)}
             />
           </label>
-          <label className="w-96 flex flex-col font-medium tracking-wider ">
+          <label className="w-96 flex flex-col font-medium text-gray-600 tracking-wider ">
             Password
             <input
-              className="text-input mt-2 focus:outline-none focus:ring-0 shadow-md rounded-md border-2 border-gray-400"
+              required
+              className="text-input mt-2 focus:outline-none focus:bg-white  focus:ring-0 shadow-md bg-gray-50 rounded-md border-2 border-gray-400"
               type="password"
               id="password"
               name="password"
