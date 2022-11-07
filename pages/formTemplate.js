@@ -25,6 +25,10 @@ import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { styled } from "@mui/material/styles";
+import CloseIcon from "@mui/icons-material/Close";
+import { RotatingLines } from "react-loader-spinner";
+import PropTypes from "prop-types";
 
 const FormTemplate = ({ form }) => {
   const [tableData, setTableData] = useState(form);
@@ -37,11 +41,17 @@ const FormTemplate = ({ form }) => {
   const [record, setRecord] = useState(null);
   const [statusChange, setStatusChange] = useState(true);
   const [typeChange, setTypeChange] = useState("IPD");
+  const [loading, setLoading] = useState(false);
 
   const [Status, setStatus] = useState(true);
   const [type, setType] = useState("IPD");
 
   const { status } = useSession();
+
+  const style = {
+    width: 50,
+    height: 50,
+  };
 
   const gridRef = useRef();
   const router = useRouter();
@@ -63,6 +73,44 @@ const FormTemplate = ({ form }) => {
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
     FileSaver.saveAs(data, fileName + fileExtension);
+  };
+
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
+
+  function BootstrapDialogTitle(props) {
+    const { children, onClose, ...other } = props;
+
+    return (
+      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </DialogTitle>
+    );
+  }
+
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
   };
 
   const dateFilterParams = {
@@ -115,6 +163,7 @@ const FormTemplate = ({ form }) => {
   };
 
   const onSelectStatusChange = async (e) => {
+    setLoading(true);
     setStatusChange(e.target.value);
 
     const response = await fetch(`api/search/${e.target.value}/${typeChange}`);
@@ -125,9 +174,11 @@ const FormTemplate = ({ form }) => {
     // const count = gridApi.api.getDisplayedRowCount();
     // setRecord(count);
     setTableData(data);
+    setLoading(false);
   };
 
   const onSelectTypeChange = async (e) => {
+    setLoading(true);
     setTypeChange(e.target.value);
 
     const response = await fetch(
@@ -145,6 +196,7 @@ const FormTemplate = ({ form }) => {
 
     // const count = gridApi.api.getDisplayedRowCount();
     // setRecord(count);
+    setLoading(false);
   };
 
   const getFilterType = () => {
@@ -587,6 +639,26 @@ const FormTemplate = ({ form }) => {
                 </h1>
 
                 <div className="ag-theme-alpine ag-style h-[65%]  bg-white px-6 py-6 rounded-xl shadow-2xl    w-full ">
+                  <BootstrapDialog
+                    onClose={() => setLoading(false)}
+                    aria-labelledby="customized-dialog-title"
+                    open={loading}
+                  >
+                    {loading && (
+                      <div className="w-96 flex flex-col py-4 items-center justify-center">
+                        <RotatingLines
+                          strokeColor="blue"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="60"
+                          visible={true}
+                        />
+                        <p className="animate-pulse text-sm font-medium text-gray-500 mt-2">
+                          Loading ...
+                        </p>
+                      </div>
+                    )}
+                  </BootstrapDialog>
                   <AgGridReact
                     columnDefs={columnDefs}
                     rowData={tableData}

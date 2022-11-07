@@ -1,22 +1,29 @@
-import { AgGridReact } from "ag-grid-react";
 import { SearchIcon } from "@heroicons/react/outline";
-import React, { useEffect, useState, useRef } from "react";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import moment from "moment";
-import Link from "next/link";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import ShareIcon from "@mui/icons-material/Share";
 import { IconButton } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import { styled } from "@mui/material/styles";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import { AgGridReact } from "ag-grid-react";
+import moment from "moment";
+import Head from "next/head";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
+import { RotatingLines } from "react-loader-spinner";
+
+import CloseIcon from "@mui/icons-material/Close";
+import PropTypes from "prop-types";
 
 import { FaFileExport } from "react-icons/fa";
 import { FcRefresh } from "react-icons/fc";
 
 import { useSession } from "next-auth/react";
 
-import Sidebar from "../../components/Sidebar";
 import FormHeader from "../../components/FormHeader";
+import Sidebar from "../../components/Sidebar";
 
 const Dashboard = ({ form }) => {
   const [tableData, setTableData] = useState(form);
@@ -27,8 +34,13 @@ const Dashboard = ({ form }) => {
   const [record, setRecord] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [openSidebar, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { status } = useSession();
+  const style = {
+    height: 50,
+    width: 50,
+  };
 
   const router = useRouter();
 
@@ -63,6 +75,44 @@ const Dashboard = ({ form }) => {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState(todaysDate);
+
+  const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+    "& .MuiDialogContent-root": {
+      padding: theme.spacing(2),
+    },
+    "& .MuiDialogActions-root": {
+      padding: theme.spacing(1),
+    },
+  }));
+
+  function BootstrapDialogTitle(props) {
+    const { children, onClose, ...other } = props;
+
+    return (
+      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null}
+      </DialogTitle>
+    );
+  }
+
+  BootstrapDialogTitle.propTypes = {
+    children: PropTypes.node,
+    onClose: PropTypes.func.isRequired,
+  };
 
   // !! parameters for date filter
   const dateFilterParams = {
@@ -275,10 +325,12 @@ const Dashboard = ({ form }) => {
   };
 
   const onSelectChange = async (e) => {
+    setLoading(true);
     const response = await fetch(`/api/dashboard/${e.target.value}`);
     const data = await response.json();
     setTableData(data);
     gridApi.api.setQuickFilter(e.target.value);
+    setLoading(false);
     // const count = gridApi.api.getDisplayedRowCount();
     // setRecord(count);
   };
@@ -421,6 +473,27 @@ const Dashboard = ({ form }) => {
                 </h1>
 
                 <div className="ag-theme-alpine  h-[70%] bg-white px-6 py-6 rounded-xl shadow-2xl w-full">
+                  <BootstrapDialog
+                    onClose={() => setLoading(false)}
+                    aria-labelledby="customized-dialog-title"
+                    open={loading}
+                  >
+                    {loading && (
+                      <div className="w-96 flex flex-col py-4 items-center justify-center">
+                        <RotatingLines
+                          strokeColor="blue"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="60"
+                          visible={true}
+                        />
+                        <p className="animate-pulse text-sm font-medium text-gray-500 mt-2">
+                          Loading ...
+                        </p>
+                      </div>
+                    )}
+                  </BootstrapDialog>
+
                   <AgGridReact
                     columnDefs={columnDefs}
                     rowData={tableData}
