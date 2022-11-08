@@ -21,7 +21,7 @@ handler.post(async (req, res) => {
     for (let i = 0; i < patient.length; i++) {
       if (patient[i].patientType === "IPD") {
         const feedbackIpd = await FormFeedback.findOne({
-          submittedBy: patient[i].regId,
+          submittedBy: patient[i].mobileNumber,
           formId: ipdForm.formId,
         });
 
@@ -31,9 +31,10 @@ handler.post(async (req, res) => {
             formName: ipdForm.formName,
             formUrl: `https://rely-form.herokuapp.com/form/${
               ipdForm.formId
-            }?regId=${Buffer.from(`${patient[i].regId}`, "binary").toString(
-              "base64"
-            )}`,
+            }?regId=${Buffer.from(
+              `${patient[i].mobileNumber}`,
+              "binary"
+            ).toString("base64")}`,
 
             averageWeightage: ipdForm.averageWeightage,
             maximumWeightage: ipdForm.maximumWeightage,

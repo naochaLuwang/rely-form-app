@@ -73,13 +73,14 @@ BootstrapDialogTitle.propTypes = {
 
 const excelTemplate = [
   {
-    SalutationName: "Mr",
-    Name: "John Doe",
-    MobileNumber: "123456789",
-    Gender: "Male",
-    Age: 18,
-    RegId: 1,
-    UhId: 1,
+    SalutationName: "",
+    Name: "",
+    MobileNumber: "",
+    Gender: "",
+    Age: null,
+    RegId: null,
+    UhId: null,
+    PatientType: "",
   },
 ];
 
@@ -113,13 +114,14 @@ const UploadData = () => {
   const exportToExcel = async (excelData) => {
     for (let i = 0; i < excelData.length; i++) {
       missingDatas.push({
-        SalutationName: excelData[i].salutationName,
-        Name: excelData[i].name,
-        MobileNumber: excelData[i].mobileNumber,
-        Gender: excelData[i].gender,
-        Age: excelData[i].age,
-        RegId: excelData[i].regId,
-        UhId: excelData[i].uhId,
+        SalutationName: excelData[i].SalutationName,
+        Name: excelData[i].Name,
+        MobileNumber: excelData[i].MobileNumber,
+        Gender: excelData[i].Gender,
+        Age: excelData[i].Age,
+        RegId: excelData[i].RegId,
+        UhId: excelData[i].UhId,
+        PatientType: excelData[i].PatientType,
       });
     }
     const ws = XLSX.utils.json_to_sheet(missingDatas);
