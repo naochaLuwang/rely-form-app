@@ -40,7 +40,7 @@ handler.post(async (req, res) => {
             minimumWeightage: ipdForm.minimumWeightage,
             createdBy: ipdForm.createdBy,
             isSubmitted: false,
-            submittedBy: patient[i].regId,
+            submittedBy: patient[i].mobileNumber,
             overallScore: 0,
             patient: {
               salutationName: patient[i].salutationName,
@@ -58,7 +58,7 @@ handler.post(async (req, res) => {
         }
       } else if (patient[i].patientType === "OPD") {
         const feedbackOpd = await FormFeedback.findOne({
-          submittedBy: patient[i].regId,
+          submittedBy: patient[i].mobileNumber,
           formId: opdForm.formId,
         });
 
@@ -68,16 +68,17 @@ handler.post(async (req, res) => {
             formName: opdForm.formName,
             formUrl: `https://rely-form.herokuapp.com/form/${
               opdForm.formId
-            }?regId=${Buffer.from(`${patient[i].regId}`, "binary").toString(
-              "base64"
-            )}`,
+            }?regId=${Buffer.from(
+              `${patient[i].mobileNumber}`,
+              "binary"
+            ).toString("base64")}`,
 
             averageWeightage: opdForm.averageWeightage,
             maximumWeightage: opdForm.maximumWeightage,
             minimumWeightage: opdForm.minimumWeightage,
             createdBy: opdForm.createdBy,
             isSubmitted: false,
-            submittedBy: patient[i].regId,
+            submittedBy: patient[i].mobileNumber,
             overallScore: 0,
             patient: {
               salutationName: patient[i].salutationName,

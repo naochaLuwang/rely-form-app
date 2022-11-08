@@ -158,15 +158,12 @@ const UploadData = () => {
           const rows = utils.sheet_to_json(wb.Sheets[sheets[0]]);
           //   setUsers(rows);
           const patientData = rows.filter(
-            (user) => user.Name && user.MobileNumber && user.RegId
+            (user) => user.Name && user.MobileNumber
           );
           setPatients(patientData);
 
           const missing = rows.filter(
-            (user) =>
-              user.Name === undefined ||
-              user.MobileNumber === undefined ||
-              user.RegId === undefined
+            (user) => user.Name === undefined || user.MobileNumber === undefined
           );
           setMissingData(missing);
         }

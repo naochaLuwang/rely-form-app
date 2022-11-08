@@ -533,7 +533,9 @@ export async function getServerSideProps(context) {
 
   const decryptedId = Buffer.from(regId, "base64").toString("binary");
 
-  console.log(query);
+  // console.log(query);
+
+  console.log(decryptedId);
 
   // const formFeedback = await fetch(
   //   `${process.env.HOST_URL}/api/formFeedback/${fid}/${decryptedId}`
