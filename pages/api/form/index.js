@@ -45,7 +45,6 @@ handler.post(async (req, res) => {
     });
     await newForm.save();
     res.json(newForm);
-    await db.disconnect();
   } catch (error) {
     res.status(500).json({ message: error.message });
     console.log(error.message);

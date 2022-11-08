@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Lottie from "lottie-react";
 import Head from "next/head";
 import success from "../assets/success.json";
+import axios from "axios";
 const style = {
   height: 400,
   width: 400,
 };
 
 const Success = () => {
+  useEffect(() => {
+    newNotification();
+  }, []);
+
+  const newNotification = async () => {
+    await axios.post("/api/notifcation");
+  };
   return (
     <>
       <Head>

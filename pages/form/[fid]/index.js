@@ -156,10 +156,23 @@ const FormFeedbackPage = ({ formFeedback }) => {
 
     // setLoading(true);
 
-    console.log(newForm);
+    // console.log(newForm);
+
+    if (scoreWeightage < newForm.averageWeightage) {
+      const data = await axios.post("/api/notification", {
+        name: newForm.patient.name,
+        mobileNumber: newForm.patient.primaryMobileNumber,
+        formId: newForm.formId,
+        formName: newForm.formName,
+        averageScore: newForm.averageWeightage,
+        overallScore: scoreWeightage,
+      });
+
+      console.log(data);
+    }
 
     const res = await axios.put(
-      `/api/formFeedback/${newForm.formId}/${newForm.patient.regId}`,
+      `/api/formFeedback/${newForm.formId}/${newForm.patient.primaryMobileNumber}`,
       {
         isSubmitted: true,
 
@@ -167,7 +180,6 @@ const FormFeedbackPage = ({ formFeedback }) => {
         formDatas,
       }
     );
-    // toast("Form saved successfully", { type: "success" });
 
     router.push("/success");
   };

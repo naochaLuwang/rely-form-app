@@ -9,14 +9,17 @@ import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Badge from "@mui/material/Badge";
 import { createGlobalState } from "react-hooks-global-state";
 
-const initialState = { open: false, submenu: false };
+const initialState = { open: false, submenu: false, notifications: [] };
 export const { useGlobalState } = createGlobalState(initialState);
 const FormHeader = ({ title }) => {
   const [openSidebar, setOpenSidebar] = useGlobalState("open");
   const [openSubmenu, setOpenSubmenu] = useGlobalState("submenu");
+  const [notificationsData, setNotificationsData] =
+    useGlobalState("notifications");
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -40,6 +43,16 @@ const FormHeader = ({ title }) => {
       setName(char);
     }
   }, [session, name]);
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
+  const getNotifications = async () => {
+    const response = await fetch("/api/notification");
+    const data = await response.json();
+    setNotificationsData(data);
+  };
+
   return (
     <div className=" flex sticky top-0 z-50 flex-1 px-8 py-3 items-center justify-between bg-white shadow-lg rounded-md">
       <div className="flex items-center space-x-2">
@@ -77,7 +90,7 @@ const FormHeader = ({ title }) => {
           </div>
         )}
         <div className="h-8 w-8 border flex items-center p-1.5 justify-center rounded-lg shadow-md border-gray-300">
-          <Badge badgeContent={4} color="error">
+          <Badge badgeContent={notificationsData.length} color="error">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
