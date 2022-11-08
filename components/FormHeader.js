@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { MenuList } from "@mui/material";
+import { Avatar, Divider, ListItemIcon, MenuList } from "@mui/material";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import Badge from "@mui/material/Badge";
 import { createGlobalState } from "react-hooks-global-state";
+import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import NotificationCard from "./NotificationCard";
 
 const initialState = { open: false, submenu: false, notifications: [] };
 export const { useGlobalState } = createGlobalState(initialState);
@@ -18,11 +20,17 @@ const FormHeader = ({ title }) => {
     useGlobalState("notifications");
   const { data: session } = useSession();
   const [name, setName] = useState("");
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [notiOpen, setNotiOpen] = useState(false);
 
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleNclick = () => {
+    setNotiOpen(!notiOpen);
   };
 
   const handleOpen = () => {
@@ -76,7 +84,7 @@ const FormHeader = ({ title }) => {
         {title && <h1 className="font-medium ml-2 text-gray-600">{title}</h1>}
       </div>
 
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center mr-5 space-x-3">
         {title === "Form Templates" && (
           <div>
             <Link href="/form">
@@ -89,7 +97,10 @@ const FormHeader = ({ title }) => {
             </Link>
           </div>
         )}
-        <div className="h-8 w-8 border flex items-center p-1.5 justify-center rounded-lg shadow-md border-gray-300">
+        <div
+          onClick={handleNclick}
+          className="h-8 cursor-pointer w-8 border flex items-center p-1.5 justify-center  rounded-lg shadow-md border-gray-300"
+        >
           <Badge badgeContent={notificationsData.length} color="error">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -108,51 +119,76 @@ const FormHeader = ({ title }) => {
           </Badge>
         </div>
 
+        {notiOpen && (
+          <div className="w-96 h-auto bg-white rounded-lg shadow-lg border-2 absolute top-12 right-24 z-30">
+            <NotificationCard data={notificationsData} />
+          </div>
+        )}
+
         <div
           onClick={handleClick}
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
           aria-haspopup="true"
           aria-expanded={open ? "true" : undefined}
-          className="h-8 w-8 border flex items-center p-1.5 justify-center rounded-lg shadow-md border-gray-300 cursor-pointer"
+          className="h-8 w-8 border  flex items-center p-1.5 justify-center rounded-lg shadow-md border-gray-300 cursor-pointer"
         >
           <p className="font-medium text-blue-500 ">{name}</p>
         </div>
         <Menu
-          id="basic-menu"
-          className="mt-2"
           anchorEl={anchorEl}
+          id="account-menu"
           open={open}
           onClose={handleClose}
-          MenuListProps={{
-            "aria-labelledby": "basic-button",
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              width: "15%",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
           }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          <MenuList sx={{ width: 200, maxWidth: "100%", outline: "none" }}>
-            <MenuItem onClick={handleClose}>
-              <div className="flex items-center space-x-3">
-                <AccountCircleOutlinedIcon
-                  fontSize="small"
-                  className="text-blue-500"
-                />
-                <p className="font-medium text-gray-500">Profile</p>
-              </div>
-            </MenuItem>
+          <MenuItem>
+            <Avatar /> Profile
+          </MenuItem>
 
-            <MenuItem
-              onClick={() =>
-                signOut({
-                  redirect: false,
-                  callbackUrl: callbackUrl,
-                })
-              }
-            >
-              <div className="flex items-center space-x-3">
-                <LogoutOutlinedIcon fontSize="small" className="text-red-700" />
-                <p className="font-medium text-base text-gray-500">Logout</p>
-              </div>
-            </MenuItem>
-          </MenuList>
+          <Divider />
+
+          <MenuItem>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <MenuItem onClick={() => signOut({ redirect: false })}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
         </Menu>
       </div>
     </div>
