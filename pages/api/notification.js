@@ -31,7 +31,7 @@ handler.post(async (req, res) => {
       averageScore,
       overallScore,
       message: `You have just received a low feedback for ${formName} by ${name}  with score ${overallScore}`,
-      isRead: fase,
+      isRead: false,
     });
 
     await newNotification.save();
