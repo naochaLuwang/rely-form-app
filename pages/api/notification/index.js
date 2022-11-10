@@ -1,7 +1,7 @@
 import nc from "next-connect";
-import dbConnect from "../../utils/db";
+import dbConnect from "../../../utils/db";
 
-import Notification from "../../models/Notification";
+import Notification from "../../../models/Notification";
 
 const handler = nc();
 
@@ -9,7 +9,7 @@ handler.get(async (req, res) => {
   try {
     await dbConnect();
 
-    const response = await Notification.find({});
+    const response = await Notification.find({}).sort({ createdAt: -1 });
     res.json(response);
   } catch (error) {
     return res.status(500).json({ error: error.message });
@@ -36,6 +36,23 @@ handler.post(async (req, res) => {
 
     await newNotification.save();
     res.json(newNotification);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+handler.put(async (req, res) => {
+  try {
+    await dbConnect();
+    const { mobileNumber } = req.body;
+
+    const response = await Notification.findOneAndUpdate(
+      {
+        mobileNumber,
+      },
+      { isRead: true }
+    );
+    res.json(response);
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

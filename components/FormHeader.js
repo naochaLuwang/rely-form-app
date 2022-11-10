@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,7 +11,13 @@ import { createGlobalState } from "react-hooks-global-state";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import NotificationCard from "./NotificationCard";
 
-const initialState = { open: false, submenu: false, notifications: [] };
+const initialState = {
+  open: false,
+  submenu: false,
+  notifications: [],
+  notiIndex: 0,
+  isRead: false,
+};
 export const { useGlobalState } = createGlobalState(initialState);
 const FormHeader = ({ title }) => {
   const [openSidebar, setOpenSidebar] = useGlobalState("open");
@@ -52,14 +58,17 @@ const FormHeader = ({ title }) => {
     }
   }, [session, name]);
 
-  useEffect(() => {
-    getNotifications();
-  }, []);
-  const getNotifications = async () => {
+  const getNotifications = useCallback(async () => {
     const response = await fetch("/api/notification");
     const data = await response.json();
-    setNotificationsData(data);
-  };
+    const unReadNotification = data.filter(
+      (notification) => notification.isRead === false
+    );
+    setNotificationsData(unReadNotification);
+  }, [setNotificationsData]);
+  useEffect(() => {
+    getNotifications();
+  });
 
   return (
     <div className=" flex sticky top-0 z-50 flex-1 px-8 py-3 items-center justify-between bg-white shadow-lg rounded-md">
