@@ -166,6 +166,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
         formName: newForm.formName,
         averageScore: newForm.averageWeightage,
         overallScore: scoreWeightage,
+        status: "QUEUED",
       });
 
       console.log(data);

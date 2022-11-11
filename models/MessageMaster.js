@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const notificationSchema = new mongoose.Schema(
+const messageMasterSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -26,12 +26,15 @@ const notificationSchema = new mongoose.Schema(
     isRead: {
       type: Boolean,
     },
+    status: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
 
-const Notification =
-  mongoose.models.Notification ||
-  mongoose.model("Notification", notificationSchema);
+const MessageMaster =
+  mongoose.models.MessageMaster ||
+  mongoose.model("MessageMaster", messageMasterSchema);
 
-module.exports = Notification;
+module.exports = MessageMaster;

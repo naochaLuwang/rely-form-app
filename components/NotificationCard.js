@@ -3,11 +3,17 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useGlobalState } from "./FormHeader";
+import ReactTimeAgo from "react-time-ago";
 
 const NotificationCard = ({ data }) => {
   const notifications = data.slice(0, 10);
+
   const [read, setRead] = useState(false);
   const [message, setMessage] = useState("");
+  const [notificationData, setNotificationData] =
+    useGlobalState("notifications");
+
+  const router = useRouter();
 
   const handleNotification = async (index) => {
     setRead(true);
@@ -21,13 +27,18 @@ const NotificationCard = ({ data }) => {
     }
   };
 
+  const viewAll = () => {
+    setNotificationData([]);
+    router.push("/notifications");
+  };
+
   return (
     <div className="w-full max-h-auto py-2">
       <div className="flex items-center justify-between px-4">
         <h1 className="text-xs text-gray-600">Notifications</h1>
-        <Link href="/notifications">
-          <a className="text-xs hover:text-blue-500">View all</a>
-        </Link>
+        <div onClick={() => viewAll()}>
+          <p className="text-xs hover:text-blue-500 cursor-pointer">View all</p>
+        </div>
       </div>
 
       <div className="mt-2 max-h-96 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-500 scrokkbar-track-gray-100 scrollbar-thumb-rounded-md">
@@ -63,7 +74,7 @@ const NotificationCard = ({ data }) => {
               <div key={noti._id}>
                 <div
                   onClick={() => handleNotification(index)}
-                  className="px-4 flex items-center space-x-2  py-3 border rounded-md shadow-sm bg-blue-50 "
+                  className="px-4 flex cursor-pointer items-start space-x-2  py-3 border rounded-md shadow-sm bg-blue-50 "
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -83,8 +94,11 @@ const NotificationCard = ({ data }) => {
                     <h1 className="text-sm font-medium text-gray-700">
                       Feedback Alert
                     </h1>
-                    <p className="text-xs text-gray-500 font-thin truncate">
+                    <p className="text-xs text-gray-500 font-thin  truncate">
                       {noti.message}
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1 ">
+                      <ReactTimeAgo date={noti.createdAt} locale="en-Us" />
                     </p>
                   </div>
                 </div>
