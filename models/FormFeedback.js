@@ -32,6 +32,9 @@ const formFeedbackSchema = new mongoose.Schema(
     minimumWeightage: {
       type: Number,
     },
+    status: {
+      type: String,
+    },
     patient: {
       salutationName: String,
       name: String,

@@ -46,7 +46,7 @@ handler.put(async (req, res) => {
     await dbConnect();
     const { mobileNumber } = req.body;
 
-    const response = await Notification.findOneAndUpdate(
+    const response = await MessageMaster.findOneAndUpdate(
       {
         mobileNumber,
       },

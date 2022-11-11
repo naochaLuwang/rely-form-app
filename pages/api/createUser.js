@@ -43,6 +43,7 @@ handler.post(async (req, res) => {
             isSubmitted: false,
             submittedBy: patient[i].mobileNumber,
             overallScore: 0,
+            status: "QUEUED",
             patient: {
               salutationName: patient[i].salutationName,
               name: patient[i].name,
@@ -77,6 +78,7 @@ handler.post(async (req, res) => {
             averageWeightage: opdForm.averageWeightage,
             maximumWeightage: opdForm.maximumWeightage,
             minimumWeightage: opdForm.minimumWeightage,
+            status: "QUEUED",
             createdBy: opdForm.createdBy,
             isSubmitted: false,
             submittedBy: patient[i].mobileNumber,
