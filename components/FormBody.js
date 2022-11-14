@@ -16,7 +16,7 @@ import Switch from "@mui/material/Switch";
 import CloseIcon from "@mui/icons-material/Close";
 import { Box, Button, FormControlLabel, IconButton } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import Dialog from "@mui/material/Dialog";
+import { Dialog, DialogTitle } from "@mui/material";
 import Slide from "@mui/material/Slide";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -35,7 +35,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-import Loader from "./Loader";
+
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
+import Lottie from "lottie-react";
+import success from "../assets/success.json";
 
 import {
   BsInputCursor,
@@ -47,11 +51,54 @@ import {
 import { TiSortNumerically } from "react-icons/ti";
 import { HiMail } from "react-icons/hi";
 import { VscPreview } from "react-icons/vsc";
+import { RotatingLines } from "react-loader-spinner";
 
+const style = {
+  height: 100,
+  width: 100,
+};
 // Dialog transition
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
+    padding: theme.spacing(2),
+  },
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(1),
+  },
+}));
+
+function BootstrapDialogTitle(props) {
+  const { children, onClose, ...other } = props;
+
+  return (
+    <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+      {children}
+      {onClose ? (
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      ) : null}
+    </DialogTitle>
+  );
+}
+
+BootstrapDialogTitle.propTypes = {
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired,
+};
 
 const FormBody = () => {
   const [formId, setFormId] = useState("");
@@ -78,6 +125,7 @@ const FormBody = () => {
   const [checkboxOpen, setCheckboxOpen] = React.useState(false);
   const [fieldOpen, setFieldOpen] = useState(false);
   const [labelText, setLabelText] = useState("");
+  const [completed, setCompleted] = useState(false);
 
   const formEndRef = useRef(null);
 
@@ -130,6 +178,10 @@ const FormBody = () => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleCloses = () => {
+    setLoading(false);
   };
 
   const newLabel = () => {
@@ -581,9 +633,15 @@ const FormBody = () => {
       createdBy,
     });
 
-    toast("Form created", { type: "success" });
-    handleClose();
-    router.push("/formTemplate");
+    if (res) {
+      setCompleted(true);
+    }
+
+    setTimeout(() => {
+      router.push("/formTemplate");
+      // setLoading(false);
+      // handleClose();
+    }, [500]);
   };
 
   useEffect(() => {
@@ -2324,89 +2382,83 @@ const FormBody = () => {
     );
   };
 
-  if (loading) {
-    return <Loader />;
-  }
-
   // ! Form Builder UI
   return (
     <>
-      {!loading && (
-        <div className="max-w-screen relative  flex-1 h-auto">
-          <Toaster />
-          <FormHeader title={formName || "Untitled"} />
-          <div className="flex relative justify-between">
-            <div
-              className={` w-[20rem] 
+      <div className="max-w-screen relative  flex-1 h-auto">
+        <FormHeader title={formName || "Untitled"} />
+        <div className="flex relative justify-between">
+          <div
+            className={` w-[20rem] 
             bg-white border  fixed top-14 py-8 px-8 h-screen`}
-            >
-              {/* <h1 className="mb-5 font-semibold text-gray-800 text-xl">
+          >
+            {/* <h1 className="mb-5 font-semibold text-gray-800 text-xl">
             Form Fields
           </h1> */}
-              <div
-                className={`grid-cols-2 grid
+            <div
+              className={`grid-cols-2 grid
               gap-4`}
+            >
+              <button
+                onClick={() => newLabel()}
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
               >
-                <button
-                  onClick={() => newLabel()}
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                >
-                  <div className="flex items-center">
-                    <BsInputCursor className="mr-2 text-2xl" />
-                    <h1 className="text-sm font-semibold">Label</h1>
-                  </div>
-                </button>
+                <div className="flex items-center">
+                  <BsInputCursor className="mr-2 text-2xl" />
+                  <h1 className="text-sm font-semibold">Label</h1>
+                </div>
+              </button>
 
-                <button
-                  onClick={() => newRadio()}
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                >
-                  <div className="flex items-center">
-                    <BsUiRadios className="text-2xl mr-2" />
-                    <h1 className="text-sm font-semibold mt-1">Radio</h1>
-                  </div>
-                </button>
+              <button
+                onClick={() => newRadio()}
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              >
+                <div className="flex items-center">
+                  <BsUiRadios className="text-2xl mr-2" />
+                  <h1 className="text-sm font-semibold mt-1">Radio</h1>
+                </div>
+              </button>
 
-                <button
-                  onClick={() => newCheckBox()}
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                >
-                  <div className="flex items-center">
-                    <BsUiChecks className="text-2xl mr-2" />
-                    <h1 className="text-sm font-semibold mt-1">Checkbox</h1>
-                  </div>
-                </button>
-                <button
-                  onClick={() => newText()}
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                >
-                  <div className="flex items-center">
-                    <BsInputCursor className="mr-2 text-2xl" />
-                    <h1 className="text-sm font-semibold">Text</h1>
-                  </div>
-                </button>
+              <button
+                onClick={() => newCheckBox()}
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              >
+                <div className="flex items-center">
+                  <BsUiChecks className="text-2xl mr-2" />
+                  <h1 className="text-sm font-semibold mt-1">Checkbox</h1>
+                </div>
+              </button>
+              <button
+                onClick={() => newText()}
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              >
+                <div className="flex items-center">
+                  <BsInputCursor className="mr-2 text-2xl" />
+                  <h1 className="text-sm font-semibold">Text</h1>
+                </div>
+              </button>
 
-                <button
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                  onClick={() => newTextNumeric()}
-                >
-                  <div className="flex items-center">
-                    <TiSortNumerically className="mr-2 text-2xl" />
-                    <h1 className="text-sm font-semibold mt-1">Number</h1>
-                  </div>
-                </button>
+              <button
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+                onClick={() => newTextNumeric()}
+              >
+                <div className="flex items-center">
+                  <TiSortNumerically className="mr-2 text-2xl" />
+                  <h1 className="text-sm font-semibold mt-1">Number</h1>
+                </div>
+              </button>
 
-                <button
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                  onClick={() => newMultiline()}
-                >
-                  <div className="flex items-center">
-                    <BsTextareaResize className="mr-2 text-2xl" />
-                    <h1 className="text-sm font-semibold mt-1">Multiline</h1>
-                  </div>
-                </button>
+              <button
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+                onClick={() => newMultiline()}
+              >
+                <div className="flex items-center">
+                  <BsTextareaResize className="mr-2 text-2xl" />
+                  <h1 className="text-sm font-semibold mt-1">Multiline</h1>
+                </div>
+              </button>
 
-                {/* <button
+              {/* <button
               onClick={() => newRange()}
               className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
               disabled
@@ -2414,360 +2466,377 @@ const FormBody = () => {
               Range
             </button> */}
 
-                <button
-                  onClick={() => newName()}
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                >
-                  <div className="flex items-center">
-                    <BsPersonCircle className="text-2xl mr-2" />
-                    <h1 className="text-sm font-semibold mt-1">Name</h1>
-                  </div>
-                </button>
+              <button
+                onClick={() => newName()}
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              >
+                <div className="flex items-center">
+                  <BsPersonCircle className="text-2xl mr-2" />
+                  <h1 className="text-sm font-semibold mt-1">Name</h1>
+                </div>
+              </button>
 
-                <button
-                  onClick={() => newEmail()}
-                  className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
-                >
-                  <div className="flex items-center">
-                    <HiMail className="text-2xl mr-2" />
-                    <h1 className="text-sm font-semibold mt-1">Email</h1>
-                  </div>
-                </button>
+              <button
+                onClick={() => newEmail()}
+                className="w-32 py-3 px-4 rounded-md shadow-lg border-2 border-blue-500 text-blue-600 text-xs font-bold "
+              >
+                <div className="flex items-center">
+                  <HiMail className="text-2xl mr-2" />
+                  <h1 className="text-sm font-semibold mt-1">Email</h1>
+                </div>
+              </button>
 
-                <button
-                  disabled={formData.length < 1}
-                  className={`${
-                    formData.length < 1 &&
-                    "shadow-none text-gray-600 bg-gray-300"
-                  } w-full shadow-xl col-span-2 py-3 px-4 rounded-md  text-gray-600 bg-blue-700 font-bold border-blue-500`}
-                  onClick={handleClickOpen}
-                >
-                  <div className="flex items-center justify-center">
-                    <h1 className="text-sm font-bold mt-1 text-white">
-                      Preview
-                    </h1>
-                    <VscPreview className="text-2xl ml-2 text-white" />
-                  </div>
-                </button>
-                <Dialog
-                  fullScreen
-                  open={open}
-                  onClose={handleClose}
-                  TransitionComponent={Transition}
-                >
-                  <AppBar sx={{ position: "fixed", top: "0" }}>
-                    <Toolbar>
-                      <IconButton
-                        edge="start"
-                        color="inherit"
-                        onClick={handleClose}
-                        aria-label="close"
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                      <Typography
-                        sx={{ ml: 2, flex: 1 }}
-                        variant="h6"
-                        component="div"
-                      >
-                        {formId} (Preview)
-                      </Typography>
-                      <button
-                        className="w-fit border-white border px-8 py-2 text-lg font-bold cursor-pointer"
-                        onClick={() => handleSubmit()}
-                      >
-                        Save and Create
-                      </button>
-                    </Toolbar>
-                  </AppBar>
-                  <div className="max-w-screen bg-gray-50 h-auto">
-                    <div className="max-w-5xl mx-auto flex flex-col  rounded-lg  h-auto bg-white mt-20 shadow-md py-10 px-10 ">
-                      <h1 className="text-2xl leading-none font-semibold text-gray-600">
-                        {formName}{" "}
-                      </h1>
-                      <p className="text-sm mt-2  font-medium text-gray-500">
-                        {formDescription}
-                      </p>
-                      <Box sx={{ minWidth: 120 }} className="mt-5">
-                        <FormControl fullWidth>
-                          <InputLabel id="demo-simple-select-label">
-                            Select Form Type
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={formType}
-                            label="Select Form Type"
-                            onChange={(e) => setFormType(e.target.value)}
-                          >
-                            <MenuItem value={"IPD"}>IPD</MenuItem>
-                            <MenuItem value={"OPD"}>OPD</MenuItem>
-                            <MenuItem value={"Doctor"}>Doctor</MenuItem>
-                          </Select>
-                        </FormControl>
-                      </Box>
-
-                      <div className="flex items-center mt-2 justify-between">
-                        <div className="flex flex-col space-y-2">
-                          <h1 className="text-base text-gray-500">
-                            Expected Feedback Weightage for management attention
-                            (*)
-                          </h1>
-                          <input
-                            className="text-input rounded-md bg-transparent"
-                            type="number"
-                            value={averageWeightage}
-                            onChange={(e) =>
-                              setAverageWeightage(e.target.value)
-                            }
-                          />
-                        </div>
-                        <div className="flex flex-col space-y-2">
-                          <h1 className="text-sm text-gray-500">
-                            Minimum Weightage : {minimumWeightage}
-                          </h1>
-                          <h1 className="text-sm text-gray-500">
-                            Maximum Weightage : {maximumWeightage}
-                          </h1>
-                        </div>
+              <button
+                disabled={formData.length < 1}
+                className={`${
+                  formData.length < 1 && "shadow-none text-gray-600 bg-gray-300"
+                } w-full shadow-xl col-span-2 py-3 px-4 rounded-md  text-gray-600 bg-blue-700 font-bold border-blue-500`}
+                onClick={handleClickOpen}
+              >
+                <div className="flex items-center justify-center">
+                  <h1 className="text-sm font-bold mt-1 text-white">Preview</h1>
+                  <VscPreview className="text-2xl ml-2 text-white" />
+                </div>
+              </button>
+              <Dialog
+                fullScreen
+                open={open}
+                onClose={handleClose}
+                TransitionComponent={Transition}
+              >
+                <AppBar sx={{ position: "fixed", top: "0" }}>
+                  <Toolbar>
+                    <IconButton
+                      edge="start"
+                      color="inherit"
+                      onClick={handleClose}
+                      aria-label="close"
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                    <Typography
+                      sx={{ ml: 2, flex: 1 }}
+                      variant="h6"
+                      component="div"
+                    >
+                      {formId} (Preview)
+                    </Typography>
+                    <button
+                      className="w-fit border-white border px-8 py-2 text-lg font-bold cursor-pointer"
+                      onClick={() => handleSubmit()}
+                    >
+                      Save and Create
+                    </button>
+                  </Toolbar>
+                </AppBar>
+                <div className="max-w-screen bg-gray-50 h-auto">
+                  <BootstrapDialog
+                    onClose={handleCloses}
+                    aria-labelledby="customized-dialog-title"
+                    open={loading}
+                  >
+                    {completed ? (
+                      <div className="w-96 flex flex-col py-10 items-center justify-center ">
+                        <Lottie animationData={success} style={style} />
+                        <p>Data uploaded successfully</p>
                       </div>
+                    ) : (
+                      <div className="w-96 h-auto py-6 flex flex-col items-center justify-center">
+                        <RotatingLines
+                          strokeColor="blue"
+                          strokeWidth="5"
+                          animationDuration="0.75"
+                          width="60"
+                          visible={true}
+                        />
+                        <p>Creating Form ...</p>
+                      </div>
+                    )}
+                  </BootstrapDialog>
+                  <div className="max-w-5xl mx-auto flex flex-col  rounded-lg  h-auto bg-white mt-20 shadow-md py-10 px-10 ">
+                    <h1 className="text-2xl leading-none font-semibold text-gray-600">
+                      {formName}{" "}
+                    </h1>
+                    <p className="text-sm mt-2  font-medium text-gray-500">
+                      {formDescription}
+                    </p>
+                    <Box sx={{ minWidth: 120 }} className="mt-5">
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Select Form Type
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={formType}
+                          label="Select Form Type"
+                          onChange={(e) => setFormType(e.target.value)}
+                        >
+                          <MenuItem value={"IPD"}>IPD</MenuItem>
+                          <MenuItem value={"OPD"}>OPD</MenuItem>
+                          <MenuItem value={"Doctor"}>Doctor</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
 
-                      {formData.map((form, i) => {
-                        switch (form.inputType) {
-                          case "label":
-                            return (
-                              <div key={i}>
+                    <div className="flex items-center mt-2 justify-between">
+                      <div className="flex flex-col space-y-2">
+                        <h1 className="text-base text-gray-500">
+                          Expected Feedback Weightage for management attention
+                          (*)
+                        </h1>
+                        <input
+                          className="text-input rounded-md bg-transparent"
+                          type="number"
+                          value={averageWeightage}
+                          onChange={(e) => setAverageWeightage(e.target.value)}
+                        />
+                      </div>
+                      <div className="flex flex-col space-y-2">
+                        <h1 className="text-sm text-gray-500">
+                          Minimum Weightage : {minimumWeightage}
+                        </h1>
+                        <h1 className="text-sm text-gray-500">
+                          Maximum Weightage : {maximumWeightage}
+                        </h1>
+                      </div>
+                    </div>
+
+                    {formData.map((form, i) => {
+                      switch (form.inputType) {
+                        case "label":
+                          return (
+                            <div key={i}>
+                              <div className="flex space-x-2 mt-5">
+                                <h1 className="font-semibold text-gray-600">
+                                  {formData[i].label}
+                                </h1>
+                              </div>
+                            </div>
+                          );
+
+                        case "text":
+                          return (
+                            <div key={i}>
+                              {!formData[i].style.label && (
                                 <div className="flex space-x-2 mt-5">
                                   <h1 className="font-semibold text-gray-600">
-                                    {formData[i].label}
-                                  </h1>
-                                </div>
-                              </div>
-                            );
-
-                          case "text":
-                            return (
-                              <div key={i}>
-                                {!formData[i].style.label && (
-                                  <div className="flex space-x-2 mt-5">
-                                    <h1 className="font-semibold text-gray-600">
-                                      {formData[i].labelText}
-                                    </h1>
-                                    {formData[i].required && (
-                                      <h1 className="font-semibold text-xl text-red-500 ">
-                                        *
-                                      </h1>
-                                    )}
-                                  </div>
-                                )}
-                                <input
-                                  className=" border w-96 h-10 rounded-md shadow-md mt-1 border-gray-400 bg-transparent"
-                                  type="text"
-                                  value={formData[i].text}
-                                  placeholder={formData[i].placeholderText}
-                                  disabled
-                                ></input>
-                              </div>
-                            );
-
-                          case "number":
-                            return (
-                              <div key={i}>
-                                {!formData[i].style.label && (
-                                  <div className="flex space-x-2 mt-5">
-                                    <h1 className="font-semibold text-gray-600">
-                                      {formData[i].labelText}
-                                    </h1>
-                                    {formData[i].required && (
-                                      <h1 className="font-semibold text-xl text-red-500 ">
-                                        *
-                                      </h1>
-                                    )}
-                                  </div>
-                                )}
-                                <input
-                                  className=" border w-96 h-10 border-gray-400 rounded-md shadow-md mt-1 bg-transparent"
-                                  type="text"
-                                  value={formData[i].text}
-                                  placeholder={formData[i].placeholderText}
-                                  disabled
-                                ></input>
-                              </div>
-                            );
-
-                          case "multiline":
-                            return (
-                              <div key={i}>
-                                {!formData[i].style.label && (
-                                  <div className="flex space-x-2 mt-5">
-                                    <h1 className="font-semibold text-gray-500">
-                                      {formData[i].labelText}
-                                    </h1>
-                                    {formData[i].required && (
-                                      <h1 className="font-semibold text-xl text-red-500 ">
-                                        *
-                                      </h1>
-                                    )}
-                                  </div>
-                                )}
-                                <textarea
-                                  className=" border w-full rounded-md shadow-md mt-2 border-gray-400 bg-transparent"
-                                  rows="5"
-                                  value={formData[i].text}
-                                  placeholder={formData[i].placeholderText}
-                                  disabled
-                                ></textarea>
-                              </div>
-                            );
-                          case "name":
-                            return (
-                              <h1 className="font-bold mt-5" key={i}>
-                                {formData[i].label} :{" "}
-                                <span className="border-b-2 font-medium border-b-black">
-                                  {formData[i].text}
-                                </span>
-                              </h1>
-                            );
-
-                          case "email":
-                            return (
-                              <h1 className="font-bold mt-5" key={i}>
-                                {formData[i].label} :{" "}
-                                <span className="border-b-2 font-medium border-b-black">
-                                  {formData[i].text}
-                                </span>
-                              </h1>
-                            );
-
-                          case "radio":
-                            return (
-                              <div className="flex flex-col space-y-3 mt-5">
-                                <div className="flex items-center space-x-3">
-                                  <h1
-                                    key={i}
-                                    className="font-semibold text-base text-gray-600 "
-                                  >
-                                    {formData[i].text}
+                                    {formData[i].labelText}
                                   </h1>
                                   {formData[i].required && (
-                                    <p className="text-red-700">*</p>
+                                    <h1 className="font-semibold text-xl text-red-500 ">
+                                      *
+                                    </h1>
                                   )}
                                 </div>
+                              )}
+                              <input
+                                className=" border w-96 h-10 rounded-md shadow-md mt-1 border-gray-400 bg-transparent"
+                                type="text"
+                                value={formData[i].text}
+                                placeholder={formData[i].placeholderText}
+                                disabled
+                              ></input>
+                            </div>
+                          );
 
-                                {form.options.map((option, j) => {
-                                  return (
-                                    <div
-                                      key={j}
-                                      className="flex items-center  space-x-2"
-                                    >
-                                      <input
-                                        type={formData[i].inputType}
-                                        disabled
-                                      />
+                        case "number":
+                          return (
+                            <div key={i}>
+                              {!formData[i].style.label && (
+                                <div className="flex space-x-2 mt-5">
+                                  <h1 className="font-semibold text-gray-600">
+                                    {formData[i].labelText}
+                                  </h1>
+                                  {formData[i].required && (
+                                    <h1 className="font-semibold text-xl text-red-500 ">
+                                      *
+                                    </h1>
+                                  )}
+                                </div>
+                              )}
+                              <input
+                                className=" border w-96 h-10 border-gray-400 rounded-md shadow-md mt-1 bg-transparent"
+                                type="text"
+                                value={formData[i].text}
+                                placeholder={formData[i].placeholderText}
+                                disabled
+                              ></input>
+                            </div>
+                          );
 
-                                      <p className="text-sm font-medium text-gray-500">
-                                        {option.optionText}
-                                      </p>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            );
+                        case "multiline":
+                          return (
+                            <div key={i}>
+                              {!formData[i].style.label && (
+                                <div className="flex space-x-2 mt-5">
+                                  <h1 className="font-semibold text-gray-500">
+                                    {formData[i].labelText}
+                                  </h1>
+                                  {formData[i].required && (
+                                    <h1 className="font-semibold text-xl text-red-500 ">
+                                      *
+                                    </h1>
+                                  )}
+                                </div>
+                              )}
+                              <textarea
+                                className=" border w-full rounded-md shadow-md mt-2 border-gray-400 bg-transparent"
+                                rows="5"
+                                value={formData[i].text}
+                                placeholder={formData[i].placeholderText}
+                                disabled
+                              ></textarea>
+                            </div>
+                          );
+                        case "name":
+                          return (
+                            <h1 className="font-bold mt-5" key={i}>
+                              {formData[i].label} :{" "}
+                              <span className="border-b-2 font-medium border-b-black">
+                                {formData[i].text}
+                              </span>
+                            </h1>
+                          );
 
-                          case "checkbox":
-                            return (
-                              <div className="flex flex-col mt-5 space-y-3">
+                        case "email":
+                          return (
+                            <h1 className="font-bold mt-5" key={i}>
+                              {formData[i].label} :{" "}
+                              <span className="border-b-2 font-medium border-b-black">
+                                {formData[i].text}
+                              </span>
+                            </h1>
+                          );
+
+                        case "radio":
+                          return (
+                            <div className="flex flex-col space-y-3 mt-5">
+                              <div className="flex items-center space-x-3">
                                 <h1
                                   key={i}
-                                  className="font-semibold text-base text-gray-600"
+                                  className="font-semibold text-base text-gray-600 "
                                 >
                                   {formData[i].text}
                                 </h1>
-                                {form.options.map((option, j) => {
-                                  return (
-                                    <div
-                                      key={j}
-                                      className="flex items-center space-x-2"
-                                    >
-                                      <input
-                                        type={formData[i].inputType}
-                                        disabled
-                                      />
-
-                                      <p className="text-sm font-medium text-gray-500">
-                                        {option.optionText}
-                                      </p>
-                                    </div>
-                                  );
-                                })}
+                                {formData[i].required && (
+                                  <p className="text-red-700">*</p>
+                                )}
                               </div>
-                            );
 
-                          case "range":
-                            return (
-                              <div className="flex flex-col mt-5 space-y-3">
-                                <h1 key={i}>{formData[i].text}</h1>
-                                <Slider
-                                  defaultValue={formData[i].value}
-                                  aria-label="Default"
-                                  valueLabelDisplay="auto"
-                                  disabled={true}
-                                />
-                              </div>
-                            );
+                              {form.options.map((option, j) => {
+                                return (
+                                  <div
+                                    key={j}
+                                    className="flex items-center  space-x-2"
+                                  >
+                                    <input
+                                      type={formData[i].inputType}
+                                      disabled
+                                    />
 
-                          default:
-                            return <h1>Add a new form</h1>;
-                        }
-                      })}
-                    </div>
+                                    <p className="text-sm font-medium text-gray-500">
+                                      {option.optionText}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+
+                        case "checkbox":
+                          return (
+                            <div className="flex flex-col mt-5 space-y-3">
+                              <h1
+                                key={i}
+                                className="font-semibold text-base text-gray-600"
+                              >
+                                {formData[i].text}
+                              </h1>
+                              {form.options.map((option, j) => {
+                                return (
+                                  <div
+                                    key={j}
+                                    className="flex items-center space-x-2"
+                                  >
+                                    <input
+                                      type={formData[i].inputType}
+                                      disabled
+                                    />
+
+                                    <p className="text-sm font-medium text-gray-500">
+                                      {option.optionText}
+                                    </p>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+
+                        case "range":
+                          return (
+                            <div className="flex flex-col mt-5 space-y-3">
+                              <h1 key={i}>{formData[i].text}</h1>
+                              <Slider
+                                defaultValue={formData[i].value}
+                                aria-label="Default"
+                                valueLabelDisplay="auto"
+                                disabled={true}
+                              />
+                            </div>
+                          );
+
+                        default:
+                          return <h1>Add a new form</h1>;
+                      }
+                    })}
                   </div>
-                </Dialog>
-              </div>
+                </div>
+              </Dialog>
             </div>
-            <div className=" flex w-full h-auto justify-center flex-1">
-              <div>
-                <div className="bg-gray-50 w-[50rem] h-fit mt-10 ml-56 shadow-md  ">
-                  <div className="bg-blue-500 w-full h-3 rounded-t-md"></div>
-                  <div className=" pt-10 pb-10 px-10">
-                    <input
-                      type="text"
-                      className="form-input bg-transparent text-4xl w-full border-0 outline-0 focus:ring-0  focus:border-b-2"
-                      placeholder=" Title"
-                      required="true"
-                      onChange={(e) => setFormName(e.target.value)}
-                    />
+          </div>
+          <div className=" flex w-full h-auto justify-center flex-1">
+            <div>
+              <div className="bg-gray-50 w-[50rem] h-fit mt-10 ml-56 shadow-md  ">
+                <div className="bg-blue-500 w-full h-3 rounded-t-md"></div>
+                <div className=" pt-10 pb-10 px-10">
+                  <input
+                    type="text"
+                    className="form-input bg-transparent text-4xl w-full border-0 outline-0 focus:ring-0  focus:border-b-2"
+                    placeholder=" Title"
+                    required="true"
+                    onChange={(e) => setFormName(e.target.value)}
+                  />
 
-                    <textarea
-                      rows="1"
-                      className="form-input bg-transparent text-gray-600 text-base font-semibold w-full border-0 outline-0 focus:ring-0 mb-4 focus:border-b-2"
-                      placeholder=" Form Description (Optional)"
-                      onChange={(e) => setFormDescription(e.target.value)}
-                    />
+                  <textarea
+                    rows="1"
+                    className="form-input bg-transparent text-gray-600 text-base font-semibold w-full border-0 outline-0 focus:ring-0 mb-4 focus:border-b-2"
+                    placeholder=" Form Description (Optional)"
+                    onChange={(e) => setFormDescription(e.target.value)}
+                  />
 
-                    {/* Droppable area */}
+                  {/* Droppable area */}
 
-                    <DragDropContext onDragEnd={onDragEnd}>
-                      <Droppable droppableId="droppable">
-                        {(provided, snapshot) => (
-                          <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                          >
-                            {formUI()}
-                            <div ref={formEndRef}></div>
-                            {provided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-                  </div>
+                  <DragDropContext onDragEnd={onDragEnd}>
+                    <Droppable droppableId="droppable">
+                      {(provided, snapshot) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                        >
+                          {formUI()}
+                          <div ref={formEndRef}></div>
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
+                  </DragDropContext>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

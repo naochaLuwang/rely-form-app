@@ -585,7 +585,7 @@ const Dashboard = ({ form }) => {
 export default Dashboard;
 
 export async function getServerSideProps(context) {
-  const url = "https://rely-form.herokuapp.com";
+  const url = process.env.HOST_URL;
 
   const submitted = false;
   const type = "IPD";

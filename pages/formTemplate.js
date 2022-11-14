@@ -702,7 +702,7 @@ export default FormTemplate;
 
 export async function getServerSideProps(context) {
   await dbConnect();
-  const url = "https://rely-form.herokuapp.com";
+  const url = process.env.HOST_URL;
 
   const status = true;
   const type = "IPD";
