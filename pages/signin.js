@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 
 export default function SignIn() {
   const [userId, setUserId] = useState("");
@@ -62,14 +63,40 @@ export default function SignIn() {
             Rely Form
           </h1>
         </div>
-        <div className="flex-1 w-full h-full flex items-center justify-center">
+        <div className="flex-1 w-full h-full flex flex-col items-center justify-center ">
+          <div className="flex flex-col w-96 space-y-2 mb-5">
+            <h1 className="text-2xl font-bold text-gray-600 ">Login</h1>
+            <p className="text-xs text-gray-500">
+              Enter your credentials to access your account
+            </p>
+          </div>
+          <button className="border w-96 bg-gray-50 hover:bg-white rounded-md shadow-md">
+            <div className="flex items-center justify-center py-[10px] space-x-2">
+              <Image
+                src="/images/googlelogo.png"
+                alt="logo"
+                width="20"
+                height="20"
+              />
+              <p className="text-sm font-medium text-gray-500">
+                Continue with Google
+              </p>
+            </div>
+          </button>
+
+          <div className="w-96 flex items-center mt-5 mb-1">
+            <div className="flex-1 h-[2px] bg-gray-100"></div>
+            <p className="text-lg font-medium text-gray-500 px-3">OR</p>
+            <div className="flex-1 h-[2px] bg-gray-100"></div>
+          </div>
+
           <form action="" className="flex flex-col space-y-3">
             <input type="hidden" name="csrfToken" defaultValue={csrfToken} />
             <label className="w-96 flex flex-col text-gray-600 font-medium tracking-wider ">
               User Id
               <input
                 required
-                className="text-input mt-2 focus:outline-none bg-gray-50 focus:bg-white focus:ring-0 shadow-md rounded-md border-2 border-gray-400"
+                className="text-input mt-2 focus:outline-none focus:bg-white  focus:ring-1 hover:border-blue-500 hover:bg-white shadow-md bg-gray-50 rounded-md border-2 border-gray-400"
                 type="text"
                 id="userId"
                 name="userId"
@@ -81,7 +108,7 @@ export default function SignIn() {
               Password
               <input
                 required
-                className="text-input mt-2 focus:outline-none focus:bg-white  focus:ring-0 shadow-md bg-gray-50 rounded-md border-2 border-gray-400"
+                className="text-input mt-2 focus:outline-none focus:bg-white  focus:ring-1 hover:border-blue-500 hover:bg-white shadow-md bg-gray-50 rounded-md border-2 border-gray-400"
                 type="password"
                 id="password"
                 name="password"
