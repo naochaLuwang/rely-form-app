@@ -35,6 +35,7 @@ handler.post(async (req, res) => {
               `${patient[i].mobileNumber}`,
               "binary"
             ).toString("base64")}`,
+            formType: ipdForm.formType,
 
             averageWeightage: ipdForm.averageWeightage,
             maximumWeightage: ipdForm.maximumWeightage,
@@ -74,6 +75,7 @@ handler.post(async (req, res) => {
               `${patient[i].mobileNumber}`,
               "binary"
             ).toString("base64")}`,
+            formType: opdForm.formType,
 
             averageWeightage: opdForm.averageWeightage,
             maximumWeightage: opdForm.maximumWeightage,

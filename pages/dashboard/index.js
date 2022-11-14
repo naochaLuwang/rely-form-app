@@ -36,6 +36,7 @@ const Dashboard = ({ form }) => {
   const [openSidebar, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [pending, setPending] = useState(false);
+  const [type, setType] = useState("IPD");
 
   const exportData = [];
 
@@ -343,13 +344,36 @@ const Dashboard = ({ form }) => {
   const onSelectChange = async (e) => {
     setLoading(true);
     setPending(!pending);
-    const response = await fetch(`/api/dashboard/${e.target.value}`);
+
+    const response = await fetch(`/api/dashboard/${e.target.value}/${type}`);
     const data = await response.json();
-    setTableData(data);
+
+    if (data.length < 0) {
+      setTableData([]);
+    } else {
+      setTableData(data);
+    }
+
     gridApi.api.setQuickFilter(e.target.value);
     setLoading(false);
-    // const count = gridApi.api.getDisplayedRowCount();
-    // setRecord(count);
+    const count = gridApi.api.getDisplayedRowCount();
+    setRecord(count);
+  };
+
+  const onSelectTypeChange = async (e) => {
+    setLoading(true);
+    setType(e.target.value);
+
+    const response = await fetch(`/api/dashboard/${pending}/${e.target.value}`);
+    const data = await response.json();
+
+    if (data.length < 0) {
+      setTableData([]);
+    } else {
+      setTableData(data);
+    }
+
+    setLoading(false);
   };
   const getFilterType = () => {
     if (startDate !== "" && endDate !== "") return "inRange";
@@ -455,7 +479,7 @@ const Dashboard = ({ form }) => {
                       name="formType"
                       id="formType"
                       className="bg-gray-50 form-input block w-40 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black "
-                      // onChange={onSelectTypeChange}
+                      onChange={onSelectTypeChange}
                     >
                       <option value="IPD">IPD</option>
                       <option value="OPD">OPD</option>
