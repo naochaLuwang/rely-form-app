@@ -11,6 +11,9 @@ const formFeedbackSchema = new mongoose.Schema(
     formUrl: {
       type: String,
     },
+    formType: {
+      type: String,
+    },
     createdBy: {
       type: String,
     },
