@@ -28,7 +28,19 @@ handler.post(async (req, res) => {
       return res.status(404).send({ message: "Form already exist" });
     }
 
-    const disable = await Form.updateMany({ status: true }, { status: false });
+    if (formType === "IPD") {
+      await Form.updateMany(
+        { status: true, formType: "IPD" },
+        { status: false }
+      );
+    }
+
+    if (formType === "OPD") {
+      await Form.updateMany(
+        { status: true, formType: "OPD" },
+        { status: false }
+      );
+    }
 
     const newForm = await new Form({
       formId,

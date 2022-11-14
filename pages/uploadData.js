@@ -104,6 +104,7 @@ const UploadData = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const router = useRouter();
 
@@ -163,6 +164,10 @@ const UploadData = () => {
             (user) => user.Name && user.MobileNumber
           );
           setPatients(patientData);
+
+          if (patientData.length > 0) {
+            setDisabled(false);
+          }
 
           const missing = rows.filter(
             (user) => user.Name === undefined || user.MobileNumber === undefined
@@ -318,6 +323,7 @@ const UploadData = () => {
                     </button>
                     <button
                       onClick={handleClickOpen}
+                      disabled={disabled}
                       className="rounded-md px-3.5 py-2 m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-indigo-600 text-indigo-600 text-white"
                     >
                       <span className="absolute w-96 h-0 transition-all duration-300 origin-center rotate-45 -translate-x-20 bg-indigo-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
@@ -361,7 +367,7 @@ const UploadData = () => {
                           Upload Patient Data
                         </BootstrapDialogTitle>
 
-                        <DialogContent dividers>
+                        <DialogContent>
                           {missingData.length > 0 && (
                             <h1 className="w-96 text-sm text-red-500 mb-3">
                               {missingData.length} record(s) found with missing

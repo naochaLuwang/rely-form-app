@@ -9,61 +9,63 @@ const ViewForm = ({ data }) => {
   return (
     <div className="max-w-screen h-auto bg-slate-100  lg:py-10 py-2 lg:px-10 px-2  lg:block">
       <div className="max-w-screen lg:max-w-4xl mx-auto">
-        <div className="w-full h-2 bg-blue-500 rounded-t-lg"></div>
-        <div className="w-full border px-8 lg:px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">
-          <h1 className="text-lg lg:text-2xl text-gray-600 font-bold mb-10">
-            {formData?.formName}
-          </h1>
-          {/* <p className="absolute top-16">
+        <div>
+          <div className="w-full h-2 bg-blue-500 rounded-t-lg "></div>
+          <div className="w-full border px-8 lg:px-10 py-5 relative bg-white mb-5 rounded-lg shadow-sm">
+            <h1 className="text-lg lg:text-2xl text-gray-600 font-bold mb-10">
+              {formData?.formName}
+            </h1>
+            {/* <p className="absolute top-16">
                 Signed in as {session?.user?.email}
               </p> */}
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:pr-10 -mt-5">
-            <div className="flex flex-col">
-              <h1 className="lg:tracking-wider text-sm">
-                <span className="font-semibold text-sm text-gray-600">
-                  Name :
-                </span>{" "}
-                {formData.patient.name}
-              </h1>
-              <h1 className="tracking-wider text-sm">
-                <span className="font-semibold text-sm text-gray-600 ">
-                  Age :
-                </span>{" "}
-                {formData.patient.ageY}
-              </h1>
-              <h1 className="tracking-wider text-sm">
-                <span className="font-semibold text-sm">Gender :</span>{" "}
-                {formData.patient.gender}
-              </h1>
-              <h1 className="tracking-wider text-sm">
-                <span className="font-semibold text-sm">Mobile :</span>{" "}
-                {formData.patient.primaryMobileNumber}
-              </h1>
-            </div>
-            <div className="flex flex-col">
-              <h1 className="tracking-wider text-sm">
-                {" "}
-                <span className="font-semibold text-sm text-gray-600">
-                  Type :
-                </span>{" "}
-                {formData.patient.patientType}
-              </h1>
-              <h1 className="tracking-wider text-sm">
-                <span className="font-semibold text-sm text-gray-600">
-                  IPD Number :
-                </span>{" "}
-                {formData.patient.iPDNumber}
-              </h1>
-              {/* <h1 className="tracking-wider">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between lg:pr-10 -mt-5">
+              <div className="flex flex-col">
+                <h1 className="lg:tracking-wider text-sm">
+                  <span className="font-semibold text-sm text-gray-600">
+                    Name :
+                  </span>{" "}
+                  {formData.patient.name}
+                </h1>
+                <h1 className="tracking-wider text-sm">
+                  <span className="font-semibold text-sm text-gray-600 ">
+                    Age :
+                  </span>{" "}
+                  {formData.patient.ageY}
+                </h1>
+                <h1 className="tracking-wider text-sm">
+                  <span className="font-semibold text-sm">Gender :</span>{" "}
+                  {formData.patient.gender}
+                </h1>
+                <h1 className="tracking-wider text-sm">
+                  <span className="font-semibold text-sm">Mobile :</span>{" "}
+                  {formData.patient.primaryMobileNumber}
+                </h1>
+              </div>
+              <div className="flex flex-col">
+                <h1 className="tracking-wider text-sm">
+                  {" "}
+                  <span className="font-semibold text-sm text-gray-600">
+                    Type :
+                  </span>{" "}
+                  {formData.patient.patientType}
+                </h1>
+                <h1 className="tracking-wider text-sm">
+                  <span className="font-semibold text-sm text-gray-600">
+                    IPD Number :
+                  </span>{" "}
+                  {formData.patient.iPDNumber}
+                </h1>
+                {/* <h1 className="tracking-wider">
                     <span className="font-semibold">Reg Id :</span>{" "}
                     {newForm?.patient.regId}
                   </h1> */}
-              <h1 className="tracking-wider text-sm">
-                <span className="font-semibold text-gray-600 text-sm">
-                  UHID :
-                </span>{" "}
-                {formData.patient.uhid}
-              </h1>
+                <h1 className="tracking-wider text-sm">
+                  <span className="font-semibold text-gray-600 text-sm">
+                    UHID :
+                  </span>{" "}
+                  {formData.patient.uhid}
+                </h1>
+              </div>
             </div>
           </div>
         </div>

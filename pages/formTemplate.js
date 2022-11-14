@@ -67,8 +67,21 @@ const FormTemplate = ({ form }) => {
   const fileExtension = ".xlsx";
   const fileName = "Form Feedback";
 
+  const formTemplate = [];
+
   const exportToExcel = async (excelData) => {
-    const ws = XLSX.utils.json_to_sheet(excelData);
+    for (let i = 0; i < excelData.length; i++) {
+      formTemplate.push({
+        FormName: excelData[i].formName,
+        FormId: excelData[i].formId,
+        CreatedBy: excelData[i].createdBy,
+        CreatedAt: excelData[i].createdAt,
+        FormType: excelData[i].formType,
+        status: `${excelData[i].status ? "active" : "inactive"}  `,
+      });
+    }
+
+    const ws = XLSX.utils.json_to_sheet(formTemplate);
     const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
     const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
     const data = new Blob([excelBuffer], { type: fileType });
@@ -526,6 +539,7 @@ const FormTemplate = ({ form }) => {
       },
     },
   ];
+
   if (status === "unauthenticated") {
     router.push("/signin");
   }
