@@ -440,13 +440,25 @@ const Dashboard = ({ form }) => {
                     <select
                       name="status"
                       id="status"
-                      className="bg-gray-50 form-input block w-96  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
+                      className="bg-gray-50 form-input block w-40  sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black"
                       onChange={onSelectChange}
                     >
                       <option className="border p-5" value="false">
                         Pending
                       </option>
                       <option value="true">Submitted</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <select
+                      name="formType"
+                      id="formType"
+                      className="bg-gray-50 form-input block w-40 sm:text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black "
+                      // onChange={onSelectTypeChange}
+                    >
+                      <option value="IPD">IPD</option>
+                      <option value="OPD">OPD</option>
                     </select>
                   </div>
 
@@ -552,7 +564,8 @@ export async function getServerSideProps(context) {
   const url = "https://rely-form.herokuapp.com";
 
   const submitted = false;
-  const response = await fetch(`${url}/api/dashboard/${submitted}`);
+  const type = "IPD";
+  const response = await fetch(`${url}/api/dashboard/${submitted}/${type}`);
 
   const data = await response.json();
 

@@ -580,6 +580,7 @@ const FormBody = () => {
       status: formStatus,
       createdBy,
     });
+
     toast("Form created", { type: "success" });
     handleClose();
     router.push("/formTemplate");

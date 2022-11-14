@@ -31,12 +31,15 @@ handler.get(async (req, res) => {
 
 handler.put(async (req, res) => {
   try {
-    const { status, isDeleted } = req.body;
+    const { status, isDeleted, type } = req.body;
     await dbConnect();
 
     // const activeForms = await Form.find({ status: true })
 
-    const disable = await Form.updateMany({ status: true }, { status: false });
+    const disable = await Form.updateMany(
+      { status: true, formType: type },
+      { status: false }
+    );
     const data = await Form.findOneAndUpdate(
       { formId: req.query.id },
       {

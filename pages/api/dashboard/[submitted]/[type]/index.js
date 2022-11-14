@@ -1,8 +1,8 @@
 import nc from "next-connect";
 
-import dbConnect from "../../../../utils/db";
+import dbConnect from "../../../../../utils/db";
 
-import FormFeedback from "../../../../models/FormFeedback";
+import FormFeedback from "../../../../../models/FormFeedback";
 
 const handler = nc();
 
@@ -12,6 +12,7 @@ handler.get(async (req, res) => {
 
     const data = await FormFeedback.find({
       isSubmitted: req.query.submitted,
+      formType: req.query.type,
     }).sort({ updatedAt: -1 });
 
     res.json(data);

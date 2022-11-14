@@ -15,7 +15,7 @@ import { IconButton } from "@mui/material";
 import { ImSwitch } from "react-icons/im";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
-import Link from "next/link";
+import Link from "next/link"; // onChange={onSelectTypeChange}
 import { ImStatsBars } from "react-icons/im";
 import dbConnect from "../utils/db";
 import Head from "next/head";
@@ -221,6 +221,7 @@ const FormTemplate = ({ form }) => {
   useEffect(() => {
     if (gridApi) {
       gridApi.api.setQuickFilter("true");
+
       // const count = gridApi.api.getDisplayedRowCount();
       // setRecord(count);
     }
@@ -231,7 +232,7 @@ const FormTemplate = ({ form }) => {
       dateFilterComponent.setModel({
         type: getFilterType(),
         dateFrom: startDate,
-        dateTo: endDate,
+        dateTo: endDate, // onChange={onSelectTypeChange}
       });
 
       gridApi.api.onFilterChanged();
@@ -281,6 +282,7 @@ const FormTemplate = ({ form }) => {
 
     await axios.put(`/api/form/${formId}`, {
       status: false,
+      type,
     });
     getFormTemplates();
     handleClose2();
@@ -289,6 +291,7 @@ const FormTemplate = ({ form }) => {
   const enableForm = async () => {
     await axios.put(`/api/form/${formId}`, {
       status: true,
+      type,
     });
     getFormTemplates();
     handleClose2();
@@ -383,6 +386,7 @@ const FormTemplate = ({ form }) => {
                     setFormId(data.data.formId);
                     setFormName(data.data.formName);
                     setFormStatus(data.data.status);
+                    setType(data.data.formType);
                   }}
                 >
                   <ImSwitch
