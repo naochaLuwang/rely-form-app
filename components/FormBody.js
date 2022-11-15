@@ -2538,7 +2538,7 @@ const FormBody = () => {
                     {completed ? (
                       <div className="w-96 flex flex-col py-10 items-center justify-center ">
                         <Lottie animationData={success} style={style} />
-                        <p>Data uploaded successfully</p>
+                        <p>Form created successfully</p>
                       </div>
                     ) : (
                       <div className="w-96 h-auto py-6 flex flex-col items-center justify-center">
