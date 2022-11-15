@@ -9,6 +9,7 @@ import ReactTimeAgo from "react-time-ago";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
+import Link from "next/link";
 
 const Notifications = () => {
   const { data: session, status } = useSession();
@@ -135,6 +136,13 @@ const Notifications = () => {
                               <p className="text-xs text-gray-500">
                                 {notification.message}
                               </p>
+                              <Link
+                                href={`/dashboard/${notification.feedbackId}`}
+                              >
+                                <a className="text-xs text-blue-500">
+                                  View Feedback
+                                </a>
+                              </Link>
                               <p className="text-xs text-gray-600 mt-2">
                                 <ReactTimeAgo
                                   date={notification.createdAt}
@@ -186,6 +194,13 @@ const Notifications = () => {
                               <p className="text-xs text-gray-500">
                                 {notification.message}
                               </p>
+                              <Link
+                                href={`/dashboard/${notification.feedbackId}`}
+                              >
+                                <a className="text-xs text-blue-500">
+                                  View Feedback
+                                </a>
+                              </Link>
                               <p className="text-xs text-gray-600 mt-2">
                                 <ReactTimeAgo
                                   date={notification.createdAt}
