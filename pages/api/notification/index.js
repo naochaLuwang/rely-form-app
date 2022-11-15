@@ -19,8 +19,15 @@ handler.post(async (req, res) => {
   try {
     await dbConnect();
 
-    const { name, mobileNumber, formId, formName, averageScore, overallScore } =
-      req.body;
+    const {
+      name,
+      mobileNumber,
+      formId,
+      formName,
+      averageScore,
+      overallScore,
+      feedbackId,
+    } = req.body;
 
     const newNotification = await new MessageMaster({
       name,
@@ -29,6 +36,8 @@ handler.post(async (req, res) => {
       formName,
       averageScore,
       overallScore,
+      feedbackId,
+
       status: "QUEUED",
       message: `You have just received a low feedback for ${formName} by ${name}  with score ${overallScore}`,
       isRead: false,

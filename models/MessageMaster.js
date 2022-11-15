@@ -29,6 +29,9 @@ const messageMasterSchema = new mongoose.Schema(
     status: {
       type: String,
     },
+    feedbackId: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
