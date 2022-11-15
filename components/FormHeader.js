@@ -9,6 +9,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { createGlobalState } from "react-hooks-global-state";
 import NotificationCard from "./NotificationCard";
 import { useRouter } from "next/router";
+
 const initialState = {
   open: false,
   submenu: false,
@@ -26,9 +27,7 @@ const FormHeader = ({ title }) => {
   const [name, setName] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
   const [notiOpen, setNotiOpen] = useState(false);
-
   const open = Boolean(anchorEl);
-
   const router = useRouter();
 
   const handleClick = (event) => {
@@ -52,8 +51,6 @@ const FormHeader = ({ title }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const callbackUrl = "https://rely-form.herokuapp.com";
 
   useEffect(() => {
     if (session) {

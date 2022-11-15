@@ -64,13 +64,26 @@ export default function SignIn() {
           </h1>
         </div>
         <div className="flex-1 w-full h-full flex flex-col items-center justify-center ">
-          <div className="flex flex-col w-96 space-y-2 mb-5">
-            <h1 className="text-2xl font-bold text-gray-600 ">Login</h1>
+          <div className="flex flex-col w-96 space-y-2  ">
+            <div className="flex w-96 items-center justify-center">
+              <div className="relative w-36 h-20 bottom-5 ">
+                <Image
+                  src="/images/relylogo.png"
+                  alt="logo"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </div>
+
+            <h1 className="text-2xl font-bold text-gray-600 text-start ">
+              Login
+            </h1>
             <p className="text-xs text-gray-500">
               Enter your credentials to access your account
             </p>
           </div>
-          <button className="border w-96 bg-gray-50 hover:bg-white rounded-md shadow-md">
+          {/* <button className="border w-96 bg-gray-50 hover:bg-white rounded-md shadow-md">
             <div className="flex items-center justify-center py-[10px] space-x-2">
               <Image
                 src="/images/googlelogo.png"
@@ -88,7 +101,7 @@ export default function SignIn() {
             <div className="flex-1 h-[2px] bg-gray-100"></div>
             <p className="text-lg font-medium text-gray-500 px-3">OR</p>
             <div className="flex-1 h-[2px] bg-gray-100"></div>
-          </div>
+          </div> */}
 
           <form action="" className="flex flex-col space-y-3">
             <input type="hidden" name="csrfToken" defaultValue={csrfToken} />

@@ -1,5 +1,4 @@
 import {
-  Close,
   ContentCopyTwoTone,
   Delete,
   DeleteForever,
@@ -7,52 +6,50 @@ import {
   ShortTextTwoTone,
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useRef } from "react";
-
+import React, { useEffect, useRef, useState } from "react";
 import { BsPencilSquare } from "react-icons/bs";
-
 import Switch from "@mui/material/Switch";
-
 import CloseIcon from "@mui/icons-material/Close";
-import { Box, Button, FormControlLabel, IconButton } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  FormControlLabel,
+  IconButton,
+} from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import { Dialog, DialogTitle } from "@mui/material";
 import Slide from "@mui/material/Slide";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { v4 as uuidv4 } from "uuid";
-
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import Drawer from "@mui/material/Drawer";
 import Slider from "@mui/material/Slider";
 import axios from "axios";
 import FormHeader from "./FormHeader";
-
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import toast, { Toaster } from "react-hot-toast";
-
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
-
 import { styled } from "@mui/material/styles";
-import PropTypes from "prop-types";
 import Lottie from "lottie-react";
+import PropTypes from "prop-types";
 import success from "../assets/success.json";
-
 import {
   BsInputCursor,
-  BsTextareaResize,
-  BsUiRadios,
-  BsUiChecks,
   BsPersonCircle,
+  BsTextareaResize,
+  BsUiChecks,
+  BsUiRadios,
 } from "react-icons/bs";
-import { TiSortNumerically } from "react-icons/ti";
 import { HiMail } from "react-icons/hi";
+import { TiSortNumerically } from "react-icons/ti";
 import { VscPreview } from "react-icons/vsc";
 import { RotatingLines } from "react-loader-spinner";
 
+// !! style for the LOttie component
 const style = {
   height: 100,
   width: 100,
@@ -62,6 +59,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// !! form creation dialog
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
@@ -113,26 +111,23 @@ const FormBody = () => {
   const [maximumWeightage, setMaximumWeightage] = useState(0);
   const [averageWeightage, setAverageWeightage] = useState(0);
   const [loading, setLoading] = useState(false);
-
-  const createdBy = "admin";
-  const router = useRouter();
-
   const [open, setOpen] = React.useState(false);
-  const [textOpen, setTextOpen] = React.useState(false);
-  const [numericOpen, setNumericOpen] = React.useState(false);
-  const [multilineOpen, setMultilineOpen] = React.useState(false);
+  const [textOpen, setTextOpen] = useState(false);
+  const [numericOpen, setNumericOpen] = useState(false);
+  const [multilineOpen, setMultilineOpen] = useState(false);
   const [radioOpen, setRadioOpen] = React.useState(false);
-  const [checkboxOpen, setCheckboxOpen] = React.useState(false);
-  const [fieldOpen, setFieldOpen] = useState(false);
+  const [checkboxOpen, setCheckboxOpen] = useState(false);
   const [labelText, setLabelText] = useState("");
   const [completed, setCompleted] = useState(false);
-
+  const createdBy = "admin";
+  const router = useRouter();
   const formEndRef = useRef(null);
 
   useEffect(() => {
     formEndRef.current.scrollIntoView({ behavior: "smooth" });
   }, [formData]);
 
+  // !! Drag and drop functionality
   function onDragEnd(result) {
     if (!result.destination) {
       return;

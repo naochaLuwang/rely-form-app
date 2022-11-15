@@ -237,10 +237,7 @@ const UploadData = () => {
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // Instead of using 'rows', we'll use page,
-    // which has only the rows for the active page
-
-    // The rest of these things are super handy, too ;)
+    page,
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -287,11 +284,7 @@ const UploadData = () => {
 
             <div className="flex-1 bg-gray-50 relative">
               <div className="w-full h-10">
-                <FormHeader
-                  //   handleOpen={handleOpen}
-                  //   openSidebar={openSidebar}
-                  title="Import Data"
-                />
+                <FormHeader title="Import Data" />
               </div>
 
               <div className="w-full flex flex-col h-screen px-7">

@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
 import Image from "next/image";
-
-import logo from "../assets/images/logo.jpeg";
+import React from "react";
 import consultations from "../assets/images/consultations.png";
-
-import Chart_fill from "../assets/images/Chart_fill.png";
-import Link from "next/link";
-import { FcFeedback } from "react-icons/fc";
-import { AiFillHome } from "react-icons/ai";
+import logo from "../assets/images/logo.jpeg";
 import { ChevronUpIcon } from "@heroicons/react/outline";
+import Link from "next/link";
+import { AiFillHome } from "react-icons/ai";
+import { FcFeedback } from "react-icons/fc";
+import Chart_fill from "../assets/images/Chart_fill.png";
 import { useGlobalState } from "./FormHeader";
-// import { createGlobalState } from "react-hooks-global-state";
+
 const Sidebar = ({ subOpen }) => {
   const [open, setOpen] = useGlobalState("open");
 
@@ -18,43 +16,13 @@ const Sidebar = ({ subOpen }) => {
 
   console.log(open);
 
-  // useEffect(() => {
-  //   setOpen(false);
-  //   setSubmenuOpen(false);
-  // }, [setOpen, setSubmenuOpen]);
-
-  const Menus = [
-    { title: "Home", src: Chart_fill, url: "/" },
-    // {
-    //   title: "Feedback",
-    //   src: Setting,
-    //   dropdown: [
-    //     {
-    //       title: "Add New Form",
-    //       src: "",
-    //       url: "/dash",
-    //     },
-    //   ],
-    // },
-  ];
+  const Menus = [{ title: "Home", src: Chart_fill, url: "/" }];
   return (
     <div
       className={`${
         open ? "w-60" : "w-16"
       } h-screen duration-300 transalte-transform ease-in-out bg-white border shadow-lg  pt-3  sticky left-0 top-0`}
     >
-      {/* <div
-        className={`absolute cursor-pointer -right-3 w-8 h-8 z-20 top-9 border-2 rounded-full border-dark-purple ${
-          !open && "rotate-180"
-        }`}
-        onClick={() => {
-          setOpen(!open);
-          setSubmenuOpen(false);
-        }}
-      >
-        <Image src={control} alt="control" layout="fill" objectFit="contain" />
-      </div> */}
-
       <div className="text-gray-600 text-sm pl-5 flex items-center gap-x-4 cursor-pointer p-2">
         <Link href="/">
           <div className="relative w-7 h-7 z-30 flex-shrink-0">
@@ -167,24 +135,24 @@ const Sidebar = ({ subOpen }) => {
       </div>
 
       <ul className={` ${submenuOpen && "mt-10"}`}>
-        <Link href="/consultation">
-          <div className="hover:border-l-4 group border-l-4  border-white    hover:border-blue-500">
-            <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-1 cursor-pointer p-2  hover:bg-light-white rounded-md">
-              <div className="relative w-6 h-6 z-30 flex-shrink-0">
-                <Image
-                  src={consultations}
-                  alt="menu icons"
-                  layout="fill"
-                  objectFit="contain"
-                />
-              </div>
-
-              <span className={`${!open && "hidden"} text-end`}>
-                Consultation
-              </span>
+        {/* <Link href="#"> */}
+        <div className="hover:border-l-4 group border-l-4  border-white    hover:border-blue-500">
+          <div className="text-gray-600 group-hover:text-blue-500 font-medium text-sm pl-5 flex items-center gap-x-1 cursor-pointer p-2  hover:bg-light-white rounded-md">
+            <div className="relative w-6 h-6 z-30 flex-shrink-0">
+              <Image
+                src={consultations}
+                alt="menu icons"
+                layout="fill"
+                objectFit="contain"
+              />
             </div>
+
+            <span className={`${!open && "hidden"} text-end`}>
+              Consultation
+            </span>
           </div>
-        </Link>
+        </div>
+        {/* </Link> */}
       </ul>
     </div>
   );

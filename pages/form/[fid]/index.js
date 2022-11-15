@@ -124,29 +124,10 @@ const FormFeedbackPage = ({ formFeedback }) => {
     );
     console.log(filledFields);
 
-    // const filterCheckbox = newFormData.form.filter(
-    //   (element) => element.inputType.includes("checkbox") && element.required
-    // );
-    // console.log(filterCheckbox);
-
-    // const filledCheckbox = filterCheckbox.filter(
-    //   (element) => element.ansText !== ""
-    // );
-    // console.log(requiredFields.length);
-    // console.log(filledCheckbox.length);
-    // console.log(filledFields.length + filledCheckbox.length);
-
     console.log(requiredFields.length);
     console.log(filledFields.length);
 
     if (requiredFields.length !== filledFields.length) {
-      // return alert("All * fields are required");
-      // const unfilledFields = requiredFields.filter(
-      //   (element) => element.required && element.ansText == ""
-      // );
-      // console.log(unfilledFields);
-      // return unfilledFields;
-
       setUnfilled(true);
       return;
     } else {

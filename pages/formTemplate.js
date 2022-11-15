@@ -15,7 +15,7 @@ import { IconButton } from "@mui/material";
 import { ImSwitch } from "react-icons/im";
 import Tooltip from "@mui/material/Tooltip";
 import axios from "axios";
-import Link from "next/link"; // onChange={onSelectTypeChange}
+import Link from "next/link";
 import { ImStatsBars } from "react-icons/im";
 import dbConnect from "../utils/db";
 import Head from "next/head";
@@ -42,7 +42,6 @@ const FormTemplate = ({ form }) => {
   const [statusChange, setStatusChange] = useState(true);
   const [typeChange, setTypeChange] = useState("IPD");
   const [loading, setLoading] = useState(false);
-
   const [Status, setStatus] = useState(true);
   const [type, setType] = useState("IPD");
 
@@ -552,7 +551,7 @@ const FormTemplate = ({ form }) => {
       {status === "authenticated" && (
         <>
           <Head>
-            <title>Home | Rely Form</title>
+            <title>Form Template | Rely Form</title>
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1.0"
