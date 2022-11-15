@@ -1,16 +1,14 @@
-import Link from "next/link";
-import React, { useState, useEffect, useCallback } from "react";
-import { useSession, signOut } from "next-auth/react";
+import { Logout, Settings } from "@mui/icons-material";
+import { Avatar, Divider, ListItemIcon } from "@mui/material";
+import Badge from "@mui/material/Badge";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Avatar, Divider, ListItemIcon, MenuList } from "@mui/material";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import Badge from "@mui/material/Badge";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
+import React, { useCallback, useEffect, useState } from "react";
 import { createGlobalState } from "react-hooks-global-state";
-import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import NotificationCard from "./NotificationCard";
-
+import { useRouter } from "next/router";
 const initialState = {
   open: false,
   submenu: false,
@@ -31,11 +29,17 @@ const FormHeader = ({ title }) => {
 
   const open = Boolean(anchorEl);
 
+  const router = useRouter();
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   const handleNclick = () => {
+    if (notificationsData.length <= 0) {
+      router.push("/notifications");
+      return;
+    }
     setNotiOpen(!notiOpen);
   };
 
