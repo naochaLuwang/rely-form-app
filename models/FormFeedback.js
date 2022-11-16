@@ -45,6 +45,7 @@ const formFeedbackSchema = new mongoose.Schema(
       patientType: String,
       ageY: Number,
       gender: String,
+      email: String,
       primaryMobileNumber: Number,
       iPDNumber: String,
       uhid: String,

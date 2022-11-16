@@ -49,6 +49,7 @@ handler.post(async (req, res) => {
               salutationName: patient[i].salutationName,
               name: patient[i].name,
               regId: patient[i].regId,
+              email: patient[i].email,
               patientType: patient[i].patientType,
               ageY: patient[i].age,
               gender: patient[i].gender,
@@ -88,6 +89,7 @@ handler.post(async (req, res) => {
             patient: {
               salutationName: patient[i].salutationName,
               name: patient[i].name,
+              email: patient[i].email,
               regId: patient[i].regId,
               patientType: patient[i].patientType,
               ageY: patient[i].age,

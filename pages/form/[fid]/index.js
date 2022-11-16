@@ -145,6 +145,7 @@ const FormFeedbackPage = ({ formFeedback }) => {
         mobileNumber: newForm.patient.primaryMobileNumber,
         formId: newForm.formId,
         formName: newForm.formName,
+        email: newForm.patient.email,
         averageScore: newForm.averageWeightage,
         overallScore: scoreWeightage,
         status: "QUEUED",

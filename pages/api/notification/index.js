@@ -27,11 +27,13 @@ handler.post(async (req, res) => {
       averageScore,
       overallScore,
       feedbackId,
+      email,
     } = req.body;
 
     const newNotification = await new MessageMaster({
       name,
       mobileNumber,
+      email,
       formId,
       formName,
       averageScore,

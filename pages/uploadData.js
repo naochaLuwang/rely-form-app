@@ -76,6 +76,7 @@ const excelTemplate = [
     SalutationName: "",
     Name: "",
     MobileNumber: "",
+    Email: "",
     Gender: "",
     Age: null,
     RegId: null,
@@ -119,6 +120,7 @@ const UploadData = () => {
         Name: excelData[i].Name,
         MobileNumber: excelData[i].MobileNumber,
         Gender: excelData[i].Gender,
+        Email: excelData[i].Email,
         Age: excelData[i].Age,
         RegId: excelData[i].RegId,
         UhId: excelData[i].UhId,
@@ -207,6 +209,10 @@ const UploadData = () => {
       {
         Header: "Mobile",
         accessor: "MobileNumber",
+      },
+      {
+        Header: "Email",
+        accessor: "Email",
       },
       {
         Header: "Gender",
@@ -433,6 +439,7 @@ const UploadData = () => {
                           <th>Sl. No</th>
                           <th>Name</th>
                           <th>Mobile</th>
+                          <th>Email</th>
                           <th>Gender</th>
                           <th>Age</th>
                           <th>Reg Id</th>
@@ -448,6 +455,7 @@ const UploadData = () => {
                             <td>{i + 1}</td>
                             <td>{data.Name}</td>
                             <td>{data.MobileNumber}</td>
+                            <td>{data.Email}</td>
                             <td>{data.Gender}</td>
                             <td>{data.Age}</td>
                             <td>{data.RegId}</td>

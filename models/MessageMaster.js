@@ -8,6 +8,9 @@ const messageMasterSchema = new mongoose.Schema(
     mobileNumber: {
       type: Number,
     },
+    email: {
+      type: String,
+    },
     formId: {
       type: Number,
     },

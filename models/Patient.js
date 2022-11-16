@@ -32,6 +32,9 @@ const patientSchema = new mongoose.Schema(
     mobileNumber: {
       type: String,
     },
+    email: {
+      type: String,
+    },
   },
   {
     timestamps: true,

@@ -25,6 +25,7 @@ handler.post(async (req, res) => {
           age: patients[i].Age,
           regId: patients[i].RegId,
           uhId: patients[i].UhId,
+          email: patients[i].Email,
           salutationName: patients[i].SalutationName,
           patientType: patients[i].PatientType,
           mobileNumber: patients[i].MobileNumber.toString(),
