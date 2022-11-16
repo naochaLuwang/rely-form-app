@@ -29,7 +29,7 @@ handler.post(async (req, res) => {
           feedbackData.push({
             formId: ipdForm.formId,
             formName: ipdForm.formName,
-            formUrl: `https://rely-form.herokuapp.com/form/${
+            formUrl: `${process.env.HOST_URL}/form/${
               ipdForm.formId
             }?regId=${Buffer.from(
               `${patient[i].mobileNumber}`,
@@ -69,7 +69,7 @@ handler.post(async (req, res) => {
           feedbackData.push({
             formId: opdForm.formId,
             formName: opdForm.formName,
-            formUrl: `https://rely-form.herokuapp.com/form/${
+            formUrl: `${process.env.HOST_URL}/form/${
               opdForm.formId
             }?regId=${Buffer.from(
               `${patient[i].mobileNumber}`,

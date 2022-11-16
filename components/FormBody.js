@@ -2529,7 +2529,7 @@ const FormBody = () => {
                       variant="h6"
                       component="div"
                     >
-                      {formId} (Preview)
+                      {formName} (Preview)
                     </Typography>
                     <button
                       className="w-fit border-white border px-8 py-2 text-lg font-bold cursor-pointer"
