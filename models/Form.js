@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const formSchema = new mongoose.Schema(
   {
     formId: {
-      type: String,
+      type: Number,
     },
     formName: {
       type: String,

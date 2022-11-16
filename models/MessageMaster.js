@@ -9,7 +9,7 @@ const messageMasterSchema = new mongoose.Schema(
       type: Number,
     },
     formId: {
-      type: String,
+      type: Number,
     },
     formName: {
       type: String,

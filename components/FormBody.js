@@ -99,7 +99,7 @@ BootstrapDialogTitle.propTypes = {
 };
 
 const FormBody = () => {
-  const [formId, setFormId] = useState("");
+  const [formId, setFormId] = useState(null);
   const [formName, setFormName] = useState("");
   const [formDescription, setFormDescription] = useState("");
   const [formData, setFormData] = useState([]);
@@ -640,9 +640,24 @@ const FormBody = () => {
   };
 
   useEffect(() => {
-    const id = uuidv4();
-    setFormId(id);
+    // const id = uuidv4();
+    // setFormId(id);
+    getFormTemplate();
   }, []);
+
+  const getFormTemplate = async () => {
+    const form = await fetch(`/api/form`);
+    const data = await form.json();
+
+    if (data.length <= 0) {
+      setFormId(1);
+    } else {
+      setFormId(data.length + 1);
+    }
+    // console.log("Data length is", data.length);
+  };
+
+  console.log("Form id is", formId);
 
   const formUI = () => {
     return (
